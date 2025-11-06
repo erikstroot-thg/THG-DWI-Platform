@@ -5,7 +5,7 @@ Maak 3 schermen: **Lijst**, **Nieuw/Bewerken**, **Details**. Voeg zoek-, filter-
 
 ## Dataverse-tabel: THG_Klachten (kolommen & typen)
 
-* **KlachtID** (Autonummer, format KL-{YYYY}{MM}-{####}, alleen-lezen in app)
+* **KlachtID** (Autonummer, format KL-{DATETIMEUTC:yyyyMM}-{SEQNUM:4}, alleen-lezen in app)
 * **DatumMelding** (DateOnly, default = Today(), verplicht)
 * **MelderNaam** (Text, default = User().FullName, verplicht)
 * **MelderEmail** (Text, default = User().Email)
