@@ -1,0 +1,26 @@
+THG Digitale Werkinstructies — Installatie-instructie
+=====================================================
+
+OPTIE 1: Direct vanaf de NAS openen (aanbevolen)
+-------------------------------------------------
+1. Open Windows Verkenner
+2. Ga naar: \\DATA-TIMMERMANS\data\CNC orders\DigitaleWerkInstructies\dwi_intranet\
+3. Dubbelklik op index.html
+4. Het DWI-portaal opent in je standaardbrowser
+
+OPTIE 2: Lokale kopie
+-------------------------------------------------
+1. Kopieer de map 'dwi_intranet' naar je lokale schijf
+2. Open index.html in Chrome of Edge
+
+VEREISTEN
+-------------------------------------------------
+- Moderne webbrowser (Chrome, Edge, Firefox)
+- Geen extra software nodig
+- Geen internetverbinding nodig (werkt volledig offline)
+
+PROBLEMEN?
+-------------------------------------------------
+- Werkinstructie opent niet: controleer of je Chrome of Edge gebruikt (niet Internet Explorer)
+- Foto's laden niet: controleer of alle bestanden zijn gekopieerd
+- Vragen? Neem contact op met Erik Stroot

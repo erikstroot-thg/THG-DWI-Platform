@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DWI-ISO-POL - Polysun Assemblage - Timmermans Hardglas</title>
+<style>
+:root{--thg:#005A9C;--thg-dk:#004678;--thg-li:#E8F0F8;--thg-gr:#595959;--bg:#F7F9FB;--bdr:#D4DDE6;--ok:#2E8B57;--ok-li:#E8F5EE;--warn:#E6A817;--warn-li:#FFF8E1;--err:#C62828;--err-li:#FDEAEA;--gold:#B8860B;--gold-li:#FDF6E3;--font:'Calibri',Arial,Helvetica,sans-serif}*{box-sizing:border-box;margin:0;padding:0}body{font:14px/1.6 var(--font);color:#222;background:var(--bg)}
+header{background:#fff;border-bottom:3px solid var(--thg);padding:14px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06)}header .brand{display:flex;align-items:center;gap:14px}header .brand .logo{width:42px;height:42px;background:var(--thg);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px}header .title-block h1{font-size:17px;font-weight:700;color:var(--thg);line-height:1.2}header .title-block .sub{font-size:12px;color:var(--thg-gr)}header .doc-meta{text-align:right;font-size:11px;color:var(--thg-gr);line-height:1.5}
+nav{background:#fff;border-bottom:1px solid var(--bdr);padding:0 24px;display:flex;gap:0;overflow-x:auto}nav .nb{padding:10px 18px;background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;font:600 13px var(--font);color:var(--thg-gr);white-space:nowrap;transition:.15s}nav .nb:hover{color:var(--thg)}nav .nb.on{color:var(--thg);border-bottom-color:var(--thg)}
+.wrap{max-width:960px;margin:0 auto;padding:24px}.view{display:none}.view.on{display:block}
+.card{background:#fff;border:1px solid var(--bdr);border-radius:10px;padding:20px;margin-bottom:18px;box-shadow:0 1px 4px rgba(0,0,0,.04)}.card .ct{font-size:15px;font-weight:700;color:var(--thg);margin-bottom:12px;display:flex;align-items:center;gap:8px}.card .ct .ic{font-size:18px}
+.pg-title{font-size:20px;font-weight:800;color:var(--thg);margin-bottom:4px}.pg-sub{font-size:13px;color:var(--thg-gr);margin-bottom:22px}
+.steps{list-style:none;margin-bottom:14px}.step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}.sn{background:var(--thg);color:#fff;border-radius:50%;width:28px;height:28px;min-width:28px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}.sn.red{background:var(--err)}.sn.green{background:var(--ok)}.sn.gold{background:var(--gold)}.st{padding-top:3px;line-height:1.55}
+.al{display:flex;gap:10px;padding:12px 16px;border-radius:8px;margin:12px 0;font-size:13px;line-height:1.5}.al .ai{font-size:17px;min-width:22px}.al-r{background:var(--err-li);border-left:4px solid var(--err)}.al-y{background:var(--warn-li);border-left:4px solid var(--warn)}.al-b{background:var(--thg-li);border-left:4px solid var(--thg)}.al-g{background:var(--ok-li);border-left:4px solid var(--ok)}.al-gold{background:var(--gold-li);border-left:4px solid var(--gold)}
+.tabs{display:flex;border-bottom:2px solid var(--bdr);margin-bottom:18px;gap:0}.tb{padding:8px 16px;background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-2px;cursor:pointer;font:600 13px var(--font);color:var(--thg-gr);transition:.12s}.tb:hover{color:var(--thg)}.tb.on{color:var(--thg);border-bottom-color:var(--thg)}.tp{display:none}.tp.on{display:block}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}@media(max-width:720px){.g2,.g3{grid-template-columns:1fr}}
+.kpi{background:#fff;border:1px solid var(--bdr);border-radius:8px;padding:16px;text-align:center;border-top:3px solid var(--thg)}.kpi.gold{border-top-color:var(--gold)}.kpi.green{border-top-color:var(--ok)}.kpi.red{border-top-color:var(--err)}.kn{font-size:26px;font-weight:800;color:var(--thg)}.kpi.gold .kn{color:var(--gold)}.kpi.green .kn{color:var(--ok)}.kpi.red .kn{color:var(--err)}.kl{font-size:11px;color:var(--thg-gr);margin-top:4px}
+table.t{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:14px}table.t th{background:var(--thg);color:#fff;padding:8px 11px;text-align:left;font-size:12px;font-weight:600}table.t td{padding:8px 11px;border-bottom:1px solid var(--bdr)}table.t tr:nth-child(even) td{background:var(--bg)}
+.cl{margin:12px 0}.ci{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bdr);font-size:13px}.ci input[type="checkbox"]{width:18px;height:18px;accent-color:var(--thg)}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0}.flow-step{background:var(--thg);color:#fff;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;text-align:center;min-width:110px}.flow-step.warn{background:var(--warn);color:#000}.flow-step.green{background:var(--ok)}.flow-arrow{color:var(--thg-gr);font-size:20px;font-weight:700}
+footer{background:#fff;border-top:2px solid var(--thg);padding:12px 24px;display:flex;justify-content:space-between;font-size:11px;color:var(--thg-gr);margin-top:40px}
+@media print{header,nav,footer{position:static}.view{display:block!important;page-break-before:always}.view:first-child{page-break-before:avoid}nav{display:none}body{font-size:11pt}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">TH</div>
+    <div class="title-block">
+      <h1>DWI-ISO-POL - Polysun Assemblage</h1>
+      <div class="sub">Werkinstructie ISO-lijn - Handmatige assemblage lamellen/screens</div>
+    </div>
+  </div>
+  <div class="doc-meta">
+    <strong>DWI-ISO-POL-001</strong><br>
+    Versie 1.0 - <span id="doc-date"></span><br>
+    Station 8 - ISO-lijn
+  </div>
+</header>
+<nav>
+  <button class="nb on" onclick="go('overzicht')">Overzicht</button>
+  <button class="nb" onclick="go('ontvangst')">1. Ontvangst</button>
+  <button class="nb" onclick="go('voorbereiding')">2. Voorbereiding</button>
+  <button class="nb" onclick="go('assemblage')">3. Assemblage</button>
+  <button class="nb" onclick="go('butyl')">4. Butyleren</button>
+  <button class="nb" onclick="go('ophangen')">5. Ophangen</button>
+  <button class="nb" onclick="go('manco')">6. Manco</button>
+  <button class="nb" onclick="go('checklist')">Checklist</button>
+</nav>
+<div class="wrap">
+<div id="view-overzicht" class="view on">
+  <div class="pg-title">Polysun Assemblage - Overzicht</div>
+  <div class="pg-sub">Handmatige assemblage van lamellen, screens en andere inbouwdelen voor isolatieglas</div>
+  <div class="card">
+    <div class="ct"><span class="ic">Doel</span></div>
+    <p>Deze DWI beschrijft het volledige assemblageproces van <strong>Polysun-pakketten</strong> (lamellen, screens, derde ruiten) die als inbouwdeel in isolatieglas worden geassembleerd op de ISO-lijn. De pakketten worden geleverd door <strong>Pellini</strong> en per batch verwerkt.</p>
+    <div class="al al-b"><span class="ai">Info</span><span>Polysun is een <strong>apart handmatig proces</strong> dat voorafgaat aan de reguliere ISO-lijn assemblage.</span></div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Procesflow</span></div>
+    <div class="flow">
+      <div class="flow-step">Batch ontvangen<br><small>Pellini-pakket</small></div>
+      <span class="flow-arrow">-></span>
+      <div class="flow-step">Uitsorteren<br><small>per batch op plaat</small></div>
+      <span class="flow-arrow">-></span>
+      <div class="flow-step">Uitpakken<br><small>plastic verwijderen</small></div>
+      <span class="flow-arrow">-></span>
+      <div class="flow-step">Hoekjes plaatsen<br><small>+ schoonmaken</small></div>
+      <span class="flow-arrow">-></span>
+      <div class="flow-step">Foampjes indrukken<br><small>3 zijden</small></div>
+      <span class="flow-arrow">-></span>
+      <div class="flow-step green">Vullen + butyleren<br><small>+ schoonmaken</small></div>
+      <span class="flow-arrow">-></span>
+      <div class="flow-step green">Ophangen<br><small>-> ISO-lijn</small></div>
+    </div>
+  </div>
+  <div class="g3">
+    <div class="kpi red"><div class="kn">&lt; 24u</div><div class="kl">Max. tijd ophangen -> assemblage ISO</div></div>
+    <div class="kpi gold"><div class="kn">4 g/m</div><div class="kl">Butyldikte per strekkende meter</div></div>
+    <div class="kpi green"><div class="kn">max 6 bar</div><div class="kl">Max. druk Bestmachina</div></div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Materialen</span></div>
+    <table class="t">
+      <thead><tr><th>Materiaal</th><th>Leverancier</th><th>Opmerking</th></tr></thead>
+      <tbody>
+        <tr><td>Screen-pakketten (lamellen/Polysun)</td><td><strong>Pellini</strong></td><td>Levering per batch op platen</td></tr>
+        <tr><td>Polysun-ruiten (glas)</td><td>Intern - snijlijn</td><td>Per batch gesneden conform planning</td></tr>
+        <tr><td>Foampjes (schuimpjes)</td><td>Intern voorraad</td><td>Voor droogkorrelvulling 3 zijden</td></tr>
+        <tr><td>Butyl</td><td>Intern - Bestmachina</td><td>Richting 4 g/m strekkend</td></tr>
+        <tr><td>Hoekjes</td><td>Intern voorraad</td><td>Worden vooraf geplaatst</td></tr>
+        <tr><td>Alcohol (reinigingsmiddel)</td><td>Intern voorraad</td><td>Voor schoonmaken frame rondom</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div id="view-ontvangst" class="view">
+  <div class="pg-title">1. Ontvangst en Sortering Pellini-pakketten</div>
+  <div class="pg-sub">Stap 1 - Pakketten sorteren op batchnummer en klaarzetten</div>
+  <div class="card">
+    <div class="ct"><span class="ic">Locatie</span></div>
+    <p>Pellini-pakketten worden <strong>achterin bij de zaagafdeling</strong> uitgepakt en uitgesorteerd. Ze worden op platen neergelegd, gesorteerd per batch.</p>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Sorteerprincipe</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Ontvang de Pellini-dozen/pakketten. Deze zijn per batch geleverd maar kunnen in willekeurige volgorde binnenkomen.</span></li>
+      <li class="step"><span class="sn">2</span><span class="st"><strong>Sorteer op batchnummer.</strong> Eerdere batches links/bovenop, latere batches rechts/onderaan op de plaat.</span></li>
+      <li class="step"><span class="sn">3</span><span class="st">Elke batch krijgt een eigen stapel/sectie op de plaat. Houd batchnummers duidelijk zichtbaar.</span></li>
+      <li class="step"><span class="sn">4</span><span class="st">Leg de bijbehorende <strong>productiestickers en formulieren</strong> bij de juiste batch.</span></li>
+    </ul>
+    <div class="al al-y"><span class="ai">Let op</span><span><strong>Pas uit bij batchaanroep:</strong> Pak de Pellini-dozen pas uit op het moment dat de betreffende batch naar beneden komt voor productie.</span></div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Glas per batch</span></div>
+    <p>Het glas voor Polysun wordt <strong>apart per batch gesneden</strong> op de snijlijn. Controleer dat het glas en de Pellini-pakketten <strong>hetzelfde batchnummer</strong> hebben.</p>
+    <div class="al al-r"><span class="ai">STOP</span><span>Bij mismatch tussen glas-batch en pakket-batch: <strong>STOP</strong> en meld bij planner/teamleider.</span></div>
+  </div>
+</div>
+<div id="view-voorbereiding" class="view">
+  <div class="pg-title">2. Voorbereiding</div>
+  <div class="pg-sub">Stap 2 - Uitpakken, plastic verwijderen, hoekjes plaatsen</div>
+  <div class="card">
+    <div class="ct"><span class="ic">Uitpakken en Voorbereiden</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Haal de Pellini-pakketten uit de doos/verpakking voor de betreffende batch.</span></li>
+      <li class="step"><span class="sn">2</span><span class="st"><strong>Verwijder zoveel mogelijk plastic verpakking</strong> - dit scheelt later tijd bij de assemblage.</span></li>
+      <li class="step"><span class="sn">3</span><span class="st"><strong>Laat de beschermfolie op het screen zitten.</strong> Deze beschermt tegen vuil en beschadiging tot aan de assemblage.</span></li>
+      <li class="step"><span class="sn">4</span><span class="st">Druk de <strong>hoekjes</strong> alvast in het frame, waar nodig.</span></li>
+      <li class="step"><span class="sn">5</span><span class="st">Maak het frame schoon met <strong>alcohol</strong> - rondom, inclusief randen.</span></li>
+    </ul>
+    <div class="al al-g"><span class="ai">OK</span><span><strong>Beschermfolie laten zitten = goed.</strong> Deze voorkomt dat het screen vies wordt tijdens het verdere voorbereidingsproces.</span></div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Schoonmaakstrategie (verbeterd)</span></div>
+    <p>De schoonmaakhandeling is verplaatst naar de <strong>vulplek</strong> in plaats van aan de voorbereidingstafel.</p>
+    <div class="g2">
+      <div><div class="al al-r"><span class="ai">OUD</span><span>Schoonmaken -> vullen -> weer vies -> opnieuw schoonmaken</span></div></div>
+      <div><div class="al al-g"><span class="ai">NIEUW</span><span>Foampjes indrukken -> verplaatsen naar vulplek -> daar vullen + schoonmaken + extruderen in een handeling</span></div></div>
+    </div>
+    <div class="al al-gold"><span class="ai">Doel</span><span>Dit voorkomt dubbel werk. De schoonmaak gebeurt nu direct voor het butyleren, zodat het frame schoon <strong>blijft</strong>.</span></div>
+  </div>
+</div>
+<div id="view-assemblage" class="view">
+  <div class="pg-title">3. Frame-assemblage</div>
+  <div class="pg-sub">Stap 3 - Frame loshalen, foampjes indrukken, klaarmaken voor vulling</div>
+  <div class="card">
+    <div class="ct"><span class="ic">Assemblage stap voor stap</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Haal de <strong>beschermfolie</strong> van het screen af (pas nu, niet eerder).</span></li>
+      <li class="step"><span class="sn">2</span><span class="st">Haal het <strong>frame los</strong> van het pakket.</span></li>
+      <li class="step"><span class="sn">3</span><span class="st">Plaats de <strong>hoekjes</strong> in het frame (indien niet al gedaan bij voorbereiding).</span></li>
+      <li class="step"><span class="sn">4</span><span class="st">Druk <strong>foampjes (schuimpjes)</strong> in het frame - <strong>3 zijden:</strong></span></li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Welke zijden vullen?</span></div>
+    <div style="display:flex;justify-content:center;margin:16px 0;">
+      <div style="width:280px;height:200px;border:3px solid var(--thg-gr);border-radius:4px;position:relative;background:#fff;">
+        <div style="position:absolute;top:-28px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:700;color:var(--err);">BOVENZIJDE - NIET vullen</div>
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--err);"></div>
+        <div style="position:absolute;left:-80px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:var(--ok);">LINKS foampjes</div>
+        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ok);"></div>
+        <div style="position:absolute;right:-85px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:var(--ok);">RECHTS foampjes</div>
+        <div style="position:absolute;right:0;top:0;bottom:0;width:3px;background:var(--ok);"></div>
+        <div style="position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:700;color:var(--ok);">ONDERZIJDE - foampjes</div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--ok);"></div>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;font-size:13px;color:var(--thg-gr);"><strong>FRAME</strong><br><small>(screen hangt<br>aan bovenzijde)</small></div>
+      </div>
+    </div>
+    <div class="al al-r"><span class="ai">STOP</span><span><strong>De bovenzijde wordt NIET gevuld.</strong> Alleen links, rechts en onderzijde krijgen foampjes.</span></div>
+  </div>
+</div>
+<div id="view-butyl" class="view">
+  <div class="pg-title">4. Butyleren, Vullen en Extruderen</div>
+  <div class="pg-sub">Stap 4 - Droogkorrels vullen, schoonmaken, butyl aanbrengen</div>
+  <div class="tabs">
+    <button class="tb on" onclick="tab(this,'bt','proces')">Proces</button>
+    <button class="tb" onclick="tab(this,'bt','machine')">Bestmachina</button>
+    <button class="tb" onclick="tab(this,'bt','schoon')">Schoonmaken</button>
+  </div>
+  <div id="bt-proces" class="tp on">
+    <div class="card">
+      <div class="ct"><span class="ic">Vul- en butyleerprocedure</span></div>
+      <ul class="steps">
+        <li class="step"><span class="sn">1</span><span class="st">Verplaats het voorbereide frame (met foampjes) naar de <strong>vulplek</strong>.</span></li>
+        <li class="step"><span class="sn">2</span><span class="st"><strong>Schoonmaken met alcohol</strong> - rondom het frame (binnenkant + buitenrand).</span></li>
+        <li class="step"><span class="sn">3</span><span class="st"><strong>Droogkorrels vullen</strong> via de foampjes - vul de drie zijden volledig.</span></li>
+        <li class="step"><span class="sn">4</span><span class="st"><strong>Butyl aanbrengen</strong> met de Bestmachina op de rand van het frame.</span></li>
+        <li class="step"><span class="sn green">5</span><span class="st"><strong>Extruderen</strong> - breng de butyllaag gelijkmatig aan rondom het frame.</span></li>
+      </ul>
+    </div>
+    <div class="g2">
+      <div class="kpi gold"><div class="kn">4 g/m</div><div class="kl">Butyldikte target per strekkende meter</div></div>
+      <div class="kpi"><div class="kn">Dikker</div><div class="kl">Dan standaard ISO voor goede hechting Polysun</div></div>
+    </div>
+    <div class="al al-y"><span class="ai">Let op</span><span><strong>Polysun vereist dikkere butyllaag</strong> dan reguliere ISO-productie. Controleer altijd de instelling van de Bestmachina.</span></div>
+  </div>
+  <div id="bt-machine" class="tp">
+    <div class="card">
+      <div class="ct"><span class="ic">Bestmachina instellen voor Polysun</span></div>
+      <ul class="steps">
+        <li class="step"><span class="sn">1</span><span class="st"><strong>Controleer de drukinstelling.</strong> Voer de druk op tot de butyluitgifte voldoende is.</span></li>
+        <li class="step"><span class="sn">2</span><span class="st"><strong>Maximale druk: 6 bar.</strong> Ga niet hoger.</span></li>
+        <li class="step"><span class="sn">3</span><span class="st">Als 6 bar onvoldoende is: draai de <strong>stelschroeven bij de buitenkop</strong> een <strong>halve slag open</strong>.</span></li>
+        <li class="step"><span class="sn red">4</span><span class="st">Test de uitgifte op een proefstuk voordat je aan de batch begint.</span></li>
+      </ul>
+      <div class="al al-r"><span class="ai">STOP</span><span><strong>NOOIT boven 6 bar.</strong> Als druk + stelschroeven niet voldoende geven, meld dit bij de teamleider.</span></div>
+      <table class="t">
+        <thead><tr><th>Instelling</th><th>Waarde Polysun</th><th>Waarde standaard ISO</th></tr></thead>
+        <tbody>
+          <tr><td>Druk</td><td><strong>Tot max. 6 bar</strong></td><td>Lager (standaard)</td></tr>
+          <tr><td>Stelschroeven buitenkop</td><td>Evt. halve slag open</td><td>Standaard positie</td></tr>
+          <tr><td>Butyldikte target</td><td><strong>~4 g/m</strong></td><td>Standaard</td></tr>
+        </tbody>
+      </table>
+      <div class="al al-gold"><span class="ai">Belangrijk</span><span><strong>Na Polysun-batch:</strong> Stel de Bestmachina terug naar standaard ISO-instellingen! Vergeet de stelschroeven niet terug te draaien.</span></div>
+    </div>
+  </div>
+  <div id="bt-schoon" class="tp">
+    <div class="card">
+      <div class="ct"><span class="ic">Schoonmaakmethode</span></div>
+      <ul class="steps">
+        <li class="step"><span class="sn">1</span><span class="st">Gebruik <strong>alcohol</strong> op een schone doek.</span></li>
+        <li class="step"><span class="sn">2</span><span class="st">Maak de <strong>binnenkant</strong> van het frame schoon - dit is het aangezicht in de spouw.</span></li>
+        <li class="step"><span class="sn">3</span><span class="st">Maak de <strong>buitenrand</strong> van het frame schoon - voor butylhechting.</span></li>
+        <li class="step"><span class="sn green">4</span><span class="st">Direct daarna butyleren - laat het frame niet onnodig lang open liggen (vuil/stof).</span></li>
+      </ul>
+      <div class="al al-b"><span class="ai">Tip</span><span>Schoonmaken en butyleren in <strong>een handeling</strong> aan de vulplek = minder vervuiling, minder dubbel werk.</span></div>
+    </div>
+  </div>
+</div>
+<div id="view-ophangen" class="view">
+  <div class="pg-title">5. Ophangen en Overdracht ISO-lijn</div>
+  <div class="pg-sub">Stap 5 - Frames ophangen en assembleren binnen 24 uur</div>
+  <div class="card">
+    <div class="ct"><span class="ic">Ophangen</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Na butyleren: hang het Polysun-frame <strong>direct op</strong> in het rek/houder.</span></li>
+      <li class="step"><span class="sn">2</span><span class="st">Hang de frames gegroepeerd <strong>per batch</strong>.</span></li>
+      <li class="step"><span class="sn">3</span><span class="st">Zorg dat de <strong>productiesticker</strong> bij het juiste frame blijft.</span></li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Tijdseis: assemblage binnen 24 uur</span></div>
+    <div class="kpi red" style="margin:16px 0;"><div class="kn">&lt; 24 uur</div><div class="kl">Maximale tijd tussen ophangen en assemblage op ISO-lijn</div></div>
+    <div class="al al-r"><span class="ai">STOP</span><span><strong>Liefst dezelfde dag assembleren.</strong> Butyl verhardt en de hechting wordt minder goed als frames te lang hangen.</span></div>
+    <div class="al al-b"><span class="ai">Tip</span><span>Als je weet dat de ISO-lijn vandaag niet meer toekomt aan Polysun, bereid dan niet meer frames voor dan de lijn morgenochtend kan verwerken.</span></div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Overdracht aan ISO-lijn</span></div>
+    <p>De opgehangen Polysun-frames worden op de reguliere ISO-lijn als <strong>derde element</strong> in het isolatieglas samengebouwd.</p>
+    <div class="al al-g"><span class="ai">OK</span><span>Communiceer actief met de ISO-lijn operator als er meerdere batches klaarstaan.</span></div>
+  </div>
+</div>
+<div id="view-manco" class="view">
+  <div class="pg-title">6. Manco-procedure</div>
+  <div class="pg-sub">Wat te doen als pakketten of onderdelen ontbreken</div>
+  <div class="card">
+    <div class="ct"><span class="ic">Wanneer treedt een manco op?</span></div>
+    <p>Een manco ontstaat als een Pellini-pakket <strong>niet (tijdig) is geleverd</strong> terwijl de batch al in productie moet.</p>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Manco-registratie stap voor stap</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn red">1</span><span class="st">Zet een <strong>rood kruis</strong> op het formulier bij het betreffende batchnummer met rode stift.</span></li>
+      <li class="step"><span class="sn red">2</span><span class="st">Noteer erbij: <strong>"Nog manco"</strong>.</span></li>
+      <li class="step"><span class="sn">3</span><span class="st">Schuif het formulier in het <strong>mapje "Manco Polysun"</strong>.</span></li>
+      <li class="step"><span class="sn">4</span><span class="st">De <strong>productiesticker blijft bewaard</strong> - gooi deze niet weg.</span></li>
+      <li class="step"><span class="sn green">5</span><span class="st">Zodra het ontbrekende pakket binnenkomt: haal het formulier uit het manco-mapje en verwerk de positie alsnog.</span></li>
+    </ul>
+    <div class="al al-y"><span class="ai">Let op</span><span><strong>Manco-mapje nooit leeggooien.</strong> Aan het einde van een batch/periode controleer je het mapje op openstaande mancos.</span></div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Manco-mapje overzicht</span></div>
+    <table class="t">
+      <thead><tr><th>Actie</th><th>Wanneer</th><th>Door wie</th></tr></thead>
+      <tbody>
+        <tr><td>Formulier inschuiven met rood kruis</td><td>Direct bij constatering manco</td><td>Polysun-operator</td></tr>
+        <tr><td>Mapje controleren op openstaande mancos</td><td>Einde batch / einde week</td><td>Polysun-operator + planner</td></tr>
+        <tr><td>Manco alsnog verwerken</td><td>Na ontvangst ontbrekend pakket</td><td>Polysun-operator</td></tr>
+        <tr><td>Productiesticker koppelen aan alsnog verwerkt item</td><td>Bij verwerking manco</td><td>Polysun-operator</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div id="view-checklist" class="view">
+  <div class="pg-title">Checklist Polysun Assemblage</div>
+  <div class="pg-sub">Gebruik per batch - vink af wat gereed is</div>
+  <div class="card">
+    <div class="ct"><span class="ic">Voor start batch</span></div>
+    <div class="cl">
+      <div class="ci"><input type="checkbox" id="c1"><label for="c1">Pellini-pakketten gesorteerd op batchnummer</label></div>
+      <div class="ci"><input type="checkbox" id="c2"><label for="c2">Glas per batch gesneden en klaargezet</label></div>
+      <div class="ci"><input type="checkbox" id="c3"><label for="c3">Batchnummer glas = batchnummer pakketten</label></div>
+      <div class="ci"><input type="checkbox" id="c4"><label for="c4">Alcohol, foampjes, hoekjes op werkplek aanwezig</label></div>
+      <div class="ci"><input type="checkbox" id="c5"><label for="c5">Bestmachina ingesteld op Polysun (dikkere butyl, max 6 bar)</label></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Per frame</span></div>
+    <div class="cl">
+      <div class="ci"><input type="checkbox" id="c6"><label for="c6">Plastic verpakking verwijderd (beschermfolie laten zitten)</label></div>
+      <div class="ci"><input type="checkbox" id="c7"><label for="c7">Hoekjes geplaatst</label></div>
+      <div class="ci"><input type="checkbox" id="c8"><label for="c8">Foampjes ingedrukt - 3 zijden (links, rechts, onder)</label></div>
+      <div class="ci"><input type="checkbox" id="c9"><label for="c9">Bovenzijde NIET gevuld</label></div>
+      <div class="ci"><input type="checkbox" id="c10"><label for="c10">Frame schoongemaakt met alcohol (binnenkant + randen)</label></div>
+      <div class="ci"><input type="checkbox" id="c11"><label for="c11">Droogkorrels gevuld via foampjes</label></div>
+      <div class="ci"><input type="checkbox" id="c12"><label for="c12">Butyl aangebracht (~4 g/m) en geextrudeerd</label></div>
+      <div class="ci"><input type="checkbox" id="c13"><label for="c13">Frame opgehangen met productiesticker</label></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Na batch</span></div>
+    <div class="cl">
+      <div class="ci"><input type="checkbox" id="c14"><label for="c14">Alle frames opgehangen per batch</label></div>
+      <div class="ci"><input type="checkbox" id="c15"><label for="c15">Mancos geregistreerd in mapje "Manco Polysun"</label></div>
+      <div class="ci"><input type="checkbox" id="c16"><label for="c16">ISO-lijn geinformeerd over klaarstaande batch(es)</label></div>
+      <div class="ci"><input type="checkbox" id="c17"><label for="c17">Assemblage gepland &lt; 24 uur (liefst dezelfde dag)</label></div>
+      <div class="ci"><input type="checkbox" id="c18"><label for="c18">Bestmachina teruggesteld naar standaard ISO-instellingen</label></div>
+    </div>
+  </div>
+</div>
+</div>
+<footer>
+  <span>DWI-ISO-POL-001 - Polysun Assemblage - v1.0 - <span id="footer-date"></span></span>
+  <span>Timmermans Hardglas B.V. | Handelsstraat 55-57 | 7772 TS Hardenberg</span>
+</footer>
+<script>
+var d=new Date().toLocaleDateString('nl-NL',{day:'2-digit',month:'2-digit',year:'numeric'});
+document.getElementById('doc-date').textContent=d;
+document.getElementById('footer-date').textContent=d;
+function go(name){document.querySelectorAll('.view').forEach(function(v){v.classList.remove('on')});document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on')});var el=document.getElementById('view-'+name);if(el)el.classList.add('on');document.querySelectorAll('.nb').forEach(function(b){var oc=b.getAttribute('onclick')||'';if(oc.indexOf("'"+name+"'")>-1)b.classList.add('on')});window.scrollTo(0,0)}
+function tab(btn,group,name){document.querySelectorAll('[id^="'+group+'-"]').forEach(function(p){p.classList.remove('on')});btn.closest('.tabs').querySelectorAll('.tb').forEach(function(b){b.classList.remove('on')});btn.classList.add('on');var panel=document.getElementById(group+'-'+name);if(panel)panel.classList.add('on')}
+</script>
+</body>
+</html>

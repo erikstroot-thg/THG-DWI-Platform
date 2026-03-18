@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DWI-CNC-001 — Boormachine Opstarten & Instellen</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Calibri, 'Segoe UI', Arial, sans-serif;
+            background: #f0f4f8;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .dwi-header {
+            background: linear-gradient(135deg, #005A9C 0%, #004678 100%);
+            color: white;
+            padding: 24px 32px;
+        }
+        .dwi-header .back-link {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+        .dwi-header .back-link:hover { color: white; }
+        .dwi-header .doc-code {
+            font-size: 13px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .dwi-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+        .dwi-header .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-top: 12px;
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        /* Main content */
+        .content {
+            max-width: 900px;
+            margin: 24px auto;
+            padding: 0 24px;
+        }
+
+        /* Info box */
+        .info-box {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .info-box h2 {
+            font-size: 18px;
+            color: #004678;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #D5E8F0;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 24px;
+        }
+        .info-grid dt {
+            font-weight: 600;
+            color: #595959;
+            font-size: 13px;
+        }
+        .info-grid dd {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        /* Requirements */
+        .req-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .req-tag {
+            background: #D5E8F0;
+            color: #004678;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .req-tag.pbm {
+            background: #FFF3E0;
+            color: #E8750A;
+        }
+
+        /* Steps */
+        .step {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-left: 5px solid #005A9C;
+            position: relative;
+        }
+        .step-number {
+            position: absolute;
+            top: -12px;
+            left: -12px;
+            width: 40px;
+            height: 40px;
+            background: #005A9C;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 0 2px 6px rgba(0,90,156,0.3);
+        }
+        .step h3 {
+            font-size: 18px;
+            color: #004678;
+            margin-left: 24px;
+            margin-bottom: 8px;
+        }
+        .step p {
+            margin-left: 24px;
+            color: #595959;
+            font-size: 15px;
+        }
+        .step .substeps {
+            margin: 12px 0 0 24px;
+            padding-left: 20px;
+        }
+        .step .substeps li {
+            margin-bottom: 6px;
+            color: #595959;
+        }
+        .step .warning {
+            margin: 12px 0 0 24px;
+            background: #FFF3E0;
+            border-left: 4px solid #E8750A;
+            padding: 10px 14px;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            color: #B35600;
+        }
+        .step .tip {
+            margin: 12px 0 0 24px;
+            background: #E8F5E9;
+            border-left: 4px solid #00A651;
+            padding: 10px 14px;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            color: #2E7D32;
+        }
+        .step .photo-placeholder {
+            margin: 12px 0 0 24px;
+            background: #f0f4f8;
+            border: 2px dashed #D5E8F0;
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* Deviation table */
+        .deviation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        .deviation-table th {
+            background: #005A9C;
+            color: white;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 13px;
+        }
+        .deviation-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+        .deviation-table tr:nth-child(even) { background: #f8fafb; }
+
+        /* Approval block */
+        .approval {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-top: 4px solid #00A651;
+        }
+        .approval h2 { color: #00A651; margin-bottom: 12px; }
+        .approval-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .approval-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .approval-item .label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .approval-item .name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #004678;
+            margin-top: 4px;
+        }
+        .approval-item .date {
+            font-size: 13px;
+            color: #595959;
+            margin-top: 2px;
+        }
+
+        /* Footer */
+        .dwi-footer {
+            text-align: center;
+            padding: 32px;
+            color: #999;
+            font-size: 13px;
+        }
+
+        /* Print */
+        @media print {
+            body { background: white; }
+            .dwi-header .back-link { display: none; }
+            .step, .info-box, .approval { box-shadow: none; border: 1px solid #ddd; }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .dwi-header { padding: 16px; }
+            .dwi-header h1 { font-size: 22px; }
+            .content { padding: 0 12px; }
+            .info-grid { grid-template-columns: 1fr; }
+            .approval-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="dwi-header">
+        <a href="../index.html" class="back-link">&#8592; Terug naar overzicht</a>
+        <div class="doc-code">DWI-CNC-001</div>
+        <h1>Boormachine Opstarten & Instellen</h1>
+        <div class="meta-row">
+            <span><strong>Station:</strong> 3 — CNC / Boren</span>
+            <span><strong>Machine:</strong> Bohle boormachine</span>
+            <span><strong>Versie:</strong> v1.0</span>
+            <span><strong>Datum:</strong> 10-03-2026</span>
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Document info -->
+        <div class="info-box">
+            <h2>Documentgegevens</h2>
+            <div class="info-grid">
+                <dt>Documentnummer</dt><dd>DWI-CNC-001</dd>
+                <dt>Versie</dt><dd>v1.0</dd>
+                <dt>Station</dt><dd>3 — CNC / Boren</dd>
+                <dt>Datum</dt><dd>10-03-2026</dd>
+                <dt>Machine</dt><dd>Bohle boormachine (Siemens SIMATIC + WEINTEK touchscreen)</dd>
+                <dt>Auteur</dt><dd>Alex Tabarcia</dd>
+                <dt>Goedgekeurd door</dt><dd>Erik Stroot</dd>
+                <dt>Volgende review</dt><dd>10-09-2026</dd>
+            </div>
+        </div>
+
+        <!-- Benodigdheden -->
+        <div class="info-box">
+            <h2>Benodigdheden</h2>
+            <h3 style="font-size:14px; color:#595959; margin-bottom:8px;">Gereedschap & materialen</h3>
+            <div class="req-list">
+                <span class="req-tag">Bahco 250mm liniaal</span>
+                <span class="req-tag">Testglas</span>
+            </div>
+            <h3 style="font-size:14px; color:#595959; margin: 16px 0 8px;">PBM's (Persoonlijke Beschermingsmiddelen)</h3>
+            <div class="req-list">
+                <span class="req-tag pbm">Veiligheidsschoenen</span>
+                <span class="req-tag pbm">Veiligheidsbril</span>
+                <span class="req-tag pbm">Snijbestendige handschoenen</span>
+            </div>
+        </div>
+
+        <!-- Stap 1 -->
+        <div class="step">
+            <div class="step-number">1</div>
+            <h3>Machine inschakelen</h3>
+            <p>Druk op de <strong>groene knop</strong> in de gele behuizing om de machine in te schakelen.</p>
+            <div class="photo-placeholder">&#128247; Foto: groene startknop in gele behuizing</div>
+        </div>
+
+        <!-- Stap 2 -->
+        <div class="step">
+            <div class="step-number">2</div>
+            <h3>Tafel resetten</h3>
+            <ol class="substeps">
+                <li>Druk op de <strong>rode knop</strong> (noodstop opheffen)</li>
+                <li>Houd de <strong>blauwe knop</strong> 3 seconden ingedrukt</li>
+                <li>Druk op <strong>Reset</strong> op het WEINTEK touchscreen</li>
+            </ol>
+            <div class="warning">&#9888; Controleer of de tafel vrij is van obstakels voordat je reset uitvoert.</div>
+        </div>
+
+        <!-- Stap 3 -->
+        <div class="step">
+            <div class="step-number">3</div>
+            <h3>Waterkranen openen</h3>
+            <p>Open <strong>beide groene kogelkranen</strong> — draai ze naar de horizontale stand.</p>
+            <div class="tip">&#10003; Controleer of er water doorstroomt. Zonder water mag er niet geboord worden.</div>
+        </div>
+
+        <!-- Stap 4 -->
+        <div class="step">
+            <div class="step-number">4</div>
+            <h3>Tafelbeweging inschakelen</h3>
+            <p>Druk op <strong>"Turn on"</strong> op het WEINTEK touchscreen om de tafelbeweging te activeren.</p>
+        </div>
+
+        <!-- Stap 5 -->
+        <div class="step">
+            <div class="step-number">5</div>
+            <h3>SET 0 instellen</h3>
+            <ol class="substeps">
+                <li>Stel in: <strong>X = 60</strong>, <strong>Y = 27</strong></li>
+                <li>Druk op <strong>Play</strong></li>
+                <li>Leg een <strong>testglas</strong> op de tafel</li>
+                <li>Druk op de <strong>Nullen-knop</strong></li>
+                <li>Stel de <strong>bovenboor</strong> in</li>
+                <li>Stel de <strong>onderboor</strong> in</li>
+            </ol>
+            <div class="warning">&#9888; Gebruik altijd een testglas. Stel nooit de SET 0 in zonder testglas.</div>
+        </div>
+
+        <!-- Stap 6 -->
+        <div class="step">
+            <div class="step-number">6</div>
+            <h3>Automatic Drilling starten</h3>
+            <ol class="substeps">
+                <li>Open het <strong>Bohle menu</strong> op het touchscreen</li>
+                <li>Ga naar <strong>AUTOMATIC DRILLING</strong></li>
+                <li>Druk op <strong>START</strong></li>
+            </ol>
+        </div>
+
+        <!-- Stap 7 -->
+        <div class="step">
+            <div class="step-number">7</div>
+            <h3>Meten & keuren</h3>
+            <p>Meet het eerste geboorde glas met de <strong>Bahco 250mm liniaal</strong>.</p>
+            <p>Controleer of de boorgaten op de juiste positie zitten en de randen schoon zijn.</p>
+            <div class="tip">&#10003; Eerste stuk altijd controleren voordat de serie wordt gestart.</div>
+        </div>
+
+        <!-- Afwijkingstabel -->
+        <div class="info-box">
+            <h2>Afwijkingen & Corrigerende acties</h2>
+            <table class="deviation-table">
+                <thead>
+                    <tr>
+                        <th>Afwijking</th>
+                        <th>Mogelijke oorzaak</th>
+                        <th>Actie</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Boorgat op verkeerde positie</td>
+                        <td>SET 0 niet correct ingesteld</td>
+                        <td>Herhaal stap 5 met nieuw testglas</td>
+                    </tr>
+                    <tr>
+                        <td>Uitbrokkeling rond boorgat</td>
+                        <td>Boor versleten of waterdruk te laag</td>
+                        <td>Boor vervangen, waterdruk controleren</td>
+                    </tr>
+                    <tr>
+                        <td>Machine stopt tijdens boren</td>
+                        <td>Noodstop geactiveerd of storing</td>
+                        <td>Herhaal stap 2 (reset), controleer foutmelding</td>
+                    </tr>
+                    <tr>
+                        <td>Geen water tijdens boren</td>
+                        <td>Kogelkranen niet open</td>
+                        <td>Stop machine! Herhaal stap 3</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Goedkeuringsblok -->
+        <div class="approval">
+            <h2>Goedkeuring</h2>
+            <div class="approval-grid">
+                <div class="approval-item">
+                    <div class="label">Opgesteld door</div>
+                    <div class="name">Alex Tabarcia</div>
+                    <div class="date">Operator CNC — 10-03-2026</div>
+                </div>
+                <div class="approval-item">
+                    <div class="label">Goedgekeurd door</div>
+                    <div class="name">Erik Stroot</div>
+                    <div class="date">Procesoptimalisatie — 10-03-2026</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="dwi-footer">
+        DWI-CNC-001 v1.0 — Timmermans Hardglas B.V. — Vertrouwelijk
+    </div>
+
+</body>
+</html>
