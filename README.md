@@ -1,72 +1,22 @@
-# THG-DWI-Platform
-
-Digitale Werkinstructies (DWI) portaal voor **Timmermans Hardglas B.V.**
-
-## Wat is dit?
-
-Een HTML-gebaseerd intranetportaal met digitale werkinstructies per productiestation.
-Elke DWI is een visuele, stap-voor-stap instructie die direct bruikbaar is op de werkvloer.
-
-## Productiestations
-
-| Nr | Station | Code |
-|----|---------|------|
-| 1  | Ontvangst / Goederenontvangst | ONT |
-| 2  | Snijlijn | SNI |
-| 3  | CNC / Boren | CNC |
-| 4  | Slijpen / Kantenbewerking | SLI |
-| 5  | Wassen | WSS |
-| 6  | Hardoven (ESG) | ESG |
-| 7  | Lamineren (VSG) | VSG |
-| 8  | ISO-lijn (isolatieglas) | ISO |
-| 9  | Inspectie / Kwaliteitscontrole | QC |
-| 10 | Expeditie / Sortering | EXP |
-
-## Opgeleverde DWI's
-
-| Code | Omschrijving | Status |
-|------|-------------|--------|
-| DWI-CNC-001 | Boormachine Opstarten & Instellen | ✅ Gereed |
-| DWI-SNI-001 | Snijlijn opstarten | 📋 Backlog |
-| DWI-ISO-001 | ISO-lijn handeling | 📋 Backlog |
-| DWI-ESG-001 | Hardoven opstarten | 📋 Backlog |
-
-## Portaal openen
-
-Open in Chrome/Edge op elke netwerkwerkplek:
-```
-\\DATA-TIMMERMANS\data\CNC orders\DigitaleWerkInstructies\dwi_intranet\index.html
-```
-
-Of na clonen:
-```
-dwi_intranet/index.html
-```
-
-## Bestandsnaamconventie
-
-```
-DWI-[STATION]-[VOLGNR]_[Omschrijving].html
-```
-
-Voorbeelden:
-- `DWI-CNC-001_Boormachine.html` → Station 3
-- `DWI-WSS-001_Wassen_Opstarten.html` → Station 5
-- `DWI-ESG-001_Hardoven_Opstarten.html` → Station 6
-
-## Nieuwe DWI toevoegen
-
-1. Bronmateriaal verzamelen (WhatsApp-export, video, document)
-2. HTML DWI genereren in THG-huisstijl
-3. Opslaan als `dwi_intranet/dwi/DWI-[CODE]-[NR]_[Omschrijving].html`
-4. Kaart toevoegen aan `dwi_intranet/index.html`
-
-## Tech
-
-Puur HTML/CSS — geen build tools, geen server, geen dependencies.
-Werkt direct vanuit de bestandsverkenner of een webserver.
-
-## Eigenaar
-
-**Erik Stroot** — Timmermans Hardglas B.V.
-Ontwikkeling via Claude Code.
+THG – Klachtenregistratie (Word + Power Apps + Dataverse)
+Dit project bevat:
+⦁	Een standaard klachtenregistratieproces voor Timmermans Hardglas B.V.
+⦁	Power Apps (phone layout) + Dataverse tabel THG_Klachten.
+⦁	Power Automate flows (meldingen/escalaties).
+⦁	Word-sjabloon in THG-huisstijl voor offline/extern gebruik.
+⦁	Prompts voor GitHub Copilot/Codex om sneller te bouwen en te wijzigen.
+Inhoud
+⦁	Architectuur
+⦁	Repo-structuur
+⦁	Snel starten
+⦁	Dataverse-schema
+⦁	Power Apps
+⦁	Power Automate
+⦁	Word-sjabloon
+⦁	Traceerbaarheid (A+W + Shiftbase + Transport)
+⦁	Beheer & beveiliging
+⦁	CI/CD (GitHub Actions)
+⦁	Copilot/Codex Prompts
+⦁	Contributing
+⦁	Licentie
+(Compacte versie — uitgebreide versie op verzoek.)

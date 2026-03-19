@@ -1,19 +1,5 @@
-# OS
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# Editor
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Environment
+node_modules/
 .env
-.env.local
-
-# Backup
-*.bak
-*.tmp
-*~
+*.env.local
+*.env.*.local
+src/uploads/
