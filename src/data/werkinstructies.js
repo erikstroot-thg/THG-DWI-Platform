@@ -1,178 +1,751 @@
-/**
- * Werkinstructies data — Timmermans Hardglas B.V.
- *
- * Stations:
- *  1. ONT - Ontvangst
- *  2. SNI - Snijlijn
- *  3. CNC - CNC/Boren
- *  4. SLI - Slijpen
- *  5. WSS - Wassen
- *  6. ESG - Hardoven
- *  7. VSG - Lamineren
- *  8. ISO - ISO-lijn
- *  9. QC  - Inspectie
- * 10. EXP - Expeditie
- */
+// Timmermans Hardglas - Digitale Werkinstructies (DWI) Database
+// Auto-generated from HTML source documents
+// Updated: 21-03-2026
 
-export const stations = [
+export const STATIONS = [
   { code: 'alle', label: 'Alle stations', nummer: null },
   { code: 'ONT', label: 'Ontvangst', nummer: 1 },
   { code: 'SNI', label: 'Snijlijn', nummer: 2 },
-  { code: 'CNC', label: 'CNC/Boren', nummer: 3 },
-  { code: 'SLI', label: 'Slijpen', nummer: 4 },
-  { code: 'WSS', label: 'Wassen', nummer: 5 },
-  { code: 'ESG', label: 'Hardoven', nummer: 6 },
-  { code: 'VSG', label: 'Lamineren', nummer: 7 },
-  { code: 'ISO', label: 'ISO-lijn', nummer: 8 },
-  { code: 'QC', label: 'Inspectie', nummer: 9 },
-  { code: 'EXP', label: 'Expeditie', nummer: 10 },
-]
+  { code: 'CNC', label: 'CNC', nummer: 3 },
+  { code: 'BOR', label: 'Boren', nummer: 4 },
+  { code: 'SLI', label: 'Slijpen', nummer: 5 },
+  { code: 'WSS', label: 'Wassen', nummer: 6 },
+  { code: 'ESG', label: 'Hardoven', nummer: 7 },
+  { code: 'VSG', label: 'Lamineren', nummer: 8 },
+  { code: 'ISO', label: 'ISO-lijn', nummer: 9 },
+  { code: 'QC', label: 'Inspectie', nummer: 10 },
+  { code: 'EXP', label: 'Expeditie', nummer: 11 },
+];
 
-export const werkinstructies = [
+export const WERKINSTRUCTIES = [
+  // ============================================================================
+  // DWI-BOR-001: Boormachine Opstarten & Instellen (Station 4: Boren)
+  // ============================================================================
   {
-    id: 'DWI-CNC-001',
+    id: 'DWI-BOR-001',
     titel: 'Boormachine Opstarten & Instellen',
-    station: 'CNC',
-    stationLabel: 'Station 3 \u00b7 CNC / Boren',
-    machine: 'Bohle boormachine (Siemens SIMATIC + WEINTEK)',
-    samenvatting:
-      '7 fasen: inschakelen \u2192 resetten \u2192 water \u2192 tafel \u2192 SET 0 \u2192 drilling \u2192 meten',
+    station: 'BOR',
+    stationNummer: 4,
+    machine: 'Bohle boormachine (Siemens SIMATIC + WEINTEK touchscreen)',
+    auteur: 'Alex Tabarcia',
+    goedgekeurd: 'Erik Stroot',
     versie: '1.0',
     datum: '10-03-2026',
-    auteur: 'Alex Tabarcia',
-    goedgekeurdDoor: 'Erik Stroot',
+    volgendeReview: '10-09-2026',
     status: 'gereed',
-    zoektermen: 'boormachine boren cnc opstarten instellen bohle siemens weintek',
+    gereedschap: [
+      'Bahco 250mm liniaal',
+      'Testglas'
+    ],
+    pbm: [
+      'Veiligheidsschoenen',
+      'Veiligheidsbril',
+      'Snijbestendige handschoenen'
+    ],
     stappen: [
       {
         nummer: 1,
         titel: 'Machine inschakelen',
-        beschrijving:
-          'Druk op de groene startknop aan de rechterzijde van de machine. Wacht tot het WEINTEK-touchscreen volledig is opgestart (ca. 30 seconden).',
+        beschrijving: 'Druk op de groene knop in de gele behuizing',
         waarschuwing: null,
-        tip: 'Het touchscreen toont het Bohle-logo wanneer het systeem gereed is.',
+        tip: null,
+        substappen: null
       },
       {
         nummer: 2,
         titel: 'Tafel resetten',
-        beschrijving:
-          'Druk de noodstop in en weer uit (kwartslag draaien). Druk vervolgens op de blauwe resetknop. Op het WEINTEK-scherm verschijnt "Machine gereset".',
-        waarschuwing:
-          'Controleer of er geen glas of gereedschap op de tafel ligt voordat je reset.',
+        beschrijving: 'Zet de tafel gereed voor gebruik',
+        waarschuwing: 'Controleer of de tafel vrij is van obstakels',
         tip: null,
+        substappen: [
+          'Druk rode knop in (noodstop opheffen)',
+          'Druk blauwe knop 3 seconden in',
+          'Druk "Reset" op WEINTEK touchscreen'
+        ]
       },
       {
         nummer: 3,
-        titel: 'Watertoevoer openen',
-        beschrijving:
-          'Open de twee waterkranen onder de machine door ze in horizontale positie te zetten. Controleer of water uit de boorkoppen stroomt.',
-        waarschuwing:
-          'Zonder water raken de boorkronen oververhit en beschadigen ze het glas.',
-        tip: null,
+        titel: 'Waterkranen openen',
+        beschrijving: 'Beide groene kogelkranen horizontaal draaien',
+        waarschuwing: null,
+        tip: 'Controleer of er water doorstroomt. Zonder water mag er niet geboord worden.',
+        substappen: null
       },
       {
         nummer: 4,
         titel: 'Tafelbeweging inschakelen',
-        beschrijving:
-          'Activeer de tafelbeweging via het WEINTEK-touchscreen: Menu \u2192 Tafel \u2192 Inschakelen. De tafel beweegt nu naar de startpositie.',
+        beschrijving: 'Activeer de tafelbeweging via de touchscreen',
         waarschuwing: null,
         tip: null,
+        substappen: [
+          'Druk "Turn on" op WEINTEK touchscreen'
+        ]
       },
       {
         nummer: 5,
-        titel: 'Referentiepunt instellen (SET 0)',
-        beschrijving:
-          'Stel het referentiepunt in op X=60, Y=27 via het WEINTEK-scherm. Dit is het standaard nulpunt voor de Bohle boormachine.',
-        waarschuwing: null,
-        tip: 'Controleer de waarden altijd bij de eerste run van de dag.',
+        titel: 'SET 0 instellen',
+        beschrijving: 'Stel de nulpunt in voor X en Y coördinaten',
+        waarschuwing: 'Gebruik altijd een testglas. Stel nooit de SET 0 in zonder testglas.',
+        tip: null,
+        substappen: [
+          'Stel X = 60 in',
+          'Stel Y = 27 in',
+          'Druk "Play"',
+          'Plaats testglas op tafel',
+          'Druk "Nullen"-knop',
+          'Stel bovenboor in',
+          'Stel onderboor in'
+        ]
       },
       {
         nummer: 6,
-        titel: 'Automatisch boren starten',
-        beschrijving:
-          'Plaats het glasstuk op de tafel tegen de aanslag. Druk op de groene startknop op het touchscreen om het boorprogramma te starten.',
-        waarschuwing:
-          'Draag altijd veiligheidsbril en gehoorbescherming tijdens het boren.',
+        titel: 'Automatic Drilling starten',
+        beschrijving: 'Start het automatische boorproces',
+        waarschuwing: null,
         tip: null,
+        substappen: [
+          'Ga naar Bohle menu',
+          'Selecteer "AUTOMATIC DRILLING"',
+          'Druk "START"'
+        ]
       },
       {
         nummer: 7,
-        titel: 'Eerste stuk meten & controleren',
-        beschrijving:
-          'Meet de boorgaten met een schuifmaat. Controleer: diameter, positie (X/Y), loodrechtheid en braamvorming. Registreer de meetwaarden op het controleformulier.',
+        titel: 'Meten & keuren',
+        beschrijving: 'Meet en keur het geboortte glas',
         waarschuwing: null,
-        tip: 'Bij afwijking > 0.5mm: stop productie en meld aan de kwaliteitsafdeling.',
-      },
+        tip: 'Eerste stuk altijd controleren voordat de serie wordt gestart.',
+        substappen: [
+          'Pak Bahco 250mm liniaal',
+          'Meet boorgatpositie',
+          'Controleer afmetingen'
+        ]
+      }
     ],
-    pbm: ['Veiligheidsbril', 'Gehoorbescherming', 'Veiligheidsschoenen', 'Snijbestendige handschoenen'],
-    gereedschap: ['Schuifmaat', 'Controleformulier', 'Schoonmaakdoek'],
+    afwijkingen: [
+      {
+        afwijking: 'Boorgat op verkeerde positie',
+        oorzaak: 'SET 0 niet correct ingesteld',
+        actie: 'Herhaal stap 5 met nieuw testglas'
+      },
+      {
+        afwijking: 'Uitbrokkeling rond boorgat',
+        oorzaak: 'Boor versleten of waterdruk te laag',
+        actie: 'Boor vervangen, waterdruk controleren'
+      },
+      {
+        afwijking: 'Machine stopt tijdens boren',
+        oorzaak: 'Noodstop geactiveerd of storing',
+        actie: 'Herhaal stap 2 (reset), controleer foutmelding'
+      },
+      {
+        afwijking: 'Geen water tijdens boren',
+        oorzaak: 'Kogelkranen niet open',
+        actie: 'Stop machine! Herhaal stap 3'
+      }
+    ],
+    zoektermen: 'boormachine bohle siemens weintek touchscreen boren opstarten set 0 nulpunt testglas'
   },
+
+  // ============================================================================
+  // DWI-SNI-001: Gelaagd Snijden iPlus/331 op Intermac Genius LM (Station 2)
+  // ============================================================================
+  {
+    id: 'DWI-SNI-001',
+    titel: 'Gelaagd Snijden iPlus/331 op Intermac Genius LM',
+    station: 'SNI',
+    stationNummer: 2,
+    machine: 'Intermac Genius LM met Movetro glaslader',
+    auteur: 'Hendry Kooistra',
+    goedgekeurd: 'Erik Stroot',
+    versie: '1.0',
+    datum: '13-03-2026',
+    volgendeReview: '13-09-2026',
+    status: 'gereed',
+    gereedschap: [
+      'PerfectCut software',
+      'Intermac Genius LM',
+      'Movetro glaslader',
+      'Printer'
+    ],
+    pbm: [
+      'Veiligheidsschoenen',
+      'Veiligheidsbril',
+      'Snijbestendige handschoenen'
+    ],
+    secties: [
+      {
+        nummer: 1,
+        titel: 'Voorbereiding',
+        stappen: [
+          {
+            nummer: 1,
+            titel: 'Systeem gereed maken',
+            beschrijving: 'Controleer de voorbereiding van het snijsysteem',
+            waarschuwing: null,
+            tip: null,
+            substappen: [
+              'PC op stand "L" zetten',
+              'Stoplichten controleren (groen)',
+              'Beide PC\'s opstarten',
+              'Niets onder lamineertafel'
+            ]
+          }
+        ]
+      },
+      {
+        nummer: 2,
+        titel: 'Programma (PerfectCut)',
+        stappen: [
+          {
+            nummer: 1,
+            titel: 'Project aanmaken en configureren',
+            beschrijving: 'Maak een nieuw project in PerfectCut en configureer de plaat',
+            waarschuwing: null,
+            tip: null,
+            substappen: [
+              'PerfectCut openen',
+              'Klik "New project"',
+              'Selecteer plaat: 3210 x 2550 mm',
+              'Voer gewenste maten in',
+              'Klik "Start processing"',
+              'Project opslaan',
+              'Bestand naar dati map verplaatsen'
+            ]
+          }
+        ]
+      },
+      {
+        nummer: 3,
+        titel: 'Plaat Laden (Movetro)',
+        stappen: [
+          {
+            nummer: 1,
+            titel: 'Glas laden en positioneren',
+            beschrijving: 'Laad het glas in de Movetro glaslader',
+            waarschuwing: null,
+            tip: null,
+            substappen: [
+              'Druk laadknop',
+              'Druk doorstuurknop',
+              'Vink uit (deselecteer)',
+              'Druk groene knop',
+              'Druk resetknop'
+            ]
+          }
+        ]
+      },
+      {
+        nummer: 4,
+        titel: 'Snijproces (Free Cut)',
+        stappen: [
+          {
+            nummer: 1,
+            titel: 'Intermac Genius configureren en starten',
+            beschrijving: 'Configureer de snijparameters in Intermac Genius',
+            waarschuwing: 'PerfectCut moet gesloten zijn voordat u Intermac opent',
+            tip: 'Controleer altijd het juiste mesje voor het glastype voordat u begint',
+            substappen: [
+              'Intermac Genius openen',
+              'Printer inschakelen',
+              'Ga naar Modify Family',
+              'Selecteer "4iplus"',
+              'Zet op "Removal Only"',
+              'Voer parameters in',
+              'Selecteer Material Code 331/442',
+              'Controleer juiste mesje',
+              'Plaats glas tegen gele knopjes',
+              'Druk voetpedaal om snijden te starten'
+            ]
+          }
+        ]
+      },
+      {
+        nummer: 5,
+        titel: 'Afwerking',
+        stappen: [
+          {
+            nummer: 1,
+            titel: 'Breken en sorteren',
+            beschrijving: 'Breek het glas en sorteer de delen',
+            waarschuwing: null,
+            tip: null,
+            substappen: [
+              'Break het glas langs snijlijn',
+              'Verplaats reststuk naar achteren',
+              'Draai glas om'
+            ]
+          },
+          {
+            nummer: 2,
+            titel: 'Troubleshooting bij problemen',
+            beschrijving: 'Handel storingen af volgens procedure',
+            waarschuwing: null,
+            tip: null,
+            substappen: [
+              'Druk zwarte resetknop bij storing',
+              'Voer resetprogramma uit',
+              'Controleer foutmeldingen'
+            ]
+          }
+        ]
+      },
+      {
+        nummer: 6,
+        titel: 'Mesjes & Onderhoud',
+        stappen: [
+          {
+            nummer: 1,
+            titel: 'Controleer en onderhoud werkstukken',
+            beschrijving: 'Voer dagelijks onderhoud uit op mesjes en snijwielen',
+            waarschuwing: null,
+            tip: null,
+            substappen: [
+              'Controleer Stanley mesje op slijtage',
+              'Inspecteer snijwieltje',
+              'Voer dagelijks onderhoud uit',
+              'Noteer onderhoudslogboek'
+            ]
+          }
+        ]
+      }
+    ],
+    materialen: [
+      { naam: 'Gelaagd glas 331', samenstelling: '3mm + 3mm + 1mm PVB', mesje: 'Stanley mesje 331 (groter)', wieltje: 'Snijwieltje 331' },
+      { naam: 'Gelaagd glas 442', samenstelling: '4mm + 4mm + 2mm PVB', mesje: 'Stanley mesje 442 (kleiner)', wieltje: 'Snijwieltje 442' }
+    ],
+    opmerkingenImportant: [
+      'Family MOET "4iplus" zijn',
+      'Bij 442 glas ander mesje dan bij 331',
+      '60mm minimale rand overstek'
+    ],
+    afwijkingen: [
+      {
+        afwijking: 'Glas breekt tijdens snijden',
+        oorzaak: 'Mesje versleten of verkeerde druk',
+        actie: 'Controleer mesje, vervang indien nodig, pas parameters aan'
+      },
+      {
+        afwijking: 'Scheef snijden',
+        oorzaak: 'Glas niet recht tegen gele knopjes',
+        actie: 'Reposicioneer glas, zorg voor goed contact'
+      },
+      {
+        afwijking: 'Printer werkt niet',
+        oorzaak: 'Niet aangesloten of papier op',
+        actie: 'Controleer aansluiting en papiervoorraad'
+      }
+    ],
+    zoektermen: 'gelaagd snijden iplus 331 442 intermac genius movetro perfectcut free cut lamineren'
+  },
+
+  // ============================================================================
+  // DWI-SNI-002: Slijpschijf Vervangen (Station 2)
+  // ============================================================================
+  {
+    id: 'DWI-SNI-002',
+    titel: 'Slijpschijf Vervangen',
+    station: 'SNI',
+    stationNummer: 2,
+    machine: 'Snijlijn slijpunit',
+    auteur: 'Hendry Kooistra',
+    goedgekeurd: 'Erik Stroot',
+    versie: '1.0',
+    datum: '13-03-2026',
+    volgendeReview: '13-09-2026',
+    status: 'gereed',
+    gereedschap: [
+      'Steeksleutel maat 4',
+      'Steeksleutel maat 5',
+      'Luchtspuit (optioneel)',
+      'Slijpprogramma (PC bij tafel 1)'
+    ],
+    pbm: [
+      'Veiligheidsschoenen',
+      'Veiligheidsbril'
+    ],
+    secties: [
+      {
+        nummer: 1,
+        titel: 'Voorbereiding',
+        stappen: [
+          {
+            nummer: 1,
+            titel: 'Controleer sticker en gereedschap',
+            beschrijving: 'Verzamel alle benodigde informatie en materialen',
+            waarschuwing: null,
+            tip: null,
+            substappen: [
+              'Controleer sticker bij PC voor schijfgegevens',
+              'Controleer sticker op nieuwe schijf',
+              'Open slijpprogramma op PC bij tafel 1',
+              'Noteer code en diameter van oude schijf',
+              'Leg gereedschap klaar (steeksleutels 4 en 5)'
+            ]
+          }
+        ]
+      },
+      {
+        nummer: 2,
+        titel: 'Demontage',
+        stappen: [
+          {
+            nummer: 1,
+            titel: 'Verwijder oude slijpschijf',
+            beschrijving: 'Demonteer de versleten slijpschijf voorzichtig',
+            waarschuwing: null,
+            tip: null,
+            substappen: [
+              'Klik op schijf-icoon in slijpprogramma',
+              'Draai buitenkap los',
+              'Maak 3 bevestigingsbouten los (maat 4 + maat 5)',
+              'Verwijder oude schijf zorgvuldig'
+            ]
+          }
+        ]
+      },
+      {
+        nummer: 3,
+        titel: 'Montage',
+        stappen: [
+          {
+            nummer: 1,
+            titel: 'Installeer nieuwe slijpschijf',
+            beschrijving: 'Plaats de nieuwe schijf en zorg voor correcte vastlegging',
+            waarschuwing: 'ALTIJD markering/platte kant aan BINNENZIJDE plaatsen! Geen beweging/speling na montage.',
+            tip: null,
+            substappen: [
+              'Pak nieuwe schijf uit doos',
+              'Verwijder beschermingssticker',
+              'Plaats schijf in houder (markering/platte kant BINNENZIJDE)',
+              'Zet borgring terug',
+              'Draai bevestigingsbouten KRUISLINGS aan (als autoband)',
+              'Controleer: GEEN beweging of speling!',
+              'Draai buitenkap terug'
+            ]
+          }
+        ]
+      },
+      {
+        nummer: 4,
+        titel: 'Software Update',
+        stappen: [
+          {
+            nummer: 1,
+            titel: 'Update slijpprogramma',
+            beschrijving: 'Voer schijfgegevens in het slijpprogramma in',
+            waarschuwing: null,
+            tip: null,
+            substappen: [
+              'Voer code (van sticker) in slijpprogramma in',
+              'Druk OK',
+              'Diameter wordt automatisch aangepast',
+              'Controleer juiste waarden zijn ingesteld'
+            ]
+          }
+        ]
+      },
+      {
+        nummer: 5,
+        titel: 'Testen',
+        stappen: [
+          {
+            nummer: 1,
+            titel: 'Test met proefstuk glas',
+            beschrijving: 'Controleer werking met een testglas',
+            waarschuwing: null,
+            tip: null,
+            substappen: [
+              'Voer testronde uit met proefstuk glas',
+              'Controleer slijpkwaliteit (glad, geen uitbrokkeling)',
+              'Check op trillingen',
+              'Bij problemen: controleer of schijf vast zit en code correct'
+            ]
+          },
+          {
+            nummer: 2,
+            titel: 'Rapportage',
+            beschrijving: 'Rapporteer problemen en zorg voor vervanging',
+            waarschuwing: null,
+            tip: null,
+            substappen: [
+              'Bij problemen: melden bij teamleider',
+              'Na gebruik: nieuwe schijf bestellen'
+            ]
+          }
+        ]
+      }
+    ],
+    kpis: [
+      'Stickercodes moeten matchen',
+      'Geen beweging na montage',
+      'Diameter automatisch aangepast'
+    ],
+    opmerkingenImportant: [
+      'ALTIJD code controleren vóór montage',
+      'GEEN beweging/speling na montage',
+      'Kruislings aandraaien (als autoband)',
+      'Na gebruik nieuwe bestellen'
+    ],
+    afwijkingen: [
+      {
+        afwijking: 'Schijf wil niet in houder passen',
+        oorzaak: 'Markering niet aan binnenzijde gericht',
+        actie: 'Verwijder schijf, orienteer correct, plaats opnieuw'
+      },
+      {
+        afwijking: 'Beweging/speling na montage',
+        oorzaak: 'Bouten niet stevig genoeg aangedraaid',
+        actie: 'Draai bouten opnieuw kruislings aan'
+      },
+      {
+        afwijking: 'Slijpkwaliteit slecht',
+        oorzaak: 'Schijf niet correct geklmd of code fout',
+        actie: 'Controleer montage en code in slijpprogramma'
+      }
+    ],
+    zoektermen: 'slijpschijf vervangen snijlijn slijpen onderhoud montage demontage steeksleutel'
+  },
+
+  // ============================================================================
+  // DWI-ISO-POL-001: Polysun Assemblage (Station 9: ISO-lijn)
+  // ============================================================================
   {
     id: 'DWI-ISO-POL-001',
     titel: 'Polysun Assemblage',
     station: 'ISO',
-    stationLabel: 'Station 8 \u00b7 ISO-lijn',
-    machine: 'Handmatige assemblage',
-    samenvatting:
-      'Ontvangst \u2192 Voorbereiding \u2192 Assemblage \u2192 Butyleren \u2192 Ophangen \u2192 Manco afhandeling',
+    stationNummer: 9,
+    machine: 'Handmatige assemblage + Bestmachina',
+    auteur: 'Simone Hamberg',
+    goedgekeurd: 'Erik Stroot',
     versie: '1.0',
     datum: '15-03-2026',
-    auteur: 'Alex Tabarcia',
-    goedgekeurdDoor: 'Erik Stroot',
+    volgendeReview: '15-09-2026',
     status: 'gereed',
-    zoektermen: 'polysun assemblage iso lijn lamineren isolatieglas pellini butyl',
-    stappen: [
+    gereedschap: [
+      'Alcohol (reinigingsmiddel)',
+      'Bestmachina',
+      'Foampjes',
+      'Hoekjes',
+      'Productiestickers'
+    ],
+    pbm: [
+      'Veiligheidsschoenen',
+      'Schone handschoenen'
+    ],
+    secties: [
       {
         nummer: 1,
-        titel: 'Ontvangst materialen',
-        beschrijving:
-          'Controleer de binnenkomende Polysun-schermen van leverancier Pellini op beschadigingen, aantallen en maatvoering. Registreer ontvangst in het systeem.',
-        waarschuwing: 'Beschadigde schermen direct apart zetten en melden.',
-        tip: null,
+        titel: 'Ontvangst',
+        stappen: [
+          {
+            nummer: 1,
+            titel: 'Sorteer en controleer pakketten',
+            beschrijving: 'Ontvang en sorteer Pellini-pakketten per batch',
+            waarschuwing: null,
+            tip: null,
+            substappen: [
+              'Pellini-pakketten sorteren op batchnummer',
+              'Locatie: bij zaagafdeling',
+              'Glas per batch apart gesneden',
+              'Controleer: batchnummers matchen'
+            ]
+          }
+        ]
       },
       {
         nummer: 2,
-        titel: 'Voorbereiding werkplek',
-        beschrijving:
-          'Reinig het werkoppervlak met alcohol. Zorg dat alle benodigde materialen (butylband, schuim, glasplaten) binnen handbereik staan.',
-        waarschuwing: null,
-        tip: 'Gebruik isopropylalcohol (IPA) voor een vetvrij oppervlak.',
+        titel: 'Voorbereiding',
+        stappen: [
+          {
+            nummer: 1,
+            titel: 'Pak uit en reinig',
+            beschrijving: 'Bereid de onderdelen voor montage voor',
+            waarschuwing: null,
+            tip: null,
+            substappen: [
+              'Pak Pellini-pakket uit',
+              'Verwijder plastic verpakking',
+              'Laat beschermfolie eraan zitten',
+              'Duw hoekjes in raam indrukken',
+              'Schoonmaken: frame met alcohol reinigen'
+            ]
+          }
+        ]
       },
       {
         nummer: 3,
-        titel: 'Assemblage Polysun-scherm',
-        beschrijving:
-          'Plaats het Polysun-scherm op de glasplaat volgens het productieorder. Let op de ori\u00ebntatie (bovenzijde gemarkeerd). Druk het scherm stevig aan.',
-        waarschuwing:
-          'Draag schone handschoenen om vingerafdrukken op het glas te voorkomen.',
-        tip: null,
+        titel: 'Frame-assemblage',
+        stappen: [
+          {
+            nummer: 1,
+            titel: 'Monteer hoekjes en foampjes',
+            beschrijving: 'Bereid frame voor butylering',
+            waarschuwing: 'Foampjes ALLEEN aan 3 zijden aanbrengen (links, rechts, onder). NIET aan bovenzijde!',
+            tip: null,
+            substappen: [
+              'Verwijder beschermfolie',
+              'Haal frame los',
+              'Plaats hoekjes in raamhoeken',
+              'Breng foampjes aan op 3 zijden:',
+              '  - Links',
+              '  - Rechts',
+              '  - Onder',
+              '  [NIET bovenzijde!]'
+            ]
+          }
+        ]
       },
       {
         nummer: 4,
         titel: 'Butyleren',
-        beschrijving:
-          'Breng butylband aan langs de randen van het isolatieglas. Dikte: 4 gram per strekkende meter. Druk: maximaal 6 bar.',
-        waarschuwing: 'Overschrijd nooit 6 bar persdruk.',
-        tip: 'Controleer de butyldikte met een diktemeter bij elk 10e stuk.',
+        stappen: [
+          {
+            nummer: 1,
+            titel: 'Voorbereiding vulplek',
+            beschrijving: 'Zet de butylering gereed',
+            waarschuwing: null,
+            tip: null,
+            substappen: [
+              'Ga naar vulplek',
+              'Schoonmaken: oppervlak met alcohol reinigen',
+              'Droogkorrels vullen'
+            ]
+          },
+          {
+            nummer: 2,
+            titel: 'Butyl aanbrengen met Bestmachina',
+            beschrijving: 'Extrudeer butyl volgens parameters',
+            waarschuwing: 'NOOIT boven 6 bar druk! Bovenzijde NIET vullen!',
+            tip: null,
+            substappen: [
+              'Zet Bestmachina aan',
+              'Butyl aanbrengen: ~4 gram per meter',
+              'Druk: max 6 bar',
+              'Stelschroeven: evt. half open zetten',
+              'Start extrusieproces',
+              'Na Polysun-batch: Bestmachina terugstellen'
+            ]
+          }
+        ]
       },
       {
         nummer: 5,
-        titel: 'Ophangen in droogrek',
-        beschrijving:
-          'Hang het afgewerkte isolatieglas in het droogrek. Zorg voor minimaal 5mm ruimte tussen de glasplaten. Markeer met productieordernummer.',
-        waarschuwing: null,
-        tip: 'Maximale droogtijd: 24 uur voordat het naar de volgende stap gaat.',
+        titel: 'Ophangen',
+        stappen: [
+          {
+            nummer: 1,
+            titel: 'Hang assemblage op en documenteer',
+            beschrijving: 'Zet de gereedde ruiten vast per batch',
+            waarschuwing: 'Assemblage moet binnen 24 uur verwerkt worden (liefst dezelfde dag)',
+            tip: null,
+            substappen: [
+              'Direct ophangen na butylering',
+              'Organiseren per batch',
+              'Productiesticker erbij plakken',
+              'Tijdstempel: assemblage < 24 uur'
+            ]
+          }
+        ]
       },
       {
         nummer: 6,
-        titel: "Manco's afhandelen",
-        beschrijving:
-          "Bij ontbrekende of beschadigde materialen: registreer een manco in het systeem. Neem contact op met de planner voor een vervangende order.",
-        waarschuwing: null,
-        tip: null,
-      },
+        titel: 'Manco-procedure',
+        stappen: [
+          {
+            nummer: 1,
+            titel: 'Handel ontbrekende onderdelen af',
+            beschrijving: 'Procedure voor onvolledige of beschadigde sets',
+            waarschuwing: null,
+            tip: null,
+            substappen: [
+              'Markeer met rood kruis op formulier',
+              'Noteer "Nog manco" (ontbrekend)',
+              'Leg mapje "Manco Polysun" aan',
+              'Bewaar productiesticker',
+              'Verwerk alsnog bij volgende ontvangst',
+              'Volg vervolgprocedure op'
+            ]
+          }
+        ]
+      }
     ],
-    pbm: ['Schone handschoenen', 'Veiligheidsbril', 'Veiligheidsschoenen'],
-    gereedschap: ['Diktemeter', 'Isopropylalcohol', 'Schoonmaakdoek', 'Butylpistool'],
-  },
-]
+    materialen: [
+      { naam: 'Screen-pakketten', variant: 'Pellini' },
+      { naam: 'Polysun-ruiten', variant: 'Intern snijlijn' },
+      { naam: 'Foampjes', variant: '3-zijdig' },
+      { naam: 'Butyl', variant: '~4 g/m' },
+      { naam: 'Hoekjes', variant: 'Standaard' },
+      { naam: 'Alcohol', variant: 'Reinigingsmiddel' }
+    ],
+    opmerkingenImportant: [
+      'Bovenzijde NIET vullen met foampjes',
+      'NOOIT boven 6 bar butylering',
+      'Assemblage < 24 uur (liefst dezelfde dag)',
+      'Na Polysun-batch Bestmachina terugstellen',
+      'Batchnummers moeten matchen'
+    ],
+    afwijkingen: [
+      {
+        afwijking: 'Foampjes aan bovenzijde',
+        oorzaak: 'Fout in voorbereiding',
+        actie: 'Verwijder foampje van bovenzijde, plaats alleen aan 3 zijden'
+      },
+      {
+        afwijking: 'Butyl niet uniform',
+        oorzaak: 'Druk niet correct of Bestmachina niet goed ingesteld',
+        actie: 'Controleer druk (max 6 bar), reset stelschroeven'
+      },
+      {
+        afwijking: 'Ontbrekende onderdelen',
+        oorzaak: 'Pellini-pakket onvolledig',
+        actie: 'Markeer "Manco", leg apart, volg manco-procedure'
+      },
+      {
+        afwijking: 'Montage langer dan 24 uur',
+        oorzaak: 'Vertraging in proces',
+        actie: 'Melden bij teamleider, mogelijk verwerken volgende dag'
+      }
+    ],
+    zoektermen: 'polysun assemblage iso lijn lamellen screens pellini butyl foampjes bestmachina manco'
+  }
+];
+
+// ============================================================================
+// Export utility functions
+// ============================================================================
+
+export const getStationByCode = (code) => {
+  return STATIONS.find(s => s.code === code);
+};
+
+export const getWerkinstructieById = (id) => {
+  return WERKINSTRUCTIES.find(wi => wi.id === id);
+};
+
+export const getWerkinstructiesByStation = (stationCode) => {
+  if (stationCode === 'alle') {
+    return WERKINSTRUCTIES;
+  }
+  return WERKINSTRUCTIES.filter(wi => wi.station === stationCode);
+};
+
+export const getAllStations = () => {
+  return STATIONS;
+};
+
+export const getAllWerkinstructies = () => {
+  return WERKINSTRUCTIES;
+};
+
+export const searchWerkinstructies = (query) => {
+  const q = query.toLowerCase();
+  return WERKINSTRUCTIES.filter(wi => {
+    return (
+      wi.titel.toLowerCase().includes(q) ||
+      wi.machine.toLowerCase().includes(q) ||
+      wi.zoektermen.toLowerCase().includes(q) ||
+      wi.id.toLowerCase().includes(q)
+    );
+  });
+};

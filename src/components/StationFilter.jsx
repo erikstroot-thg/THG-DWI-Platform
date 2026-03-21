@@ -1,9 +1,9 @@
-import { stations } from '../data/werkinstructies'
+import { STATIONS } from '../data/werkinstructies'
 
 export default function StationFilter({ actief, onFilter }) {
   return (
     <div className="flex flex-wrap gap-2">
-      {stations.map((s) => {
+      {STATIONS.map((s) => {
         const isActive = actief === s.code
         return (
           <button

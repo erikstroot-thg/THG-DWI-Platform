@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { werkinstructies } from '../data/werkinstructies'
+import { WERKINSTRUCTIES } from '../data/werkinstructies'
 import DwiCard from './DwiCard'
 import StationFilter from './StationFilter'
 import ZoekBalk from './ZoekBalk'
@@ -10,12 +10,12 @@ export default function OverzichtPagina() {
   const [station, setStation] = useState('alle')
 
   const gefilterd = useMemo(() => {
-    return werkinstructies.filter((dwi) => {
+    return WERKINSTRUCTIES.filter((dwi) => {
       const matchStation = station === 'alle' || dwi.station === station
       if (!matchStation) return false
       if (!zoekterm) return true
       const tekst =
-        `${dwi.zoektermen} ${dwi.titel} ${dwi.machine} ${dwi.samenvatting}`.toLowerCase()
+        `${dwi.zoektermen} ${dwi.titel} ${dwi.machine} ${dwi.id}`.toLowerCase()
       return tekst.includes(zoekterm.toLowerCase())
     })
   }, [zoekterm, station])
