@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Calibri', 'Inter', system-ui, sans-serif;
+
+  --color-thg-blue: #1e3a5f;
+  --color-thg-blue-light: #2b5282;
+  --color-thg-blue-dark: #152d49;
+  --color-thg-accent: #3b82f6;
+  --color-thg-orange: #f97316;
+  --color-thg-red: #ef4444;
+  --color-thg-green: #22c55e;
+  --color-thg-gray: #6b7280;
+}
