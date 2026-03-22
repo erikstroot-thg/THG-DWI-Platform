@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import {
   ArrowLeft,
   ShieldCheck,
@@ -15,6 +16,7 @@ import {
   ListChecks,
 } from 'lucide-react'
 import { WERKINSTRUCTIES, STATIONS } from '../data/werkinstructies'
+import { getGeneratedDwis } from '../utils/dwiService'
 import StatusBadge from './StatusBadge'
 
 function getStationLabel(code) {
@@ -94,7 +96,14 @@ function StapRender({ stap }) {
 
 export default function DetailPagina() {
   const { id } = useParams()
+  const [generatedDwis, setGeneratedDwis] = useState([])
+
+  useEffect(() => {
+    getGeneratedDwis().then(setGeneratedDwis).catch(() => {})
+  }, [])
+
   const dwi = WERKINSTRUCTIES.find((w) => w.id === id)
+    || generatedDwis.find((w) => w.id === id)
 
   if (!dwi) {
     return (

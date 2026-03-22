@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { Home } from 'lucide-react'
+import { Home, Plus } from 'lucide-react'
 
 function ThgLogo({ className = 'w-10 h-10' }) {
   return (
@@ -35,7 +35,7 @@ export default function Header() {
             </p>
           </div>
         </Link>
-        <nav className="flex items-center gap-4">
+        <nav className="flex items-center gap-2 md:gap-4">
           {!isHome && (
             <Link
               to="/"
@@ -47,6 +47,15 @@ export default function Header() {
               <span className="hidden md:inline">Overzicht</span>
             </Link>
           )}
+          <Link
+            to="/nieuw"
+            className="flex items-center gap-2 bg-thg-green hover:bg-green-600
+              text-white font-semibold py-2 px-4 rounded-lg min-h-[44px]
+              transition-colors duration-150"
+          >
+            <Plus className="w-5 h-5" />
+            <span className="hidden md:inline">Nieuwe DWI</span>
+          </Link>
         </nav>
       </div>
     </header>
