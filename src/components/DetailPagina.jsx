@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import {
   ArrowLeft,
   ShieldCheck,
@@ -13,88 +14,128 @@ import {
   Target,
   AlertCircle,
   ListChecks,
+  ZoomIn,
 } from 'lucide-react'
 import { WERKINSTRUCTIES, STATIONS } from '../data/werkinstructies'
+import { getGeneratedDwis } from '../utils/dwiService'
 import StatusBadge from './StatusBadge'
+import Lightbox from './Lightbox'
 
 function getStationLabel(code) {
   const s = STATIONS.find((st) => st.code === code)
   return s ? s.label : code
 }
 
-/* Render a single step (used in both flat stappen and secties) */
-function StapRender({ stap }) {
+/* ─── Photo-first step renderer ─── */
+function StapRender({ stap, onImageClick }) {
+  const heeftFotos = stap.afbeeldingen && stap.afbeeldingen.length > 0
+
   return (
-    <div className="flex gap-4">
-      <div
-        className="shrink-0 w-10 h-10 rounded-full bg-thg-blue text-white
-          flex items-center justify-center font-bold text-base"
-      >
-        {stap.nummer}
+    <div className="space-y-3">
+      {/* Step header: number + title + short description */}
+      <div className="flex items-start gap-3">
+        <div
+          className="shrink-0 w-10 h-10 rounded-full bg-thg-blue text-white
+            flex items-center justify-center font-bold text-base"
+        >
+          {stap.nummer}
+        </div>
+        <div className="flex-1 min-w-0">
+          <h3 className="text-lg font-semibold leading-tight">{stap.titel}</h3>
+          <p className="text-sm text-gray-600 mt-0.5 leading-relaxed">
+            {stap.beschrijving}
+          </p>
+        </div>
       </div>
-      <div className="flex-1 space-y-2">
-        <h3 className="text-lg font-semibold">{stap.titel}</h3>
-        <p className="text-base text-gray-700 leading-relaxed">
-          {stap.beschrijving}
-        </p>
 
-        {/* Foto's */}
-        {stap.afbeeldingen && stap.afbeeldingen.length > 0 && (
-          <div className={`grid gap-3 my-3 ${stap.afbeeldingen.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
-            {stap.afbeeldingen.map((src, i) => (
-              <figure key={i} className="m-0">
-                <img
-                  src={src}
-                  alt={stap.bijschrift?.[i] || `Stap ${stap.nummer} foto ${i + 1}`}
-                  className="w-full rounded-lg shadow-sm object-cover"
-                  loading="lazy"
+      {/* PHOTOS — the main content (80% visual) */}
+      {heeftFotos && (
+        <div
+          className={`grid gap-2 ${
+            stap.afbeeldingen.length === 1
+              ? 'grid-cols-1'
+              : 'grid-cols-1 sm:grid-cols-2'
+          }`}
+        >
+          {stap.afbeeldingen.map((src, i) => (
+            <figure
+              key={i}
+              className="m-0 cursor-pointer group relative overflow-hidden rounded-lg"
+              onClick={() => onImageClick(stap.afbeeldingen, stap.bijschrift, i)}
+            >
+              <img
+                src={src}
+                alt={stap.bijschrift?.[i] || `Stap ${stap.nummer} foto ${i + 1}`}
+                className="w-full rounded-lg shadow-sm object-cover transition-transform
+                  duration-200 group-hover:scale-[1.02]"
+                loading="lazy"
+              />
+              {/* Zoom hint overlay */}
+              <div
+                className="absolute inset-0 bg-black/0 group-hover:bg-black/10
+                  transition-colors duration-200 flex items-center justify-center"
+              >
+                <ZoomIn
+                  className="w-8 h-8 text-white opacity-0 group-hover:opacity-80
+                    transition-opacity duration-200 drop-shadow-lg"
                 />
-                {stap.bijschrift?.[i] && (
-                  <figcaption className="text-xs text-gray-500 mt-1 text-center italic">
-                    {stap.bijschrift[i]}
-                  </figcaption>
-                )}
-              </figure>
-            ))}
-          </div>
-        )}
+              </div>
+              {stap.bijschrift?.[i] && (
+                <figcaption className="text-xs text-gray-500 mt-1.5 text-center italic px-1">
+                  {stap.bijschrift[i]}
+                </figcaption>
+              )}
+            </figure>
+          ))}
+        </div>
+      )}
 
-        {/* Substappen */}
-        {stap.substappen && stap.substappen.length > 0 && (
-          <ul className="ml-2 space-y-1">
-            {stap.substappen.map((sub, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
-                <span className="w-5 h-5 shrink-0 rounded-full bg-blue-100 text-thg-blue flex items-center justify-center text-xs font-semibold mt-0.5">
-                  {String.fromCharCode(97 + i)}
-                </span>
-                {sub}
-              </li>
-            ))}
-          </ul>
-        )}
+      {/* Substappen — compact below photos */}
+      {stap.substappen && stap.substappen.length > 0 && (
+        <ul className="ml-1 space-y-1">
+          {stap.substappen.map((sub, i) => (
+            <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+              <span className="w-5 h-5 shrink-0 rounded-full bg-blue-100 text-thg-blue flex items-center justify-center text-xs font-semibold mt-0.5">
+                {String.fromCharCode(97 + i)}
+              </span>
+              {sub}
+            </li>
+          ))}
+        </ul>
+      )}
 
-        {stap.waarschuwing && (
-          <div className="flex items-start gap-2 bg-orange-50 border-l-4 border-l-thg-orange rounded-lg p-3">
-            <AlertTriangle className="w-5 h-5 text-thg-orange shrink-0 mt-0.5" />
-            <p className="text-sm text-orange-800">
-              {stap.waarschuwing}
-            </p>
-          </div>
-        )}
-        {stap.tip && (
-          <div className="flex items-start gap-2 bg-green-50 border-l-4 border-l-thg-green rounded-lg p-3">
-            <Lightbulb className="w-5 h-5 text-thg-green shrink-0 mt-0.5" />
-            <p className="text-sm text-green-800">{stap.tip}</p>
-          </div>
-        )}
-      </div>
+      {/* Warning & tip — compact */}
+      {stap.waarschuwing && (
+        <div className="flex items-start gap-2 bg-orange-50 border-l-4 border-l-thg-orange rounded-lg p-3">
+          <AlertTriangle className="w-5 h-5 text-thg-orange shrink-0 mt-0.5" />
+          <p className="text-sm text-orange-800">{stap.waarschuwing}</p>
+        </div>
+      )}
+      {stap.tip && (
+        <div className="flex items-start gap-2 bg-green-50 border-l-4 border-l-thg-green rounded-lg p-3">
+          <Lightbulb className="w-5 h-5 text-thg-green shrink-0 mt-0.5" />
+          <p className="text-sm text-green-800">{stap.tip}</p>
+        </div>
+      )}
     </div>
   )
 }
 
 export default function DetailPagina() {
   const { id } = useParams()
+  const [generatedDwis, setGeneratedDwis] = useState([])
+  const [lightbox, setLightbox] = useState(null) // { images, captions, index }
+
+  useEffect(() => {
+    getGeneratedDwis().then(setGeneratedDwis).catch(() => {})
+  }, [])
+
   const dwi = WERKINSTRUCTIES.find((w) => w.id === id)
+    || generatedDwis.find((w) => w.id === id)
+
+  const openLightbox = (images, captions, index) => {
+    setLightbox({ images, captions, index })
+  }
 
   if (!dwi) {
     return (
@@ -120,6 +161,16 @@ export default function DetailPagina() {
 
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
+      {/* Lightbox overlay */}
+      {lightbox && (
+        <Lightbox
+          images={lightbox.images}
+          captions={lightbox.captions}
+          initialIndex={lightbox.index}
+          onClose={() => setLightbox(null)}
+        />
+      )}
+
       {/* Terug-knop */}
       <Link
         to="/"
@@ -206,7 +257,7 @@ export default function DetailPagina() {
         </div>
       )}
 
-      {/* PBM & Gereedschap */}
+      {/* PBM & Gereedschap — compact row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6">
           <h2 className="text-lg font-semibold text-thg-blue-dark flex items-center gap-2 mb-3">
@@ -215,10 +266,7 @@ export default function DetailPagina() {
           </h2>
           <ul className="space-y-2">
             {dwi.pbm.map((item) => (
-              <li
-                key={item}
-                className="flex items-center gap-2 text-base"
-              >
+              <li key={item} className="flex items-center gap-2 text-base">
                 <span className="w-2 h-2 bg-thg-orange rounded-full shrink-0" />
                 {item}
               </li>
@@ -232,10 +280,7 @@ export default function DetailPagina() {
           </h2>
           <ul className="space-y-2">
             {dwi.gereedschap.map((item) => (
-              <li
-                key={item}
-                className="flex items-center gap-2 text-base"
-              >
+              <li key={item} className="flex items-center gap-2 text-base">
                 <span className="w-2 h-2 bg-thg-accent rounded-full shrink-0" />
                 {item}
               </li>
@@ -286,15 +331,15 @@ export default function DetailPagina() {
         </div>
       )}
 
-      {/* Werkstappen (flat) */}
+      {/* Werkstappen (flat) — photo-first layout */}
       {heeftStappen && !heeftSecties && (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6">
           <h2 className="text-xl font-semibold text-thg-blue-dark mb-6">
             Werkstappen
           </h2>
-          <div className="space-y-6">
+          <div className="space-y-8">
             {dwi.stappen.map((stap) => (
-              <StapRender key={stap.nummer} stap={stap} />
+              <StapRender key={stap.nummer} stap={stap} onImageClick={openLightbox} />
             ))}
           </div>
         </div>
@@ -314,9 +359,9 @@ export default function DetailPagina() {
                 </span>
                 {sectie.titel}
               </h2>
-              <div className="space-y-6">
+              <div className="space-y-8">
                 {sectie.stappen.map((stap) => (
-                  <StapRender key={`${sectie.nummer}-${stap.nummer}`} stap={stap} />
+                  <StapRender key={`${sectie.nummer}-${stap.nummer}`} stap={stap} onImageClick={openLightbox} />
                 ))}
               </div>
             </div>
