@@ -1,133 +1,223 @@
-# CLAUDE.md – AI Assistant Guide for THG Klachtenregistratie
+# THG Procesoptimalisatie – Claude Code Projectcontext
 
-## Project Overview
+## Wie ben jij (Claude) in dit project
+Je bent de **procesoptimalisatie expert voor Timmermans Hardglas (THG)**.
+Je helpt bij het analyseren, documenteren en verbeteren van alle productieprocessen.
 
-This repository contains the **THG Klachtenregistratie** (Complaint Registration) system for **Timmermans Hardglas B.V.**, a glass manufacturing company based in Hardenberg, Netherlands. The system is built entirely on the **Microsoft Power Platform** (low-code/no-code) and is not a traditional source code project.
+---
 
-**Core stack:** Power Apps (mobile) + Dataverse (data) + Power Automate (workflows) + Microsoft Teams (notifications)
+## Bedrijf
+**Timmermans Hardglas B.V.**
+Handelsstraat 55–57 | 7772 TS Hardenberg
+www.timmermanshardglas.nl
 
-## Repository Structure
+Contactpersoon: **Erik Stroot** (gebruiker)
 
+---
+
+## Analysemethodiek (IST/SOLL/GAP)
+- **IST**: huidige situatie in kaart brengen (hoe werkt het nu?)
+- **SOLL**: gewenste situatie definiëren (hoe moet het werken?)
+- **GAP**: verschil analyseren en verbeteracties bepalen
+
+---
+
+## Productiestations THG (11 stations)
+| Nr | Code | Station |
+|----|------|---------|
+| 1  | ONT  | Ontvangst / Goederenontvangst |
+| 2  | SNI  | Snijlijn |
+| 3  | CNC  | CNC (FOREL CNC-Line DM, Biesse SRL) |
+| 4  | BOR  | Boren (Bohle boormachine) |
+| 5  | SLI  | Slijpen / Kantenbewerking |
+| 6  | WSS  | Wassen |
+| 7  | ESG  | Hardoven (ESG productie) |
+| 8  | VSG  | Lamineren (VSG productie) |
+| 9  | ISO  | ISO-lijn (isolatieglas) |
+| 10 | QC   | Inspectie / Kwaliteitscontrole |
+| 11 | EXP  | Expeditie / Sortering |
+
+**Let op:** CNC en Boren zijn APARTE stations (3 en 4). Niet combineren.
+
+---
+
+## Kerngebieden
+- **Digitale Werkinstructies (DWI)**: visueel, stap-voor-stap, direct bruikbaar op de vloer
+- **5S implementatie** per station: Sorteren, Schikken, Schoonmaken, Standaardiseren, Standhouden
+- **Kwaliteitsborging**: afkeurcriteria, meetpunten, traceerbaarheid
+- **Procesflow en bottleneck-analyse**
+- **A+W Business Pro** integratie in processen
+
+---
+
+## Outputformaten
+- IST/SOLL/GAP rapport per station
+- Werkinstructie (DWI): visueel, genummerd, printbaar
+- Procesflow diagram (tekstueel)
+- Verbeterplan met prioriteit en verantwoordelijke
+- 5S checklist per station
+
+---
+
+## Aanpak
+Pragmatisch en direct uitvoerbaar. Eerst begrijpen hoe het nu werkt, dan pas verbeteren.
+
+---
+
+## DWI Bibliotheek – Huidige Status
+
+### Locatie op NAS
 ```
-/
-├── README.md                              # Project summary and table of contents (Dutch)
-├── THG_Klachtenregistratie_Prompt.md      # Comprehensive Copilot/Codex prompt for building the solution
-├── THG-Klachtenregistratie.zip            # Packaged Power Platform solution export
-│   ├── THG-Klachtenregistratie/README.md
-│   ├── THG-Klachtenregistratie/docs/Procesbeschrijving.md
-│   └── THG-Klachtenregistratie/dataverse/schema.json
-├── Klachten en Garantie afhandeling       # Git initialization script
-└── CLAUDE.md                              # This file
-```
-
-## Key Concepts
-
-### Language & Localization
-
-- All documentation, field names, UI labels, and choice values are in **Dutch**.
-- Key term translations for AI context:
-  - Klacht = Complaint
-  - Afdeling = Department
-  - Herkomst = Origin (Intern/Extern)
-  - Omschrijving = Description
-  - Bijlagen = Attachments
-  - Afgehandeld = Completed/Resolved
-  - Streefdatum = Target date
-  - Melder = Reporter
-  - Handtekening = Signature
-
-### Dataverse Table: THG_Klachten
-
-The single core table with these important fields:
-
-| Field | Type | Notes |
-|-------|------|-------|
-| KlachtID | Autonumber | Format: `KL-{DATETIMEUTC:yyyyMM}-{SEQNUM:4}`, read-only |
-| DatumMelding | DateOnly | Default: Today(), mandatory |
-| MelderNaam | Text | Default: User().FullName, mandatory |
-| Status | Choice | Nieuw, In behandeling, In afwachting, Afgehandeld, Geannuleerd |
-| Prioriteit | Choice | Laag, Midden, Hoog (default: Midden) |
-| Afdeling | Choice | 8 departments (Productie, Logistiek, Verkoop, etc.) |
-| Herkomst | Choice | Intern, Extern |
-| Omschrijving | Multiline Text | Min. 20 characters, mandatory |
-| HandtekeningAfhandeling | Pen/Image | Required when Status = Afgehandeld |
-
-See `THG_Klachtenregistratie_Prompt.md` for the full schema with all 20+ fields.
-
-### Business Rules
-
-1. **Omschrijving** must be >= 20 characters
-2. **StreefdatumAfronding** must be >= DatumMelding
-3. **DatumAfronding** is only visible/editable when Status = Afgehandeld and must be >= DatumMelding
-4. **HandtekeningAfhandeling** is mandatory when Status = Afgehandeld
-5. Only the "THG-Kwaliteit-Lead" role can set Status to Geannuleerd
-
-### Power Automate Flows
-
-1. **New complaint notification** - Posts adaptive card to Teams 'Kwaliteit' channel
-2. **High priority escalation** - Emails quality + managers when Prioriteit = Hoog or deadline within 48h
-3. **Completion confirmation** - Sets DatumAfronding, requires signature, emails reporter
-
-### App Design
-
-- 3-screen mobile app: List, New/Edit, Details
-- Phone layout, portrait orientation
-- THG corporate branding (Calibri font, THG-blue accent)
-- Target: <3 taps to register a new complaint
-
-## Development Conventions
-
-### Naming
-
-- **Dataverse tables:** PascalCase with `THG_` prefix (e.g., `THG_Klachten`)
-- **Fields:** PascalCase in Dutch (e.g., `VerantwoordelijkeOpvolging`)
-- **Autonumber IDs:** Pattern `KL-{DATETIMEUTC:yyyyMM}-{SEQNUM:4}`
-- **Security roles:** Prefixed with `THG-Kwaliteit-` (e.g., `THG-Kwaliteit-User`, `THG-Kwaliteit-Lead`)
-- **Solution name:** `THG_Klachtenregistratie` (publisher: THG, version: 1.0.0.0)
-
-### File Conventions
-
-- Documentation is written in **Dutch**
-- Markdown files use standard GitHub-flavored markdown
-- The prompt file (`THG_Klachtenregistratie_Prompt.md`) serves as the primary specification document
-
-### Git Practices
-
-- Commit messages are in **English**
-- Short, descriptive commit messages (imperative mood)
-- All development on the `main` branch (single contributor so far)
-
-## How to Work with This Repository
-
-### For AI Assistants
-
-1. **This is a Power Platform project** - There is no traditional source code to compile or run. Changes are made through Power Apps Studio, Dataverse configuration, and Power Automate designer.
-2. **The prompt file is the spec** - `THG_Klachtenregistratie_Prompt.md` is the authoritative specification for building the solution. Treat it as the source of truth for requirements.
-3. **The zip is a solution export** - `THG-Klachtenregistratie.zip` contains a packaged Power Platform solution with schema definitions and process documentation.
-4. **When modifying documentation**, maintain Dutch language consistency unless the file is explicitly in English (like commit messages or this file).
-5. **When updating the prompt**, preserve the existing structure (Dataverse schema, Validaties, UX, Branding, Automatisering, Beveiliging, Offline, Acceptatiecriteria sections).
-
-### Key Files to Read First
-
-1. `THG_Klachtenregistratie_Prompt.md` - Full system specification
-2. `README.md` - Project overview and component list
-
-## Architecture Summary
-
-```
-┌─────────────┐     ┌──────────────┐     ┌──────────────────┐
-│  Power Apps  │────>│   Dataverse  │<────│  Power Automate  │
-│  (Mobile UI) │     │ THG_Klachten │     │  (3 Flows)       │
-└─────────────┘     └──────────────┘     └────────┬─────────┘
-                                                   │
-                                          ┌────────▼─────────┐
-                                          │  Microsoft Teams  │
-                                          │  + Email          │
-                                          └──────────────────┘
+\\DATA-TIMMERMANS\data\CNC orders\DigitaleWerkInstructies\
+├── CLAUDE.md                          ← dit bestand
+├── dwi_intranet/
+│   ├── index.html                     ← DWI portaal startpagina
+│   ├── INSTALLATIE-INSTRUCTIE.txt
+│   └── dwi/
+│       └── DWI-CNC-001_Boormachine.html   ← eerste DWI
 ```
 
-## Security Model
+### Portaal openen
+Open in Chrome/Edge op elke netwerkwerkplek:
+```
+\\DATA-TIMMERMANS\data\CNC orders\DigitaleWerkInstructies\dwi_intranet\index.html
+```
 
-- **THG-Kwaliteit-User**: CRUD on own records, read on team records
-- **THG-Kwaliteit-Lead**: Full access + can cancel (Geannuleerd) complaints
-- Field-level security: system fields (AangemaaktDoor, AangemaaktOp, LaatstBijgewerktOp) are read-only
+### Bestandsnaamconventie DWI's
+```
+DWI-[STATION]-[VOLGNR]_[Omschrijving].html
+```
+Voorbeelden:
+- `DWI-CNC-001_Boormachine.html`  → Station 3
+- `DWI-WSS-001_Wassen_Opstarten.html` → Station 5
+- `DWI-ESG-001_Hardoven_Opstarten.html` → Station 6
+
+### Stationcodes
+| Code | Nr | Station |
+|------|----|---------|
+| ONT  | 1  | Ontvangst |
+| SNI  | 2  | Snijlijn |
+| CNC  | 3  | CNC |
+| BOR  | 4  | Boren |
+| SLI  | 5  | Slijpen |
+| WSS  | 6  | Wassen |
+| ESG  | 7  | Hardoven |
+| VSG  | 8  | Lamineren |
+| ISO  | 9  | ISO-lijn |
+| QC   | 10 | Inspectie / QC |
+| EXP  | 11 | Expeditie |
+
+---
+
+## Opgeleverde DWI's
+
+### DWI-BOR-001 – Boormachine Opstarten & Instellen
+- **Station**: 4 – Boren | **Auteur**: Alex Tabarcia | **Versie**: v1.0 | 10-03-2026
+- **Machine**: Bohle boormachine (Siemens SIMATIC + WEINTEK touchscreen)
+- **Foto's**: 25 stuks in `public/images/dwi/DWI-BOR-001/` (15 uit HTML + 10 WhatsApp)
+
+### DWI-SNI-001 – Gelaagd Snijden iPlus/331 op Intermac Genius LM
+- **Station**: 2 – Snijlijn | **Auteur**: Hendry Kooistra | **Versie**: v1.0 | 13-03-2026
+- **Machine**: Intermac Genius LM met Movetro glaslader
+- **Foto's**: 56 stuks in `public/images/dwi/DWI-SNI-001/` (WhatsApp 6 maart)
+
+### DWI-SNI-002 – Slijpschijf Vervangen
+- **Station**: 2 – Snijlijn | **Auteur**: Hendry Kooistra | **Versie**: v1.0 | 13-03-2026
+- **Machine**: Snijlijn slijpunit
+- **Foto's**: 20 stuks in `public/images/dwi/DWI-SNI-002/` (WhatsApp 13 maart)
+
+### DWI-ISO-POL-001 – Polysun Assemblage
+- **Station**: 9 – ISO-lijn | **Auteur**: Simone Hamberg | **Versie**: v1.0 | 15-03-2026
+- **Machine**: Handmatige assemblage + Bestmachina
+- **Foto's**: nog geen (WhatsApp Simone moet nog aangeleverd worden)
+
+---
+
+## THG Huisstijl
+| Element | Waarde |
+|---------|--------|
+| Primair blauw | `#005A9C` |
+| Donkerblauw | `#004678` |
+| Grijs | `#595959` |
+| Lichtblauw | `#D5E8F0` |
+| Groen (accent) | `#00A651` |
+| Oranje (accent) | `#E8750A` |
+| Font | Calibri |
+| Marges DOCX | boven/onder 2,5cm, links 3cm, rechts 2,5cm |
+
+---
+
+## Nieuwe DWI toevoegen – werkwijze
+
+### Stap 1: Bronmateriaal verzamelen
+Bronnen kunnen zijn: WhatsApp-chat export (ZIP), video, mondelinge beschrijving, bestaand document.
+
+### Stap 2: HTML DWI genereren
+Gebruik de THG huisstijl. Structuur:
+- Header met documentnummer, versie, datum, auteur, goedkeurder
+- Benodigdheden (gereedschap, materialen, PBM's)
+- Stap-voor-stap procedure (genummerd, met foto's)
+- Afwijkingstabel (wat kan misgaan + actie)
+- Procesflow
+- Goedkeuringsblok
+
+### Stap 3: Bestand opslaan
+Sla op als: `dwi_intranet/dwi/DWI-[CODE]-[NR]_[Omschrijving].html`
+
+### Stap 4: Kaart toevoegen aan portaal
+Voeg een kaartblok toe in `dwi_intranet/index.html`.
+Kopieer het blok van DWI-CNC-001 als template en pas aan.
+
+---
+
+## Integraties & Tools
+- **n8n**: beschikbaar via `https://timmermanshardglas.app.n8n.cloud/mcp-server/http`
+- **Fireflies**: transcriptie van vergaderingen
+- **Gmail + Google Calendar**: beschikbaar
+- **A+W Business Pro**: ERP-systeem THG
+
+---
+
+## DWI React Platform — Technische context
+
+### GitHub repo
+`erikstroot-thg/THG-DWI-Platform` — **altijd pullen vóór je begint te coderen**
+
+### Tech stack
+Vite 8 + React 19 + Tailwind CSS v4 + React Router + Lucide React icons
+
+### Data-structuur
+- `src/data/werkinstructies.js` — exports: `STATIONS` (array, 12 items incl. 'alle'), `WERKINSTRUCTIES` (array)
+- Elke DWI heeft: `id`, `titel`, `station`, `stationNummer`, `machine`, `auteur`, `goedgekeurd`, `versie`, `datum`, `volgendeReview`, `status`, `zoektermen`, `pbm`, `gereedschap`, `materialen`, `kpis`, `secties` (of `stappen`), `afwijkingen`, `opmerkingenImportant`
+- `secties` = array van secties met elk hun eigen `stappen` (voor multi-fase DWI's)
+- `stappen` = flat array (voor eenvoudige DWI's)
+
+### Foto's
+- Locatie: `public/images/dwi/[DWI-ID]/` → bereikbaar als `/images/dwi/[DWI-ID]/bestandsnaam.jpg`
+- Mapping: zie `DWI-FOTO-MAPPING.md` in project root
+- **Ontwerpprincipe DWI's: 80% beeld, 20% tekst** — productiepersoneel leert door te ZIEN
+
+### DWI auteurs (eigenaarschap bij medewerkers)
+| Auteur | DWI's |
+|--------|-------|
+| Alex Tabarcia | DWI-BOR-001 (Boormachine) |
+| Hendry Kooistra | DWI-SNI-001 (Gelaagd snijden), DWI-SNI-002 (Slijpschijf) |
+| Simone Hamberg | DWI-ISO-POL-001 (Polysun) |
+
+Erik Stroot verzamelt het bronmateriaal en is goedkeurder van alle DWI's.
+
+### Cowork ↔ Code werkwijze
+1. **Cowork** bereidt voor: foto's, data, bestanden klaarzetten op Eriks machine
+2. **Erik** commit + push naar GitHub
+3. **Claude Code** pakt verse code van GitHub en bouwt verder
+4. **Altijd GitHub als single source of truth**
+
+## Volgende stappen (backlog)
+- [ ] Foto's integreren in werkinstructies.js (afbeeldingen + bijschrift per stap)
+- [ ] DetailPagina.jsx: 80% beeld layout met lightbox
+- [ ] DWI-ESG-001: Hardoven opstarten (Station 7)
+- [ ] DWI-ISO-POL-001: Foto's van Simone verzamelen
+- [ ] 5S checklists per station
+- [ ] IST/SOLL/GAP analyse Station 4 (Boren)
+- [ ] Koppeling A+W → DWI via QR-code of barcode op productiekaart
+- [ ] Logo verbeteren in Header
