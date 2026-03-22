@@ -1,6 +1,6 @@
 // Timmermans Hardglas - Digitale Werkinstructies (DWI) Database
 // Auto-generated from HTML source documents
-// Updated: 21-03-2026
+// Updated: 22-03-2026
 
 export const STATIONS = [
   { code: 'alle', label: 'Alle stations', nummer: null },
@@ -49,7 +49,17 @@ export const WERKINSTRUCTIES = [
         beschrijving: 'Druk op de groene knop in de gele behuizing',
         waarschuwing: null,
         tip: null,
-        substappen: null
+        substappen: null,
+        afbeeldingen: [
+          '/images/dwi/DWI-BOR-001/stap-01.jpg',
+          '/images/dwi/DWI-BOR-001/stap-02.jpg',
+          '/images/dwi/DWI-BOR-001/extra-02.jpg',
+        ],
+        bijschrift: [
+          'Groene startknop in gele behuizing — druk om te starten',
+          'Siemens SIMATIC paneel — startscherm',
+          'Siemens paneel totaaloverzicht',
+        ],
       },
       {
         nummer: 2,
@@ -61,7 +71,17 @@ export const WERKINSTRUCTIES = [
           'Druk rode knop in (noodstop opheffen)',
           'Druk blauwe knop 3 seconden in',
           'Druk "Reset" op WEINTEK touchscreen'
-        ]
+        ],
+        afbeeldingen: [
+          '/images/dwi/DWI-BOR-001/stap-03.jpg',
+          '/images/dwi/DWI-BOR-001/stap-04.jpg',
+          '/images/dwi/DWI-BOR-001/stap-05.jpg',
+        ],
+        bijschrift: [
+          'Rode knop — noodstop opheffen',
+          'Blauwe knop 3 seconden indrukken',
+          'WEINTEK touchscreen — Reset knop (groen omcirkeld)',
+        ],
       },
       {
         nummer: 3,
@@ -69,7 +89,15 @@ export const WERKINSTRUCTIES = [
         beschrijving: 'Beide groene kogelkranen horizontaal draaien',
         waarschuwing: null,
         tip: 'Controleer of er water doorstroomt. Zonder water mag er niet geboord worden.',
-        substappen: null
+        substappen: null,
+        afbeeldingen: [
+          '/images/dwi/DWI-BOR-001/stap-06.jpg',
+          '/images/dwi/DWI-BOR-001/stap-07.jpg',
+        ],
+        bijschrift: [
+          'Groene kogelkranen horizontaal draaien = OPEN',
+          'Beide kranen open — controleer waterstroming',
+        ],
       },
       {
         nummer: 4,
@@ -79,7 +107,13 @@ export const WERKINSTRUCTIES = [
         tip: null,
         substappen: [
           'Druk "Turn on" op WEINTEK touchscreen'
-        ]
+        ],
+        afbeeldingen: [
+          '/images/dwi/DWI-BOR-001/stap-08.jpg',
+        ],
+        bijschrift: [
+          'WEINTEK touchscreen — druk "Turn on"',
+        ],
       },
       {
         nummer: 5,
@@ -95,7 +129,25 @@ export const WERKINSTRUCTIES = [
           'Druk "Nullen"-knop',
           'Stel bovenboor in',
           'Stel onderboor in'
-        ]
+        ],
+        afbeeldingen: [
+          '/images/dwi/DWI-BOR-001/extra-03.jpg',
+          '/images/dwi/DWI-BOR-001/extra-01.jpg',
+          '/images/dwi/DWI-BOR-001/stap-09.jpg',
+          '/images/dwi/DWI-BOR-001/extra-08.jpg',
+          '/images/dwi/DWI-BOR-001/stap-10.jpg',
+          '/images/dwi/DWI-BOR-001/stap-11.jpg',
+          '/images/dwi/DWI-BOR-001/stap-12.jpg',
+        ],
+        bijschrift: [
+          'Glas op tafel plaatsen — hoekpositionering',
+          'WEINTEK — Position X/Y coördinaten invoerscherm',
+          'X/Y coördinaten invoeren (X = lengte, Y = breedte)',
+          'Coördinaten: position x = lengte, position y = breedte',
+          'Bovenboor positie instellen',
+          'Onderboor positie instellen',
+          'Nullen-knop op paneel drukken',
+        ],
       },
       {
         nummer: 6,
@@ -107,19 +159,45 @@ export const WERKINSTRUCTIES = [
           'Ga naar Bohle menu',
           'Selecteer "AUTOMATIC DRILLING"',
           'Druk "START"'
-        ]
+        ],
+        afbeeldingen: [
+          '/images/dwi/DWI-BOR-001/extra-05.jpg',
+          '/images/dwi/DWI-BOR-001/extra-06.jpg',
+          '/images/dwi/DWI-BOR-001/extra-07.jpg',
+          '/images/dwi/DWI-BOR-001/stap-13.jpg',
+          '/images/dwi/DWI-BOR-001/stap-14.jpg',
+          '/images/dwi/DWI-BOR-001/extra-09.jpg',
+        ],
+        bijschrift: [
+          'Intermac 1.0 app — project opzoeken',
+          'Computer scherm — batchnummer invoer',
+          'Projectweergave op scherm',
+          'Bohle menu — AUTOMATIC DRILLING selecteren',
+          'START knop drukken',
+          'Start knop indrukken om boorproces te starten',
+        ],
       },
       {
         nummer: 7,
         titel: 'Meten & keuren',
-        beschrijving: 'Meet en keur het geboortte glas',
+        beschrijving: 'Meet en keur het geboorde glas',
         waarschuwing: null,
         tip: 'Eerste stuk altijd controleren voordat de serie wordt gestart.',
         substappen: [
           'Pak Bahco 250mm liniaal',
           'Meet boorgatpositie',
           'Controleer afmetingen'
-        ]
+        ],
+        afbeeldingen: [
+          '/images/dwi/DWI-BOR-001/extra-04.jpg',
+          '/images/dwi/DWI-BOR-001/extra-10.jpg',
+          '/images/dwi/DWI-BOR-001/stap-15.jpg',
+        ],
+        bijschrift: [
+          'Sticker op glas — ordernummer/batchnummer controleren',
+          'Glas op tafel — positionering in hoek',
+          'Bahco 250mm liniaal — boorgatpositie meten',
+        ],
       }
     ],
     afwijkingen: [
@@ -189,7 +267,13 @@ export const WERKINSTRUCTIES = [
               'Stoplichten controleren (groen)',
               'Beide PC\'s opstarten',
               'Niets onder lamineertafel'
-            ]
+            ],
+            afbeeldingen: [
+              '/images/dwi/DWI-SNI-001/stap-01.jpg',
+            ],
+            bijschrift: [
+              'Voorste computer op stand L, sleutel omdraaien, stoplicht op groen',
+            ],
           }
         ]
       },
@@ -211,7 +295,29 @@ export const WERKINSTRUCTIES = [
               'Klik "Start processing"',
               'Project opslaan',
               'Bestand naar dati map verplaatsen'
-            ]
+            ],
+            afbeeldingen: [
+              '/images/dwi/DWI-SNI-001/stap-02.jpg',
+              '/images/dwi/DWI-SNI-001/stap-03.jpg',
+              '/images/dwi/DWI-SNI-001/stap-04.jpg',
+              '/images/dwi/DWI-SNI-001/stap-05.jpg',
+              '/images/dwi/DWI-SNI-001/stap-06.jpg',
+              '/images/dwi/DWI-SNI-001/stap-09.jpg',
+              '/images/dwi/DWI-SNI-001/stap-10.jpg',
+              '/images/dwi/DWI-SNI-001/stap-20.jpg',
+              '/images/dwi/DWI-SNI-001/stap-21.jpg',
+            ],
+            bijschrift: [
+              'PerfectCut programma — voor handmatig snijden 331 float/iPlus',
+              'Free cut selecteren, material code 331 instellen',
+              'Parameter 1 en 2 invullen, dan OK',
+              'Bevestiging parameters',
+              'PerfectCut: Project → New, platen selecteren (Stock rechts)',
+              'Programma slepen naar dati → kw 26 2022',
+              'Map kw openen, bestand naar dati slepen',
+              'Programma opslaan',
+              'Removal only instelling instellen, dan start',
+            ],
           }
         ]
       },
@@ -231,7 +337,21 @@ export const WERKINSTRUCTIES = [
               'Vink uit (deselecteer)',
               'Druk groene knop',
               'Druk resetknop'
-            ]
+            ],
+            afbeeldingen: [
+              '/images/dwi/DWI-SNI-001/stap-07.jpg',
+              '/images/dwi/DWI-SNI-001/stap-08.jpg',
+              '/images/dwi/DWI-SNI-001/stap-11.jpg',
+              '/images/dwi/DWI-SNI-001/stap-12.jpg',
+              '/images/dwi/DWI-SNI-001/stap-13.jpg',
+            ],
+            bijschrift: [
+              'Display loading transfer instelling',
+              'Knop ingedrukt houden tot Movetro start, KF stopt met knipperen',
+              'Knop ingedrukt houden tot plaat op tafel ligt',
+              'Vinkje uitzetten, groene knop drukken',
+              'Zwarte knop resetten',
+            ],
           }
         ]
       },
@@ -256,7 +376,47 @@ export const WERKINSTRUCTIES = [
               'Controleer juiste mesje',
               'Plaats glas tegen gele knopjes',
               'Druk voetpedaal om snijden te starten'
-            ]
+            ],
+            afbeeldingen: [
+              '/images/dwi/DWI-SNI-001/stap-14.jpg',
+              '/images/dwi/DWI-SNI-001/stap-15.jpg',
+              '/images/dwi/DWI-SNI-001/stap-16.jpg',
+              '/images/dwi/DWI-SNI-001/stap-17.jpg',
+              '/images/dwi/DWI-SNI-001/stap-18.jpg',
+              '/images/dwi/DWI-SNI-001/stap-19.jpg',
+              '/images/dwi/DWI-SNI-001/stap-22.jpg',
+              '/images/dwi/DWI-SNI-001/stap-23.jpg',
+              '/images/dwi/DWI-SNI-001/stap-24.jpg',
+              '/images/dwi/DWI-SNI-001/stap-25.jpg',
+              '/images/dwi/DWI-SNI-001/stap-26.jpg',
+              '/images/dwi/DWI-SNI-001/stap-27.jpg',
+              '/images/dwi/DWI-SNI-001/stap-28.jpg',
+              '/images/dwi/DWI-SNI-001/stap-29.jpg',
+              '/images/dwi/DWI-SNI-001/stap-30.jpg',
+              '/images/dwi/DWI-SNI-001/stap-31.jpg',
+              '/images/dwi/DWI-SNI-001/stap-32.jpg',
+              '/images/dwi/DWI-SNI-001/stap-33.jpg',
+            ],
+            bijschrift: [
+              'Programma openen in dati (PerfectCut moet afgesloten zijn)',
+              'Printer boven op kast aanzetten',
+              'Volledig programma printen',
+              'Modify family → naar 4iplus (BELANGRIJK!)',
+              'Bevestiging family wijziging',
+              'Druk op Yes om te bevestigen',
+              'Tekeningen voor berekeningen — 60mm rand eromheen',
+              'Berekeningen detail',
+              'Verdere berekeningen',
+              'Eerste 2 maten invoeren, OK. Let op: 331 + juiste mesje!',
+              'Snijproces gestart',
+              'Op voetpedaal drukken',
+              'Sheet naar je toe brengen, links/rechts positioneren',
+              'Tweede positionering',
+              'Strak tegen gele knopjes, goed vasthouden + controleren',
+              'Mesje boven de snijlijn controleren',
+              'Instructies op scherm volgen',
+              'Plaat loslaten na snijden — machine maakt het proces af',
+            ],
           }
         ]
       },
@@ -274,7 +434,25 @@ export const WERKINSTRUCTIES = [
               'Break het glas langs snijlijn',
               'Verplaats reststuk naar achteren',
               'Draai glas om'
-            ]
+            ],
+            afbeeldingen: [
+              '/images/dwi/DWI-SNI-001/stap-34.jpg',
+              '/images/dwi/DWI-SNI-001/stap-35.jpg',
+              '/images/dwi/DWI-SNI-001/stap-36.jpg',
+              '/images/dwi/DWI-SNI-001/stap-37.jpg',
+              '/images/dwi/DWI-SNI-001/stap-38.jpg',
+              '/images/dwi/DWI-SNI-001/stap-39.jpg',
+              '/images/dwi/DWI-SNI-001/stap-40.jpg',
+            ],
+            bijschrift: [
+              'Reststuk ver genoeg naar achteren brengen — LET OP',
+              'Sheet omdraaien voor andere kant',
+              'Sheet weer strak tegen gele bandjes',
+              'Controleren en cyclus herhalen',
+              'Doorrekenen tot ramen/deuren er helemaal uit zijn',
+              'Altijd reststuk weghalen aan einde cyclus',
+              'Reststuk kan tussen machine vallen — OPLETTEN',
+            ],
           },
           {
             nummer: 2,
@@ -286,7 +464,17 @@ export const WERKINSTRUCTIES = [
               'Druk zwarte resetknop bij storing',
               'Voer resetprogramma uit',
               'Controleer foutmeldingen'
-            ]
+            ],
+            afbeeldingen: [
+              '/images/dwi/DWI-SNI-001/stap-41.jpg',
+              '/images/dwi/DWI-SNI-001/stap-42.jpg',
+              '/images/dwi/DWI-SNI-001/stap-43.jpg',
+            ],
+            bijschrift: [
+              'Sequentie gaat soms mis → zwarte resetknop drukken',
+              'Reset procedure',
+              'Handje aanklikken, rood = fout. Van onder en rechts naar links uitzetten',
+            ],
           }
         ]
       },
@@ -305,7 +493,37 @@ export const WERKINSTRUCTIES = [
               'Inspecteer snijwieltje',
               'Voer dagelijks onderhoud uit',
               'Noteer onderhoudslogboek'
-            ]
+            ],
+            afbeeldingen: [
+              '/images/dwi/DWI-SNI-001/stap-44.jpg',
+              '/images/dwi/DWI-SNI-001/stap-45.jpg',
+              '/images/dwi/DWI-SNI-001/stap-46.jpg',
+              '/images/dwi/DWI-SNI-001/stap-47.jpg',
+              '/images/dwi/DWI-SNI-001/stap-48.jpg',
+              '/images/dwi/DWI-SNI-001/stap-49.jpg',
+              '/images/dwi/DWI-SNI-001/stap-50.jpg',
+              '/images/dwi/DWI-SNI-001/stap-51.jpg',
+              '/images/dwi/DWI-SNI-001/stap-52.jpg',
+              '/images/dwi/DWI-SNI-001/stap-53.jpg',
+              '/images/dwi/DWI-SNI-001/stap-54.jpg',
+              '/images/dwi/DWI-SNI-001/stap-55.jpg',
+              '/images/dwi/DWI-SNI-001/stap-56.jpg',
+            ],
+            bijschrift: [
+              'Kast openen, stanley mesje en snijmesjes checken',
+              'Moertjes losdraaien, stanley mes eruit halen, controleren',
+              'Snijmes controleren op soepelheid',
+              '331 mesje (groter dan 442), pinnetje eruit, schoonblazen',
+              'Kast dicht, sleutels omdraaien, beide computers checken',
+              'Achterste PC sleutel ook omdraaien',
+              'Nieuwe sequentie beginnen',
+              'Meestal 331 — hier kan je glassoort veranderen',
+              'Repetities gebruiken bij zelfde maten meerdere keren',
+              'Foutafhandeling voorbeeld: als er iets mis gaat',
+              'Foutafhandeling detail 1',
+              'Foutafhandeling detail 2',
+              'Foutafhandeling detail 3',
+            ],
           }
         ]
       }
@@ -381,7 +599,19 @@ export const WERKINSTRUCTIES = [
               'Open slijpprogramma op PC bij tafel 1',
               'Noteer code en diameter van oude schijf',
               'Leg gereedschap klaar (steeksleutels 4 en 5)'
-            ]
+            ],
+            afbeeldingen: [
+              '/images/dwi/DWI-SNI-002/stap-17.jpg',
+              '/images/dwi/DWI-SNI-002/stap-01.jpg',
+              '/images/dwi/DWI-SNI-002/stap-02.jpg',
+              '/images/dwi/DWI-SNI-002/stap-03.jpg',
+            ],
+            bijschrift: [
+              'Machine uitzetten voordat je begint',
+              'Sticker naast PC bij tafel 1 — welke slijpschijf we hebben',
+              'Sticker op schijf — check of code matcht met de doos',
+              'Slijpprogramma op PC — hier zie je de huidige schijfgegevens',
+            ],
           }
         ]
       },
@@ -400,7 +630,19 @@ export const WERKINSTRUCTIES = [
               'Draai buitenkap los',
               'Maak 3 bevestigingsbouten los (maat 4 + maat 5)',
               'Verwijder oude schijf zorgvuldig'
-            ]
+            ],
+            afbeeldingen: [
+              '/images/dwi/DWI-SNI-002/stap-04.jpg',
+              '/images/dwi/DWI-SNI-002/stap-05.jpg',
+              '/images/dwi/DWI-SNI-002/stap-06.jpg',
+              '/images/dwi/DWI-SNI-002/stap-07.jpg',
+            ],
+            bijschrift: [
+              'Klik op deze optie in het slijpprogramma',
+              'Draai buitenkap los',
+              '3 bouten losdraaien — sleutel 4 (eerste), sleutel 5 (tweede)',
+              'Houder leeg — oude schijf is verwijderd',
+            ],
           }
         ]
       },
@@ -422,7 +664,23 @@ export const WERKINSTRUCTIES = [
               'Draai bevestigingsbouten KRUISLINGS aan (als autoband)',
               'Controleer: GEEN beweging of speling!',
               'Draai buitenkap terug'
-            ]
+            ],
+            afbeeldingen: [
+              '/images/dwi/DWI-SNI-002/stap-08.jpg',
+              '/images/dwi/DWI-SNI-002/stap-09.jpg',
+              '/images/dwi/DWI-SNI-002/stap-10.jpg',
+              '/images/dwi/DWI-SNI-002/stap-11.jpg',
+              '/images/dwi/DWI-SNI-002/stap-12.jpg',
+              '/images/dwi/DWI-SNI-002/stap-13.jpg',
+            ],
+            bijschrift: [
+              'Nieuwe schijf erin, sticker eraf — platte kant BINNENZIJDE',
+              'Plaatje er weer op — deze kant aan de binnenzijde',
+              'Vastzetten als een autoband — kruislings aandraaien',
+              'Bouten goed aandraaien',
+              'Controleer op speling — mag GEEN beweging in zitten',
+              'Buitenkant er weer op en goed vastdraaien',
+            ],
           }
         ]
       },
@@ -441,7 +699,17 @@ export const WERKINSTRUCTIES = [
               'Druk OK',
               'Diameter wordt automatisch aangepast',
               'Controleer juiste waarden zijn ingesteld'
-            ]
+            ],
+            afbeeldingen: [
+              '/images/dwi/DWI-SNI-002/stap-14.jpg',
+              '/images/dwi/DWI-SNI-002/stap-15.jpg',
+              '/images/dwi/DWI-SNI-002/stap-16.jpg',
+            ],
+            bijschrift: [
+              'Zelfde code van sticker invoeren in het programma',
+              'Druk op OK om te bevestigen',
+              'Diameter wordt automatisch aangepast',
+            ],
           }
         ]
       },
@@ -460,7 +728,13 @@ export const WERKINSTRUCTIES = [
               'Controleer slijpkwaliteit (glad, geen uitbrokkeling)',
               'Check op trillingen',
               'Bij problemen: controleer of schijf vast zit en code correct'
-            ]
+            ],
+            afbeeldingen: [
+              '/images/dwi/DWI-SNI-002/stap-20.jpg',
+            ],
+            bijschrift: [
+              'Laatste stap — testen met proefstuk glas',
+            ],
           },
           {
             nummer: 2,
@@ -471,7 +745,15 @@ export const WERKINSTRUCTIES = [
             substappen: [
               'Bij problemen: melden bij teamleider',
               'Na gebruik: nieuwe schijf bestellen'
-            ]
+            ],
+            afbeeldingen: [
+              '/images/dwi/DWI-SNI-002/stap-18.jpg',
+              '/images/dwi/DWI-SNI-002/stap-19.jpg',
+            ],
+            bijschrift: [
+              'Schijf vervangen? Bestel meteen een nieuwe!',
+              'Aanvullende informatie',
+            ],
           }
         ]
       }
@@ -549,7 +831,9 @@ export const WERKINSTRUCTIES = [
               'Locatie: bij zaagafdeling',
               'Glas per batch apart gesneden',
               'Controleer: batchnummers matchen'
-            ]
+            ],
+            afbeeldingen: [],
+            bijschrift: [],
           }
         ]
       },
@@ -569,7 +853,9 @@ export const WERKINSTRUCTIES = [
               'Laat beschermfolie eraan zitten',
               'Duw hoekjes in raam indrukken',
               'Schoonmaken: frame met alcohol reinigen'
-            ]
+            ],
+            afbeeldingen: [],
+            bijschrift: [],
           }
         ]
       },
@@ -592,7 +878,9 @@ export const WERKINSTRUCTIES = [
               '  - Rechts',
               '  - Onder',
               '  [NIET bovenzijde!]'
-            ]
+            ],
+            afbeeldingen: [],
+            bijschrift: [],
           }
         ]
       },
@@ -610,7 +898,9 @@ export const WERKINSTRUCTIES = [
               'Ga naar vulplek',
               'Schoonmaken: oppervlak met alcohol reinigen',
               'Droogkorrels vullen'
-            ]
+            ],
+            afbeeldingen: [],
+            bijschrift: [],
           },
           {
             nummer: 2,
@@ -625,7 +915,9 @@ export const WERKINSTRUCTIES = [
               'Stelschroeven: evt. half open zetten',
               'Start extrusieproces',
               'Na Polysun-batch: Bestmachina terugstellen'
-            ]
+            ],
+            afbeeldingen: [],
+            bijschrift: [],
           }
         ]
       },
@@ -644,7 +936,9 @@ export const WERKINSTRUCTIES = [
               'Organiseren per batch',
               'Productiesticker erbij plakken',
               'Tijdstempel: assemblage < 24 uur'
-            ]
+            ],
+            afbeeldingen: [],
+            bijschrift: [],
           }
         ]
       },
@@ -665,7 +959,9 @@ export const WERKINSTRUCTIES = [
               'Bewaar productiesticker',
               'Verwerk alsnog bij volgende ontvangst',
               'Volg vervolgprocedure op'
-            ]
+            ],
+            afbeeldingen: [],
+            bijschrift: [],
           }
         ]
       }

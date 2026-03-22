@@ -22,8 +22,45 @@ function getStationLabel(code) {
   return s ? s.label : code
 }
 
+/* Foto grid voor een stap — 80% beeld principe */
+function StapFotos({ afbeeldingen, bijschrift }) {
+  if (!afbeeldingen || afbeeldingen.length === 0) return null
+  const isEnkele = afbeeldingen.length === 1
+  const isTwee = afbeeldingen.length === 2
+  return (
+    <div
+      className={
+        isEnkele
+          ? 'grid grid-cols-1 gap-3 mt-4'
+          : isTwee
+          ? 'grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4'
+          : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-4'
+      }
+    >
+      {afbeeldingen.map((src, i) => (
+        <figure key={i} className="m-0 group">
+          <div className="overflow-hidden rounded-xl shadow-md bg-gray-100 aspect-video">
+            <img
+              src={src}
+              alt={bijschrift?.[i] || `Foto ${i + 1}`}
+              loading="lazy"
+              className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
+            />
+          </div>
+          {bijschrift?.[i] && (
+            <figcaption className="text-xs text-gray-500 mt-1.5 text-center leading-snug px-1">
+              {bijschrift[i]}
+            </figcaption>
+          )}
+        </figure>
+      ))}
+    </div>
+  )
+}
+
 /* Render a single step (used in both flat stappen and secties) */
 function StapRender({ stap }) {
+  const heeftFotos = stap.afbeeldingen && stap.afbeeldingen.length > 0
   return (
     <div className="flex gap-4">
       <div
@@ -32,15 +69,20 @@ function StapRender({ stap }) {
       >
         {stap.nummer}
       </div>
-      <div className="flex-1 space-y-2">
+      <div className="flex-1 space-y-3">
         <h3 className="text-lg font-semibold">{stap.titel}</h3>
         <p className="text-base text-gray-700 leading-relaxed">
           {stap.beschrijving}
         </p>
 
+        {/* Foto's — direct na omschrijving voor maximale visuele impact */}
+        {heeftFotos && (
+          <StapFotos afbeeldingen={stap.afbeeldingen} bijschrift={stap.bijschrift} />
+        )}
+
         {/* Substappen */}
         {stap.substappen && stap.substappen.length > 0 && (
-          <ul className="ml-2 space-y-1">
+          <ul className="ml-2 space-y-1 mt-3">
             {stap.substappen.map((sub, i) => (
               <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
                 <span className="w-5 h-5 shrink-0 rounded-full bg-blue-100 text-thg-blue flex items-center justify-center text-xs font-semibold mt-0.5">
