@@ -38,6 +38,27 @@ function StapRender({ stap }) {
           {stap.beschrijving}
         </p>
 
+        {/* Foto's */}
+        {stap.afbeeldingen && stap.afbeeldingen.length > 0 && (
+          <div className={`grid gap-3 my-3 ${stap.afbeeldingen.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+            {stap.afbeeldingen.map((src, i) => (
+              <figure key={i} className="m-0">
+                <img
+                  src={src}
+                  alt={stap.bijschrift?.[i] || `Stap ${stap.nummer} foto ${i + 1}`}
+                  className="w-full rounded-lg shadow-sm object-cover"
+                  loading="lazy"
+                />
+                {stap.bijschrift?.[i] && (
+                  <figcaption className="text-xs text-gray-500 mt-1 text-center italic">
+                    {stap.bijschrift[i]}
+                  </figcaption>
+                )}
+              </figure>
+            ))}
+          </div>
+        )}
+
         {/* Substappen */}
         {stap.substappen && stap.substappen.length > 0 && (
           <ul className="ml-2 space-y-1">
