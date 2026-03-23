@@ -11,15 +11,16 @@ function resizeImage(file) {
     reader.onload = (e) => {
       const img = new Image()
       img.onload = () => {
-        // Skip resize if already small enough
-        if (img.width <= MAX_WIDTH) {
-          resolve(e.target.result)
-          return
-        }
+        // Always draw through canvas to guarantee JPEG output
         const canvas = document.createElement('canvas')
-        const scale = MAX_WIDTH / img.width
-        canvas.width = MAX_WIDTH
-        canvas.height = Math.round(img.height * scale)
+        if (img.width > MAX_WIDTH) {
+          const scale = MAX_WIDTH / img.width
+          canvas.width = MAX_WIDTH
+          canvas.height = Math.round(img.height * scale)
+        } else {
+          canvas.width = img.width
+          canvas.height = img.height
+        }
         const ctx = canvas.getContext('2d')
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
         resolve(canvas.toDataURL('image/jpeg', 0.85))
