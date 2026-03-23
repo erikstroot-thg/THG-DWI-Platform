@@ -1,15 +1,33 @@
-import { useState } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { STATIONS, WERKINSTRUCTIES } from '../data/werkinstructies'
-import { Settings, ArrowLeft, Factory, FileText, Users } from 'lucide-react'
+import { getGeneratedDwis } from '../utils/dwiService'
+import StatusBadge from './StatusBadge'
+import { Settings, ArrowLeft, Factory, FileText, Users, ClipboardCheck } from 'lucide-react'
 
 export default function BeheerPagina() {
-  const [activeTab, setActiveTab] = useState('overzicht')
+  const [activeTab, setActiveTab] = useState('beoordeling')
+  const [generatedDwis, setGeneratedDwis] = useState([])
+
+  useEffect(() => {
+    getGeneratedDwis().then(setGeneratedDwis).catch(() => {})
+  }, [])
+
+  const conceptDwis = useMemo(
+    () => generatedDwis.filter(d => d.status === 'concept'),
+    [generatedDwis]
+  )
+
+  const alleDwis = useMemo(() => {
+    const ids = new Set(WERKINSTRUCTIES.map(d => d.id))
+    const extra = generatedDwis.filter(d => !ids.has(d.id))
+    return [...WERKINSTRUCTIES, ...extra]
+  }, [generatedDwis])
 
   const stats = {
-    totaalDwis: WERKINSTRUCTIES.length,
+    totaalDwis: alleDwis.length,
     stations: STATIONS.filter(s => s.code !== 'alle').length,
-    auteurs: [...new Set(WERKINSTRUCTIES.flatMap(d => d.auteurs || []))].length,
+    terBeoordeling: conceptDwis.length,
   }
 
   return (
@@ -42,10 +60,10 @@ export default function BeheerPagina() {
           </div>
         </div>
         <div className="bg-white rounded-xl shadow p-5 flex items-center gap-4">
-          <Users size={28} className="text-thg-blue" />
+          <ClipboardCheck size={28} className={stats.terBeoordeling > 0 ? 'text-thg-orange' : 'text-thg-green'} />
           <div>
-            <p className="text-2xl font-bold">{stats.auteurs}</p>
-            <p className="text-sm text-gray-500">Auteurs</p>
+            <p className="text-2xl font-bold">{stats.terBeoordeling}</p>
+            <p className="text-sm text-gray-500">Ter beoordeling</p>
           </div>
         </div>
       </div>
@@ -53,8 +71,9 @@ export default function BeheerPagina() {
       {/* Tabs */}
       <div className="flex gap-2 mb-4 border-b">
         {[
+          { key: 'beoordeling', label: `Ter beoordeling (${conceptDwis.length})` },
+          { key: 'dwis', label: 'Alle werkinstructies' },
           { key: 'overzicht', label: 'Stations' },
-          { key: 'dwis', label: 'Werkinstructies' },
         ].map(tab => (
           <button
             key={tab.key}
@@ -70,7 +89,85 @@ export default function BeheerPagina() {
         ))}
       </div>
 
-      {/* Tab content */}
+      {/* Ter beoordeling */}
+      {activeTab === 'beoordeling' && (
+        <div>
+          {conceptDwis.length === 0 ? (
+            <div className="bg-white rounded-xl shadow p-8 text-center text-gray-500">
+              <ClipboardCheck size={48} className="mx-auto mb-3 text-gray-300" />
+              <p className="font-medium">Geen DWI's ter beoordeling</p>
+              <p className="text-sm mt-1">Alle werkinstructies zijn beoordeeld.</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {conceptDwis.map(dwi => (
+                <div key={dwi.id} className="bg-white rounded-xl shadow p-5 border-l-4 border-thg-orange">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="font-mono text-sm text-gray-500">{dwi.id}</span>
+                        <StatusBadge status={dwi.status} />
+                      </div>
+                      <Link to={`/dwi/${dwi.id}`} className="text-lg font-semibold text-thg-blue hover:underline">
+                        {dwi.titel}
+                      </Link>
+                      <div className="mt-2 text-sm text-gray-600 flex flex-wrap gap-4">
+                        <span>Station: <strong>{dwi.station}</strong></span>
+                        {dwi.machine && <span>Machine: <strong>{dwi.machine}</strong></span>}
+                        <span>Auteur: <strong>{dwi.auteur}</strong></span>
+                        {dwi.datum && <span>Aangemaakt: <strong>{dwi.datum}</strong></span>}
+                      </div>
+                      {dwi.stappen && (
+                        <p className="mt-1 text-sm text-gray-400">{dwi.stappen.length} stappen</p>
+                      )}
+                    </div>
+                    <Link
+                      to={`/dwi/${dwi.id}`}
+                      className="shrink-0 px-4 py-2 bg-thg-blue text-white rounded-lg hover:bg-thg-blue/90 text-sm font-medium"
+                    >
+                      Bekijken
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Alle werkinstructies */}
+      {activeTab === 'dwis' && (
+        <div className="bg-white rounded-xl shadow overflow-hidden">
+          <table className="w-full text-left">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-4 py-3 text-sm font-medium text-gray-600">ID</th>
+                <th className="px-4 py-3 text-sm font-medium text-gray-600">Titel</th>
+                <th className="px-4 py-3 text-sm font-medium text-gray-600">Station</th>
+                <th className="px-4 py-3 text-sm font-medium text-gray-600">Status</th>
+                <th className="px-4 py-3 text-sm font-medium text-gray-600">Versie</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {alleDwis.map(dwi => (
+                <tr key={dwi.id} className="hover:bg-gray-50">
+                  <td className="px-4 py-3 text-sm font-mono">{dwi.id}</td>
+                  <td className="px-4 py-3 text-sm">
+                    <Link to={`/dwi/${dwi.id}`} className="text-thg-blue hover:underline font-medium">
+                      {dwi.titel}
+                    </Link>
+                  </td>
+                  <td className="px-4 py-3 text-sm">{dwi.station}</td>
+                  <td className="px-4 py-3 text-sm"><StatusBadge status={dwi.status} /></td>
+                  <td className="px-4 py-3 text-sm">{dwi.versie || '1.0'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Stations */}
       {activeTab === 'overzicht' && (
         <div className="bg-white rounded-xl shadow overflow-hidden">
           <table className="w-full text-left">
@@ -89,37 +186,8 @@ export default function BeheerPagina() {
                   <td className="px-4 py-3 text-sm font-mono">{station.code}</td>
                   <td className="px-4 py-3 text-sm font-medium">{station.label}</td>
                   <td className="px-4 py-3 text-sm text-right">
-                    {WERKINSTRUCTIES.filter(d => d.station === station.code).length}
+                    {alleDwis.filter(d => d.station === station.code).length}
                   </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {activeTab === 'dwis' && (
-        <div className="bg-white rounded-xl shadow overflow-hidden">
-          <table className="w-full text-left">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-4 py-3 text-sm font-medium text-gray-600">ID</th>
-                <th className="px-4 py-3 text-sm font-medium text-gray-600">Titel</th>
-                <th className="px-4 py-3 text-sm font-medium text-gray-600">Station</th>
-                <th className="px-4 py-3 text-sm font-medium text-gray-600">Versie</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {WERKINSTRUCTIES.map(dwi => (
-                <tr key={dwi.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-sm font-mono">{dwi.id}</td>
-                  <td className="px-4 py-3 text-sm">
-                    <Link to={`/dwi/${dwi.id}`} className="text-thg-blue hover:underline font-medium">
-                      {dwi.titel}
-                    </Link>
-                  </td>
-                  <td className="px-4 py-3 text-sm">{dwi.station}</td>
-                  <td className="px-4 py-3 text-sm">{dwi.versie || '1.0'}</td>
                 </tr>
               ))}
             </tbody>
