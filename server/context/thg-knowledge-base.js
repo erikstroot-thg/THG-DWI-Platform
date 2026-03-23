@@ -461,15 +461,6 @@ export const THG_CONTEXT = {
       "Geen vaagheid"
     ]
   },
-  fault_codes: {
-    vacuum_system: [
-      {
-        issue: "Glas valt om bij lossen",
-        cause: "Te hoge loslaatdruk",
-        action: ["Reduceer druk", "Controleer zuignappen", "Check vervuiling"]
-      }
-    ]
-  },
   measurement_rules: {
     general: [
       "Altijd meten bij twijfel",
@@ -679,12 +670,6 @@ export function getBedrijfsContext() {
   ctx += `\n### Kritische controles & toleranties\n`
   tc.production_flow.critical_controls.forEach(cc => {
     ctx += `- **${cc.step}:** ${cc.check} (${cc.tolerance || cc.rule})\n`
-  })
-
-  // Foutcodes
-  ctx += `\n### Bekende foutcodes\n`
-  tc.fault_codes.vacuum_system.forEach(fc => {
-    ctx += `- **${fc.issue}:** ${fc.cause} → ${fc.action.join(', ')}\n`
   })
 
   // Meetregels
