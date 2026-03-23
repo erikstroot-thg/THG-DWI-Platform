@@ -13,7 +13,16 @@ export const THG_KNOWLEDGE_BASE = {
     capaciteit: "~25 ton glas per week",
     werktijden: "06:00–22:00, 5 dagen per week",
     software: "A+W (glasindustrie-standaard)",
-    certificeringen: ["CE-keurmerk op gehard/gelaagd glas"],
+    medewerkers: "~14",
+    leverbetrouwbaarheid: "99%",
+    certificeringen: [
+      "CE-keurmerk op gehard/gelaagd glas",
+      "NEN-EN 12150-1 (thermisch gehard veiligheidsglas)",
+      "EN 14449 (gelaagd veiligheidsglas)",
+      "EN 1279-5 (isolatieglas)",
+      "RVO meldcode KA29779 (E-save TriPlus)",
+      "AGC Recognized Processor (gelakt glas)",
+    ],
     machineleverancier: "Pieterman Glas- en Steentechniek (Vlaardingen) — hofleverancier machinepark",
     onderhoud: "Preventief onderhoud 2x per jaar + op basis van draaiuren",
   },
@@ -27,12 +36,16 @@ export const THG_KNOWLEDGE_BASE = {
     {
       naam: "Gehard/Gelaagd glas (VSG)",
       beschrijving: "Volledig in eigen huis geproduceerd met hardingsoven en hypermoderne autoclaaf. CE-gekeurmerkt.",
+      folieTypes: ["PVB (Polyvinylbutyral — standaard)", "EVA (Ethyleen-vinylacetaat — outdoor/vocht)", "SentryGlas (100x stijver, 5x harder)"],
       varianten: ["Gelamineerd vacuümglas", "BENG vacuümglas", "FINEO vacuümglas", "Monumentaal glas met Restover"],
+      toepassingen: ["Balustrades", "Beloopbaar glas", "Vitrineglas", "Glastafels", "Mesh/metaal tussenlagen"],
     },
     {
       naam: "E-Save Isolatieglas",
-      beschrijving: "Energiebesparend isolatieglas voor alle toepassingen. Triple glas: U-waarde 0.9 W/m²K, LTA 70%, ZTA 64%.",
-      varianten: ["Dubbelglas", "Triple glas (HR+++)", "Polysun zonwering-in-isolatieglas"],
+      beschrijving: "Energiebesparend isolatieglas voor alle toepassingen. Superspacer T-Shape warm edge technologie (Forel robot). Eerste glasfabriek in NL met deze techniek.",
+      varianten: ["Dubbelglas", "Triple glas (HR+++ U-waarde 0.9 W/m²K)", "Polysun zonwering-in-isolatieglas"],
+      gasvulling: ["Argon", "Krypton"],
+      rvoMeldcode: "KA29779 — E-save TriPlus 1.0 argon 4/10/4/12/4 (U-waarde 0.7 W/m²K)",
     },
     {
       naam: "Klep-, Val- en Draairamen (KVD)",
@@ -45,6 +58,10 @@ export const THG_KNOWLEDGE_BASE = {
     {
       naam: "Timeless Glas",
       beschrijving: "Beschermd tegen kalkaanslag en vuil door innovatieve coating aangebracht tijdens productie.",
+    },
+    {
+      naam: "Gehard Gelakt Glas",
+      beschrijving: "Voor interieur en exterieur. Gevelbekleding, etalages, borstweringen. 7 standaardkleuren op voorraad. AGC Recognized Processor.",
     },
   ],
 
@@ -88,9 +105,10 @@ export const THG_KNOWLEDGE_BASE = {
       beschrijving: "CNC-bewerking van glasplaten: slijpen, gaten frezen, randen polijsten. 4 brede Intermac CNC-machines.",
       machines: [
         "Intermac Master Edge (horizontale CNC)",
-        "Intermac CNC (4 stuks — slijpen, frezen, polijsten)",
+        "Intermac CNC 5-as (geüpgraded van 3-as — verbeterde software en gereedschapsopslag)",
+        "Intermac CNC (4 brede machines totaal — slijpen, frezen, polijsten)",
       ],
-      processen: ["Randbewerking", "Vormsnijden", "Gaten frezen", "Randen polijsten"],
+      processen: ["Randbewerking", "Vormsnijden", "Gaten frezen", "Randen polijsten", "Uitsparingen frezen"],
       pbm: ["Veiligheidsschoenen", "Veiligheidsbril", "Snijbestendige handschoenen", "Gehoorbescherming"],
     },
     BOR: {
@@ -154,10 +172,11 @@ export const THG_KNOWLEDGE_BASE = {
       beschrijving: "Isolatieglas assemblage. Polysun zonwering-in-isolatieglas. Lisec isolatielijn.",
       machines: [
         "Lisec isolatielijn",
+        "Forel robot (automatische Superspacer T-Shape applicatie — warm edge)",
         "Bestmachina (butylextrusie)",
         "Polysun assemblage-unit",
       ],
-      processen: ["Isolatieglas assemblage", "Gasvulling", "Polysun assemblage", "Butyleren"],
+      processen: ["Isolatieglas assemblage", "Gasvulling (argon/krypton)", "Superspacer T-Shape applicatie", "Polysun assemblage", "Butyleren"],
       materialen: {
         "Pellini packages": "Extern geleverde componenten (lamellen, screens, accessoires)",
         "Butyl": "4 g/m doelwaarde, max 6 bar druk, bovenkant NIET vullen",
@@ -210,6 +229,11 @@ export const THG_KNOWLEDGE_BASE = {
     "Triple glas": "HR+++ driedubbel glas, U-waarde 0.9 W/m²K",
     "Vacuümglas": "BENG/FINEO vacuümlaminering in autoclaaf",
     "Timeless glas": "Anti-kalk coating, onderhoudsvrij",
+    "Gelakt glas": "Gehard glas met keramische lak, 7 standaardkleuren, AGC assortiment",
+    "Halfgehard glas": "Heat-strengthened glas, minder sterk dan ESG maar breekt in grote stukken",
+    "SentryGlas": "Hoogwaardige laminaatfolie, 100x stijver dan PVB, voor structurele toepassingen",
+    "Superspacer T-Shape": "Warm edge spacer profiel voor isolatieglas, betere isolatiewaarde",
+    "Energy 72/38": "Low-E glastype op voorraad in 6mm, voor isolatieglas productie",
   },
 
   industrieTerminologie: {
