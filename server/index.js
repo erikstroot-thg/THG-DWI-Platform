@@ -9,6 +9,16 @@ import { THG_KNOWLEDGE_BASE } from './context/thg-knowledge-base.js'
 
 dotenv.config()
 
+// Sanitize filenames for OneDrive/SharePoint compatibility
+// Removes: \ / : * ? " < > | and leading/trailing spaces/dots
+function sanitizeFilename(name) {
+  return name
+    .replace(/[\\/:*?"<>|]/g, '_')  // Replace OneDrive-forbidden chars
+    .replace(/\.+$/, '')             // No trailing dots
+    .replace(/^\s+|\s+$/g, '')       // No leading/trailing spaces
+    .replace(/\s{2,}/g, ' ')         // Collapse multiple spaces
+}
+
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
 const GENERATED_DIR = join(ROOT, 'src', 'data', 'generated')
@@ -147,7 +157,8 @@ app.post('/api/dwi/save', rateLimit, async (req, res) => {
     }
 
     // Save photos to public/images/dwi/{id}/
-    const imageDir = join(IMAGES_DIR, dwi.id)
+    const safeId = sanitizeFilename(dwi.id)
+    const imageDir = join(IMAGES_DIR, safeId)
     mkdirSync(imageDir, { recursive: true })
 
     if (photos && photos.length > 0) {
@@ -159,7 +170,7 @@ app.post('/api/dwi/save', rateLimit, async (req, res) => {
     }
 
     // Save DWI JSON
-    const jsonPath = join(GENERATED_DIR, `${dwi.id}.json`)
+    const jsonPath = join(GENERATED_DIR, `${safeId}.json`)
     writeFileSync(jsonPath, JSON.stringify(dwi, null, 2), 'utf-8')
 
     res.json({ success: true, id: dwi.id, path: jsonPath })
@@ -269,7 +280,7 @@ app.put('/api/dwi/:id', rateLimit, async (req, res) => {
       photos.forEach((photo) => {
         if (photo.base64 && photo.filename) {
           const base64Data = photo.base64.replace(/^data:image\/\w+;base64,/, '')
-          writeFileSync(join(imageDir, photo.filename), Buffer.from(base64Data, 'base64'))
+          writeFileSync(join(imageDir, sanitizeFilename(photo.filename)), Buffer.from(base64Data, 'base64'))
         }
       })
     }
