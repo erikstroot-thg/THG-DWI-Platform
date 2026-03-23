@@ -3,6 +3,7 @@ import Layout from './components/Layout'
 import OverzichtPagina from './components/OverzichtPagina'
 import DetailPagina from './components/DetailPagina'
 import NieuwDwiPagina from './components/NieuwDwiPagina'
+import BeheerPagina from './components/BeheerPagina'
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
         <Route path="/" element={<OverzichtPagina />} />
         <Route path="/dwi/:id" element={<DetailPagina />} />
         <Route path="/nieuw" element={<NieuwDwiPagina />} />
+        <Route path="/beheer" element={<BeheerPagina />} />
       </Routes>
     </Layout>
   )
