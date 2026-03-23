@@ -252,6 +252,291 @@ export const THG_KNOWLEDGE_BASE = {
   },
 }
 
+// ==========================================================================
+// THG_CONTEXT — Werkvloerkennis & cultuur voor AI DWI-generatie
+// Bron: operatorinterviews, kwaliteitsleider Erik Stroot
+// ==========================================================================
+export const THG_CONTEXT = {
+  company: {
+    name: "Timmermans Hardglas B.V.",
+    sector: "Glasverwerking",
+    core_activity: "Bewerken en assembleren van vlakglas tot eindproduct (ESG, VSG, ISO)",
+    philosophy: [
+      "Kwaliteit ontstaat in elke stap, niet aan het einde",
+      "Voorkomen is goedkoper dan herstellen",
+      "Samen verbeteren, geen discussiecultuur",
+      "Aanspreken = helpen verbeteren"
+    ]
+  },
+  production_flow: {
+    general_flow: [
+      "Snijden",
+      "Slijpen (edging)",
+      "Boren",
+      "Wassen",
+      "Harden (ESG)",
+      "Assembleren (ISO / VSG)"
+    ],
+    key_control_points: [
+      "Na snijden: maatvoering check",
+      "Na slijpen: randkwaliteit + krassen",
+      "Na boren: positie + uitbraak",
+      "Na wassen: visuele controle",
+      "Na harden: vervorming + coating",
+      "Voor ISO: volledige eindinspectie"
+    ],
+    critical_controls: [
+      { step: "Snijden", check: "Maatvoering", tolerance: "±1 mm" },
+      { step: "Slijpen", check: "Randkwaliteit / krassen", tolerance: "Geen zichtbare schade" },
+      { step: "Boren", check: "Positie + diameter", tolerance: "Volgens tekening" },
+      { step: "ISO QC", check: "Volledige visuele controle", rule: "Alles stoppen en checken" }
+    ]
+  },
+  machines: {
+    cutting_line: {
+      description: "Snijlijn voor basis glasplaten",
+      operators: ["MP", "DM", "HK"],
+      risks: [
+        "Krassen door verschuiven",
+        "Verkeerde maatvoering",
+        "Glasbreuk bij handling"
+      ]
+    },
+    cnc_line: {
+      description: "Intermac CNC voor slijpen en boren",
+      model: "Master series",
+      operators: ["JK", "MF"],
+      operations: ["Slijpen", "Boren", "Frezen"],
+      critical_settings: [
+        "Correct nulpunt",
+        "Juiste tool selectie",
+        "Koeling actief"
+      ],
+      risks: [
+        "Foute positionering",
+        "Beschadiging door tooling",
+        "Krassen tijdens handling"
+      ]
+    },
+    iso_line: {
+      description: "Forel lijn voor isolatieglas",
+      operators: ["GB", "RB", "FM"],
+      modules: [
+        "Wasmachine",
+        "Inspectie (LED)",
+        "Spacer applicatie",
+        "Gasvulling",
+        "Pers"
+      ],
+      qc_points: [
+        "Inspectie vóór spacer",
+        "QC na spacer",
+        "Eindcontrole vóór pers"
+      ],
+      rules: [
+        "Altijd stoppen bij inspectie",
+        "Geen twijfel doorlaten",
+        "Elke ruit actief beoordelen",
+        "Blokjes correct positioneren",
+        "Continue maatcontrole"
+      ]
+    },
+    drilling: {
+      description: "Boorstation",
+      operators: ["AT", "DH"],
+      rules: [
+        "Controle op juiste boorpositie",
+        "Let op uitbraak",
+        "Altijd check op tekening"
+      ]
+    },
+    edging: {
+      description: "Slijpen / kanten breken",
+      main_operator: "GJS",
+      note: "Ook andere operators kunnen dit uitvoeren",
+      risks: [
+        "Randbeschadiging",
+        "Krassen door slechte handling"
+      ]
+    },
+    esg_oven: {
+      description: "Hardingsoven",
+      operators: ["RA-VD"],
+      critical_checks: [
+        "Temperatuur curve",
+        "Glaspositie",
+        "Geen vervuiling"
+      ],
+      coating_rules: [
+        "Pyrolytische coating = toegestaan",
+        "Sputter coating = risico, voorzichtig behandelen"
+      ],
+      risks: [
+        "Vervorming",
+        "Optische afwijkingen",
+        "Coating schade"
+      ]
+    },
+    vsg_lamination: {
+      description: "Lamineren van glas",
+      operators: ["FB"],
+      risks: [
+        "Vervuiling tussen lagen",
+        "Luchtinsluiting",
+        "Foutieve opbouw"
+      ]
+    }
+  },
+  quality_rules: {
+    general: [
+      "NOOIT glas verschuiven in handen",
+      "Altijd stabiel verplaatsen",
+      "Op elk station visueel controleren",
+      "Twijfel = stoppen en checken"
+    ],
+    scratch_prevention: [
+      "Glas niet over elkaar schuiven",
+      "Gebruik correcte ondersteuning",
+      "Direct melden bij twijfel"
+    ],
+    iso_specific: [
+      "Blokjes 9mm altijd in lengterichting plaatsen",
+      "Blokjes uitlijnen met glaszijde",
+      "Controleer boorgaten positie",
+      "Eindsticker op eerste ruit zonder frame"
+    ],
+    exception_rules: [
+      "Bij uitzetters mogen blokjes haaks geplaatst worden indien nodig"
+    ]
+  },
+  common_mistakes: [
+    {
+      issue: "Krassen pas zichtbaar bij ISO",
+      cause: "Schade eerder in proces niet gezien",
+      lesson: "Elke stap controleren, niet doorschuiven"
+    },
+    {
+      issue: "Glas valt om bij loslaten zuignappen",
+      cause: "Te hoge loslaatdruk",
+      lesson: "Instellingen controleren en rustig lossen"
+    },
+    {
+      issue: "Verkeerde blokpositie",
+      cause: "Onoplettendheid of haast",
+      lesson: "Altijd check tegen tekening"
+    }
+  ],
+  best_practices: [
+    "Rustig werken = minder fouten",
+    "Altijd vooruit denken (volgende stap)",
+    "Werkplek schoon houden",
+    "Direct corrigeren i.p.v. laten doorgaan",
+    "Elkaar aanspreken op fouten"
+  ],
+  operator_language: {
+    style: [
+      "Kort en duidelijk",
+      "Geen lange uitleg",
+      "Direct toepasbaar",
+      "Focus op actie"
+    ],
+    examples: [
+      "Check maat",
+      "Niet schuiven",
+      "Rustig neerleggen",
+      "Stop bij twijfel",
+      "Eerst kijken, dan doen"
+    ]
+  },
+  tone_of_voice: {
+    do: [
+      "Praktisch",
+      "Direct",
+      "Helder",
+      "Werkvloergericht"
+    ],
+    dont: [
+      "Geen managementtaal",
+      "Geen lange verhalen",
+      "Geen vaagheid"
+    ]
+  },
+  fault_codes: {
+    forel: [
+      {
+        code: "PLC9011",
+        meaning: "Algemene PLC fout",
+        action: ["Lijn resetten", "Controleer modules", "Blijft fout → TD inschakelen"]
+      }
+    ],
+    vacuum_system: [
+      {
+        issue: "Glas valt om bij lossen",
+        cause: "Te hoge loslaatdruk",
+        action: ["Reduceer druk", "Controleer zuignappen", "Check vervuiling"]
+      }
+    ]
+  },
+  measurement_rules: {
+    general: [
+      "Altijd meten bij twijfel",
+      "Niet aannemen, controleren"
+    ],
+    iso: [
+      "Blokjes positie controleren",
+      "Afstandhouder exact meten",
+      "Glasdikte checken vóór assemblage"
+    ]
+  },
+  quality_control: {
+    checkpoints: [
+      {
+        location: "Voor ISO",
+        action: "Volledige visuele inspectie",
+        focus: ["Krassen", "Vervuiling", "Randbeschadiging"]
+      }
+    ],
+    stop_rules: [
+      "Bij twijfel altijd stoppen",
+      "Geen beschadigd glas doorlaten",
+      "Fout = direct melden"
+    ]
+  },
+  ncr_system: {
+    when_to_create: [
+      "Structurele fout",
+      "Herhalende schade",
+      "Procesafwijking"
+    ],
+    required_fields: [
+      "Datum", "Station", "Operator",
+      "Omschrijving", "Waarschijnlijke oorzaak", "Actie"
+    ],
+    goal: "Herhaling voorkomen, niet schuld zoeken"
+  },
+  photo_requirements: [
+    { situation: "Schade", requirement: "Altijd foto maken" },
+    { situation: "Onzekerheid", requirement: "Foto + overleg" }
+  ],
+  ai_behavior: {
+    instruction_rules: [
+      "Gebruik korte stappen",
+      "Maximaal 5-8 stappen per instructie",
+      "Gebruik werkvloer taal",
+      "Geen lange uitleg"
+    ],
+    safety_rules: [
+      "Altijd waarschuwing bij risico",
+      "Fouten voorkomen staat centraal"
+    ],
+    output_format: [
+      "Stap-voor-stap",
+      "Duidelijke acties",
+      "Eventueel korte waarschuwingen"
+    ]
+  }
+}
+
 // Helper: bouw stationscontext op voor een specifiek station
 export function getStationContext(stationCode) {
   const station = THG_KNOWLEDGE_BASE.stations[stationCode]
@@ -302,16 +587,143 @@ export function getStationContext(stationCode) {
 // Helper: bouw volledige bedrijfscontext op voor de system prompt
 export function getBedrijfsContext() {
   const kb = THG_KNOWLEDGE_BASE
+  const tc = THG_CONTEXT
   let ctx = `## Bedrijfscontext — Timmermans Hardglas B.V.\n\n`
   ctx += `**Bedrijf:** ${kb.bedrijf.naam}\n`
   ctx += `**Locatie:** ${kb.bedrijf.locatie}\n`
   ctx += `**Industrie:** ${kb.bedrijf.industrie}\n`
+  ctx += `**Kernactiviteit:** ${tc.company.core_activity}\n`
   ctx += `**Capaciteit:** ${kb.bedrijf.capaciteit}\n`
   ctx += `**Kwaliteitsleider:** ${kb.bedrijf.kwaliteitsleider}\n`
   ctx += `**Machineleverancier:** ${kb.bedrijf.machineleverancier}\n`
   ctx += `**Software:** ${kb.bedrijf.software}\n\n`
 
-  ctx += `### Productgroepen\n`
+  // Bedrijfsfilosofie
+  ctx += `### Bedrijfsfilosofie\n`
+  tc.company.philosophy.forEach(p => { ctx += `- ${p}\n` })
+
+  // Productiestroom
+  ctx += `\n### Productiestroom (van begin tot eind)\n`
+  tc.production_flow.general_flow.forEach((step, i) => {
+    ctx += `${i + 1}. ${step}\n`
+  })
+  ctx += `\n**Controlepunten per stap:**\n`
+  tc.production_flow.key_control_points.forEach(cp => {
+    ctx += `- ${cp}\n`
+  })
+
+  // Machines met risico's en operators
+  ctx += `\n### Machines & risico's (werkvloerkennis)\n`
+  for (const [key, machine] of Object.entries(tc.machines)) {
+    ctx += `\n**${machine.description}**`
+    if (machine.operators) ctx += ` (operators: ${Array.isArray(machine.operators) ? machine.operators.join(', ') : machine.main_operator})`
+    ctx += `\n`
+    if (machine.risks?.length > 0) {
+      ctx += `Risico's:\n`
+      machine.risks.forEach(r => { ctx += `  - ${r}\n` })
+    }
+    if (machine.rules?.length > 0) {
+      ctx += `Regels:\n`
+      machine.rules.forEach(r => { ctx += `  - ${r}\n` })
+    }
+    if (machine.modules?.length > 0) {
+      ctx += `Modules: ${machine.modules.join(' → ')}\n`
+    }
+    if (machine.qc_points?.length > 0) {
+      ctx += `QC-punten: ${machine.qc_points.join(', ')}\n`
+    }
+    if (machine.critical_settings?.length > 0) {
+      ctx += `Kritische instellingen: ${machine.critical_settings.join(', ')}\n`
+    }
+    if (machine.critical_checks?.length > 0) {
+      ctx += `Kritische checks: ${machine.critical_checks.join(', ')}\n`
+    }
+    if (machine.coating_rules?.length > 0) {
+      ctx += `Coating-regels:\n`
+      machine.coating_rules.forEach(r => { ctx += `  - ${r}\n` })
+    }
+  }
+
+  // Kwaliteitsregels
+  ctx += `\n### Kwaliteitsregels\n`
+  ctx += `**Algemeen:**\n`
+  tc.quality_rules.general.forEach(r => { ctx += `- ${r}\n` })
+  ctx += `**Kraspreventie:**\n`
+  tc.quality_rules.scratch_prevention.forEach(r => { ctx += `- ${r}\n` })
+  ctx += `**ISO-specifiek:**\n`
+  tc.quality_rules.iso_specific.forEach(r => { ctx += `- ${r}\n` })
+  if (tc.quality_rules.exception_rules?.length > 0) {
+    ctx += `**Uitzonderingen:**\n`
+    tc.quality_rules.exception_rules.forEach(r => { ctx += `- ${r}\n` })
+  }
+
+  // Veelgemaakte fouten
+  ctx += `\n### Veelgemaakte fouten (leer hiervan!)\n`
+  tc.common_mistakes.forEach(m => {
+    ctx += `- **${m.issue}** — Oorzaak: ${m.cause}. Les: ${m.lesson}\n`
+  })
+
+  // Best practices
+  ctx += `\n### Best practices op de werkvloer\n`
+  tc.best_practices.forEach(bp => { ctx += `- ${bp}\n` })
+
+  // Schrijfstijl-instructies
+  ctx += `\n### Schrijfstijl voor DWI's\n`
+  ctx += `**Stijl:** ${tc.operator_language.style.join(', ')}\n`
+  ctx += `**Voorbeeldzinnen:** ${tc.operator_language.examples.join(' | ')}\n`
+  ctx += `**Toon — WEL:** ${tc.tone_of_voice.do.join(', ')}\n`
+  ctx += `**Toon — NIET:** ${tc.tone_of_voice.dont.join(', ')}\n`
+
+  // AI-gedragsregels
+  ctx += `\n### AI-instructieregels\n`
+  tc.ai_behavior.instruction_rules.forEach(r => { ctx += `- ${r}\n` })
+  ctx += `**Veiligheid:**\n`
+  tc.ai_behavior.safety_rules.forEach(r => { ctx += `- ${r}\n` })
+  ctx += `**Outputformaat:**\n`
+  tc.ai_behavior.output_format.forEach(r => { ctx += `- ${r}\n` })
+
+  // Toleranties en kritische controles
+  ctx += `\n### Kritische controles & toleranties\n`
+  tc.production_flow.critical_controls.forEach(cc => {
+    ctx += `- **${cc.step}:** ${cc.check} (${cc.tolerance || cc.rule})\n`
+  })
+
+  // Foutcodes
+  ctx += `\n### Bekende foutcodes\n`
+  tc.fault_codes.forel.forEach(fc => {
+    ctx += `- **${fc.code}:** ${fc.meaning} → ${fc.action.join(', ')}\n`
+  })
+  tc.fault_codes.vacuum_system.forEach(fc => {
+    ctx += `- **${fc.issue}:** ${fc.cause} → ${fc.action.join(', ')}\n`
+  })
+
+  // Meetregels
+  ctx += `\n### Meetregels\n`
+  tc.measurement_rules.general.forEach(r => { ctx += `- ${r}\n` })
+  ctx += `**ISO-specifiek:**\n`
+  tc.measurement_rules.iso.forEach(r => { ctx += `- ${r}\n` })
+
+  // QC stopregels
+  ctx += `\n### Kwaliteitscontrole — stopregels\n`
+  tc.quality_control.stop_rules.forEach(r => { ctx += `- ${r}\n` })
+  tc.quality_control.checkpoints.forEach(cp => {
+    ctx += `- **${cp.location}:** ${cp.action} — focus: ${cp.focus.join(', ')}\n`
+  })
+
+  // NCR-systeem
+  ctx += `\n### NCR-systeem (afwijkingsregistratie)\n`
+  ctx += `**Doel:** ${tc.ncr_system.goal}\n`
+  ctx += `**Wanneer aanmaken:** ${tc.ncr_system.when_to_create.join(', ')}\n`
+  ctx += `**Verplichte velden:** ${tc.ncr_system.required_fields.join(', ')}\n`
+
+  // Fotoregels
+  ctx += `\n### Fotoregels op de werkvloer\n`
+  tc.photo_requirements.forEach(pr => {
+    ctx += `- **${pr.situation}:** ${pr.requirement}\n`
+  })
+
+  // Productgroepen
+  ctx += `\n### Productgroepen\n`
   kb.productgroepen.forEach(p => {
     ctx += `- **${p.naam}:** ${p.beschrijving}\n`
   })
