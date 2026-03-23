@@ -1,5 +1,6 @@
 const statusConfig = {
   gereed: { label: 'Gereed', kleur: 'bg-thg-green text-white' },
+  goedgekeurd: { label: 'Goedgekeurd', kleur: 'bg-thg-green text-white' },
   concept: { label: 'Concept', kleur: 'bg-thg-orange text-white' },
   actief: { label: 'Actief', kleur: 'bg-thg-accent text-white' },
 }

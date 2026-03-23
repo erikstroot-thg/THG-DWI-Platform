@@ -1,19 +1,26 @@
 import { useState, useMemo, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { WERKINSTRUCTIES } from '../data/werkinstructies'
-import { getGeneratedDwis } from '../utils/dwiService'
+import { getGeneratedDwis, updateDwiStatus, deleteDwi } from '../utils/dwiService'
 import DwiCard from './DwiCard'
 import StationFilter from './StationFilter'
 import ZoekBalk from './ZoekBalk'
+import PincodeModal from './PincodeModal'
 import { SearchX, Sparkles } from 'lucide-react'
 
 export default function OverzichtPagina() {
   const [zoekterm, setZoekterm] = useState('')
   const [station, setStation] = useState('alle')
   const [generatedDwis, setGeneratedDwis] = useState([])
+  const [pinModal, setPinModal] = useState({ open: false, dwi: null })
+  const [laden, setLaden] = useState(false)
+
+  const laadDwis = () => {
+    getGeneratedDwis().then(setGeneratedDwis).catch(() => {})
+  }
 
   useEffect(() => {
-    getGeneratedDwis().then(setGeneratedDwis).catch(() => {})
+    laadDwis()
   }, [])
 
   const alleDwis = useMemo(() => {
@@ -29,10 +36,42 @@ export default function OverzichtPagina() {
       if (!matchStation) return false
       if (!zoekterm) return true
       const tekst =
-        `${dwi.zoektermen} ${dwi.titel} ${dwi.machine} ${dwi.id}`.toLowerCase()
+        `${dwi.zoektermen || ''} ${dwi.titel} ${dwi.machine} ${dwi.id}`.toLowerCase()
       return tekst.includes(zoekterm.toLowerCase())
     })
   }, [zoekterm, station, alleDwis])
+
+  const handleGoedkeuren = (dwi) => {
+    setPinModal({ open: true, dwi })
+  }
+
+  const handlePinSubmit = async (pin) => {
+    if (!pinModal.dwi) return
+    setLaden(true)
+    try {
+      await updateDwiStatus(pinModal.dwi.id, 'goedgekeurd', pin)
+      setPinModal({ open: false, dwi: null })
+      laadDwis() // Refresh list
+    } catch (err) {
+      throw err // Let modal show the error
+    } finally {
+      setLaden(false)
+    }
+  }
+
+  const handleAfkeuren = async (dwi) => {
+    const bevestig = window.confirm(
+      `Weet je zeker dat je "${dwi.titel}" (${dwi.id}) wilt verwijderen?\n\nDit kan niet ongedaan worden gemaakt.`
+    )
+    if (!bevestig) return
+
+    try {
+      await deleteDwi(dwi.id)
+      laadDwis() // Refresh list
+    } catch (err) {
+      alert(`Verwijderen mislukt: ${err.message}`)
+    }
+  }
 
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
@@ -59,7 +98,12 @@ export default function OverzichtPagina() {
       {gefilterd.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {gefilterd.map((dwi) => (
-            <DwiCard key={dwi.id} dwi={dwi} />
+            <DwiCard
+              key={dwi.id}
+              dwi={dwi}
+              onGoedkeuren={handleGoedkeuren}
+              onAfkeuren={handleAfkeuren}
+            />
           ))}
         </div>
       ) : (
@@ -73,6 +117,14 @@ export default function OverzichtPagina() {
           </p>
         </div>
       )}
+
+      {/* Pincode Modal */}
+      <PincodeModal
+        open={pinModal.open}
+        onClose={() => setPinModal({ open: false, dwi: null })}
+        onSubmit={handlePinSubmit}
+        laden={laden}
+      />
     </div>
   )
 }
