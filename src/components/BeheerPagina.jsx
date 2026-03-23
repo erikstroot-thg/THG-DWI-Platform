@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { STATIONS, WERKINSTRUCTIES } from '../data/werkinstructies'
 import { getGeneratedDwis } from '../utils/dwiService'
 import StatusBadge from './StatusBadge'
-import { Settings, ArrowLeft, Factory, FileText, Users, ClipboardCheck } from 'lucide-react'
+import { Settings, ArrowLeft, Factory, FileText, Users, ClipboardCheck, Pencil } from 'lucide-react'
 
 export default function BeheerPagina() {
   const [activeTab, setActiveTab] = useState('beoordeling')
@@ -121,12 +121,21 @@ export default function BeheerPagina() {
                         <p className="mt-1 text-sm text-gray-400">{dwi.stappen.length} stappen</p>
                       )}
                     </div>
-                    <Link
-                      to={`/dwi/${dwi.id}`}
-                      className="shrink-0 px-4 py-2 bg-thg-blue text-white rounded-lg hover:bg-thg-blue/90 text-sm font-medium"
-                    >
-                      Bekijken
-                    </Link>
+                    <div className="flex gap-2 shrink-0">
+                      <Link
+                        to={`/dwi/${dwi.id}/bewerken`}
+                        className="px-4 py-2 bg-thg-accent text-white rounded-lg hover:bg-thg-blue text-sm font-medium flex items-center gap-1"
+                      >
+                        <Pencil size={14} />
+                        Bewerken
+                      </Link>
+                      <Link
+                        to={`/dwi/${dwi.id}`}
+                        className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium"
+                      >
+                        Bekijken
+                      </Link>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -146,6 +155,7 @@ export default function BeheerPagina() {
                 <th className="px-4 py-3 text-sm font-medium text-gray-600">Station</th>
                 <th className="px-4 py-3 text-sm font-medium text-gray-600">Status</th>
                 <th className="px-4 py-3 text-sm font-medium text-gray-600">Versie</th>
+                <th className="px-4 py-3 text-sm font-medium text-gray-600"></th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -160,6 +170,12 @@ export default function BeheerPagina() {
                   <td className="px-4 py-3 text-sm">{dwi.station}</td>
                   <td className="px-4 py-3 text-sm"><StatusBadge status={dwi.status} /></td>
                   <td className="px-4 py-3 text-sm">{dwi.versie || '1.0'}</td>
+                  <td className="px-4 py-3 text-sm">
+                    <Link to={`/dwi/${dwi.id}/bewerken`}
+                      className="text-thg-accent hover:text-thg-blue flex items-center gap-1">
+                      <Pencil size={12} /> Bewerken
+                    </Link>
+                  </td>
                 </tr>
               ))}
             </tbody>

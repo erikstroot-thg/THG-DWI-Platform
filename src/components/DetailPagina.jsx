@@ -15,6 +15,7 @@ import {
   AlertCircle,
   ListChecks,
   ZoomIn,
+  Pencil,
 } from 'lucide-react'
 import { WERKINSTRUCTIES, STATIONS } from '../data/werkinstructies'
 import { getGeneratedDwis } from '../utils/dwiService'
@@ -171,15 +172,25 @@ export default function DetailPagina() {
         />
       )}
 
-      {/* Terug-knop */}
-      <Link
-        to="/"
-        className="inline-flex items-center gap-2 text-thg-accent hover:text-thg-blue
-          font-semibold min-h-[44px] transition-colors"
-      >
-        <ArrowLeft className="w-5 h-5" />
-        Terug naar overzicht
-      </Link>
+      {/* Terug-knop + Bewerken */}
+      <div className="flex items-center justify-between">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-thg-accent hover:text-thg-blue
+            font-semibold min-h-[44px] transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          Terug naar overzicht
+        </Link>
+        <Link
+          to={`/dwi/${id}/bewerken`}
+          className="inline-flex items-center gap-2 bg-thg-accent hover:bg-thg-blue
+            text-white font-semibold py-2 px-4 rounded-lg min-h-[44px] transition-colors text-sm"
+        >
+          <Pencil className="w-4 h-4" />
+          Bewerken
+        </Link>
+      </div>
 
       {/* Koptekst */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6">

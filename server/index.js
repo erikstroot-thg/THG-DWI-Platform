@@ -1,6 +1,6 @@
 import express from 'express'
 import Anthropic from '@anthropic-ai/sdk'
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'fs'
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, cpSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import dotenv from 'dotenv'
@@ -11,10 +11,12 @@ dotenv.config()
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
 const GENERATED_DIR = join(ROOT, 'src', 'data', 'generated')
+const HISTORY_DIR = join(ROOT, 'src', 'data', 'generated', 'history')
 const IMAGES_DIR = join(ROOT, 'public', 'images', 'dwi')
 
 // Ensure directories exist
 mkdirSync(GENERATED_DIR, { recursive: true })
+mkdirSync(HISTORY_DIR, { recursive: true })
 
 const app = express()
 app.use(express.json({ limit: '100mb' }))
@@ -185,6 +187,163 @@ app.get('/api/dwi/generated', (req, res) => {
     res.json({ dwis })
   } catch (err) {
     console.error('List error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// ==========================================================================
+// GET /api/dwi/:id
+// Returns a single DWI by ID (from generated or hardcoded)
+// ==========================================================================
+app.get('/api/dwi/:id', (req, res) => {
+  try {
+    const { id } = req.params
+    const jsonPath = join(GENERATED_DIR, `${id}.json`)
+
+    if (existsSync(jsonPath)) {
+      const content = readFileSync(jsonPath, 'utf-8')
+      return res.json({ dwi: JSON.parse(content) })
+    }
+
+    res.status(404).json({ error: `DWI ${id} niet gevonden.` })
+  } catch (err) {
+    console.error('Get DWI error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// ==========================================================================
+// PUT /api/dwi/:id
+// Updates an existing DWI with auto-versioning and history tracking
+// ==========================================================================
+app.put('/api/dwi/:id', rateLimit, async (req, res) => {
+  try {
+    const { id } = req.params
+    const { dwi, photos, opmerking } = req.body
+
+    if (!dwi || dwi.id !== id) {
+      return res.status(400).json({ error: 'Ongeldig DWI object of ID mismatch.' })
+    }
+
+    const jsonPath = join(GENERATED_DIR, `${id}.json`)
+
+    // Save previous version to history if exists
+    if (existsSync(jsonPath)) {
+      const previous = JSON.parse(readFileSync(jsonPath, 'utf-8'))
+      const historyDir = join(HISTORY_DIR, id)
+      mkdirSync(historyDir, { recursive: true })
+      const historyPath = join(historyDir, `v${previous.versie || '1.0'}.json`)
+      writeFileSync(historyPath, JSON.stringify(previous, null, 2), 'utf-8')
+    }
+
+    // Increment version
+    const oldVersion = dwi.versie || '1.0'
+    const [major, minor] = oldVersion.split('.').map(Number)
+    dwi.versie = `${major}.${minor + 1}`
+
+    // Update date
+    const now = new Date()
+    const datum = `${String(now.getDate()).padStart(2, '0')}-${String(now.getMonth() + 1).padStart(2, '0')}-${now.getFullYear()}`
+
+    // Add revision entry
+    if (!dwi.revisies) dwi.revisies = []
+    dwi.revisies.push({
+      versie: dwi.versie,
+      datum,
+      auteur: dwi._bewerkDoor || 'Onbekend',
+      opmerking: opmerking || 'Handmatige bewerking'
+    })
+    delete dwi._bewerkDoor
+
+    // Update volgendeReview to 6 months from now
+    const review = new Date(now)
+    review.setMonth(review.getMonth() + 6)
+    dwi.volgendeReview = `${String(review.getDate()).padStart(2, '0')}-${String(review.getMonth() + 1).padStart(2, '0')}-${review.getFullYear()}`
+
+    // Save new photos if provided
+    if (photos && photos.length > 0) {
+      const imageDir = join(IMAGES_DIR, id)
+      mkdirSync(imageDir, { recursive: true })
+
+      photos.forEach((photo) => {
+        if (photo.base64 && photo.filename) {
+          const base64Data = photo.base64.replace(/^data:image\/\w+;base64,/, '')
+          writeFileSync(join(imageDir, photo.filename), Buffer.from(base64Data, 'base64'))
+        }
+      })
+    }
+
+    // Save updated DWI JSON
+    writeFileSync(jsonPath, JSON.stringify(dwi, null, 2), 'utf-8')
+
+    res.json({ success: true, id, versie: dwi.versie })
+  } catch (err) {
+    console.error('Update DWI error:', err)
+    res.status(500).json({ error: err.message || 'Bijwerken mislukt.' })
+  }
+})
+
+// ==========================================================================
+// POST /api/dwi/:id/copy-to-generated
+// Copies a hardcoded DWI to the generated folder so it becomes editable
+// ==========================================================================
+app.post('/api/dwi/:id/copy-to-generated', rateLimit, (req, res) => {
+  try {
+    const { id } = req.params
+    const { dwi } = req.body
+
+    if (!dwi || dwi.id !== id) {
+      return res.status(400).json({ error: 'Ongeldig DWI object.' })
+    }
+
+    const jsonPath = join(GENERATED_DIR, `${id}.json`)
+
+    // Don't overwrite if already exists
+    if (existsSync(jsonPath)) {
+      return res.json({ success: true, id, alreadyExists: true })
+    }
+
+    // Add initial revision entry
+    if (!dwi.revisies) {
+      dwi.revisies = [{
+        versie: dwi.versie || '1.0',
+        datum: dwi.datum || 'Onbekend',
+        auteur: dwi.auteur || 'Systeem',
+        opmerking: 'Gekopieerd naar bewerkbare opslag'
+      }]
+    }
+
+    writeFileSync(jsonPath, JSON.stringify(dwi, null, 2), 'utf-8')
+    res.json({ success: true, id })
+  } catch (err) {
+    console.error('Copy error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// ==========================================================================
+// GET /api/dwi/:id/history
+// Returns revision history for a DWI
+// ==========================================================================
+app.get('/api/dwi/:id/history', (req, res) => {
+  try {
+    const { id } = req.params
+    const historyDir = join(HISTORY_DIR, id)
+
+    if (!existsSync(historyDir)) {
+      return res.json({ versies: [] })
+    }
+
+    const files = readdirSync(historyDir).filter(f => f.endsWith('.json')).sort()
+    const versies = files.map(f => {
+      const content = readFileSync(join(historyDir, f), 'utf-8')
+      const dwi = JSON.parse(content)
+      return { versie: dwi.versie, datum: dwi.datum, bestandsnaam: f }
+    })
+
+    res.json({ versies })
+  } catch (err) {
+    console.error('History error:', err)
     res.status(500).json({ error: err.message })
   }
 })
