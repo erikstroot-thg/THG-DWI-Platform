@@ -462,13 +462,6 @@ export const THG_CONTEXT = {
     ]
   },
   fault_codes: {
-    forel: [
-      {
-        code: "PLC9011",
-        meaning: "Algemene PLC fout",
-        action: ["Lijn resetten", "Controleer modules", "Blijft fout → TD inschakelen"]
-      }
-    ],
     vacuum_system: [
       {
         issue: "Glas valt om bij lossen",
@@ -690,9 +683,6 @@ export function getBedrijfsContext() {
 
   // Foutcodes
   ctx += `\n### Bekende foutcodes\n`
-  tc.fault_codes.forel.forEach(fc => {
-    ctx += `- **${fc.code}:** ${fc.meaning} → ${fc.action.join(', ')}\n`
-  })
   tc.fault_codes.vacuum_system.forEach(fc => {
     ctx += `- **${fc.issue}:** ${fc.cause} → ${fc.action.join(', ')}\n`
   })
