@@ -93,6 +93,27 @@ export async function getDwiHistory(id) {
   return data.versies || []
 }
 
+export async function getContext() {
+  const res = await fetch('/api/context')
+  if (!res.ok) return { stations: {} }
+  return res.json()
+}
+
+export async function updateContext(stations) {
+  const res = await fetch('/api/context', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ stations }),
+  })
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Onbekende fout' }))
+    throw new Error(err.error || `Server error: ${res.status}`)
+  }
+
+  return res.json()
+}
+
 export async function checkHealth() {
   try {
     const res = await fetch('/api/health')

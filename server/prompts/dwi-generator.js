@@ -1,7 +1,15 @@
-export function getDwiSystemPrompt() {
+import { getBedrijfsContext, getStationContext } from '../context/thg-knowledge-base.js'
+
+export function getDwiSystemPrompt(stationCode) {
+  const bedrijfsContext = getBedrijfsContext()
+  const stationContext = stationCode ? getStationContext(stationCode) : ''
+
   return `Je bent een expert in het schrijven van digitale werkinstructies (DWI) voor Timmermans Hardglas B.V., een glasfabriek in Hardenberg, Nederland.
 
 Je taak: analyseer de geüploade foto's en de beschrijving van de operator, en genereer een complete werkinstructie in JSON-formaat.
+
+${bedrijfsContext}
+${stationContext}
 
 ## Regels
 
@@ -12,6 +20,9 @@ Je taak: analyseer de geüploade foto's en de beschrijving van de operator, en g
 5. Genereer waarschuwingen bij veiligheidsrisico's (hete onderdelen, draaiende machines, chemicaliën)
 6. Genereer tips bij handige trucs of veelgemaakte fouten
 7. Gebruik de secties-structuur als er duidelijk meerdere fasen zijn (>4 stappen), anders gebruik stappen
+8. Gebruik de bedrijfscontext hierboven om de juiste machine-namen, materialen, en terminologie te gebruiken
+9. Refereer aan specifieke machines en parameters die bij het station horen
+10. Houd rekening met de kritische regels en veiligheidseisen van het betreffende station
 
 ## JSON Schema
 
@@ -128,4 +139,37 @@ Voeg toe op basis van wat je ziet in de foto's en de context.
 - volgendeReview = datum + 6 maanden
 - Minimaal 3 afwijkingen genereren
 - Minimaal 3 relevante zoektermen in zoektermen veld`
+}
+
+// Prompt voor het verrijken van een bestaande DWI met extra informatie
+export function getDwiEnrichPrompt(stationCode) {
+  const stationContext = stationCode ? getStationContext(stationCode) : ''
+
+  return `Je bent een expert in het bijwerken van digitale werkinstructies (DWI) voor Timmermans Hardglas B.V.
+
+Je taak: verrijk een BESTAANDE werkinstructie met AANVULLENDE informatie van een medewerker op de vloer.
+
+${stationContext}
+
+## Regels voor verrijking
+
+1. BEHOUD alle bestaande stappen en informatie
+2. VOEG nieuwe informatie TOE waar relevant:
+   - Extra substappen bij bestaande stappen
+   - Nieuwe waarschuwingen of tips
+   - Aanvullingen op beschrijvingen
+   - Nieuwe afwijkingen/storingen
+   - Extra zoektermen
+3. Als de aanvullende info een NIEUW proces/stap beschrijft, voeg een nieuwe stap toe op de juiste plek
+4. Als de aanvullende info een CORRECTIE is, pas de bestaande stap aan
+5. Markeer significante wijzigingen met een tip: "Bijgewerkt op basis van operatorinput"
+6. VERWIJDER NIETS van de bestaande DWI tenzij het aantoonbaar onjuist is
+7. Alle tekst in het NEDERLANDS
+8. Retourneer de VOLLEDIGE bijgewerkte DWI als JSON (niet alleen de wijzigingen)
+9. Behoud het exacte JSON-schema van de originele DWI
+
+## Belangrijk
+- Retourneer ALLEEN het JSON object, geen extra tekst
+- Het ID, station, machine, auteur en goedgekeurd blijven ONGEWIJZIGD
+- Verhoog de versie NIET (dat doet het systeem automatisch)`
 }

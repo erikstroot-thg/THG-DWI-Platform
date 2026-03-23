@@ -4,7 +4,8 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, cpSync
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import dotenv from 'dotenv'
-import { getDwiSystemPrompt } from './prompts/dwi-generator.js'
+import { getDwiSystemPrompt, getDwiEnrichPrompt } from './prompts/dwi-generator.js'
+import { THG_KNOWLEDGE_BASE } from './context/thg-knowledge-base.js'
 
 dotenv.config()
 
@@ -106,7 +107,7 @@ Genereer de complete DWI als JSON object. Volg exact het schema uit de system pr
     const response = await client.messages.create({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 8000,
-      system: getDwiSystemPrompt(),
+      system: getDwiSystemPrompt(station),
       messages: [{ role: 'user', content: userContent }],
     })
 
@@ -344,6 +345,47 @@ app.get('/api/dwi/:id/history', (req, res) => {
     res.json({ versies })
   } catch (err) {
     console.error('History error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// ==========================================================================
+// GET /api/context
+// Returns the current knowledge base (stations with machines/processes)
+// ==========================================================================
+const CONTEXT_FILE = join(ROOT, 'server', 'context', 'thg-knowledge-base.json')
+
+app.get('/api/context', (req, res) => {
+  try {
+    // Try JSON override first, fall back to JS module
+    if (existsSync(CONTEXT_FILE)) {
+      const content = readFileSync(CONTEXT_FILE, 'utf-8')
+      return res.json(JSON.parse(content))
+    }
+    // Return stations from the JS module
+    res.json({ stations: THG_KNOWLEDGE_BASE.stations })
+  } catch (err) {
+    console.error('Context error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// ==========================================================================
+// PUT /api/context
+// Updates station-specific context (machines, processes) via Beheer
+// ==========================================================================
+app.put('/api/context', rateLimit, (req, res) => {
+  try {
+    const { stations } = req.body
+    if (!stations) {
+      return res.status(400).json({ error: 'Stations object verplicht.' })
+    }
+
+    // Save as JSON override file
+    writeFileSync(CONTEXT_FILE, JSON.stringify({ stations }, null, 2), 'utf-8')
+    res.json({ success: true })
+  } catch (err) {
+    console.error('Context update error:', err)
     res.status(500).json({ error: err.message })
   }
 })
