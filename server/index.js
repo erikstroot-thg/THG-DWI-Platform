@@ -1,6 +1,6 @@
 import express from 'express'
 import Anthropic from '@anthropic-ai/sdk'
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, cpSync } from 'fs'
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, cpSync, unlinkSync, rmSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import dotenv from 'dotenv'
@@ -582,6 +582,50 @@ app.get('/api/dwi/:id', (req, res) => {
 })
 
 // ==========================================================================
+// PATCH /api/dwi/:id/status
+// Update DWI status (requires pin for 'goedgekeurd')
+// ==========================================================================
+app.patch('/api/dwi/:id/status', (req, res) => {
+  try {
+    const { id } = req.params
+    const { status, pin } = req.body
+
+    if (!status) {
+      return res.status(400).json({ error: 'Status is verplicht.' })
+    }
+
+    const validStatuses = ['concept', 'goedgekeurd']
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ error: `Ongeldige status. Kies uit: ${validStatuses.join(', ')}` })
+    }
+
+    // Pin verification for approval
+    if (status === 'goedgekeurd') {
+      const correctPin = process.env.DWI_APPROVE_PIN || '7772'
+      if (!pin || pin !== correctPin) {
+        return res.status(403).json({ error: 'Ongeldige pincode.' })
+      }
+    }
+
+    // Find and update the DWI file
+    const jsonPath = join(GENERATED_DIR, `${id}.json`)
+    if (!existsSync(jsonPath)) {
+      return res.status(404).json({ error: `DWI ${id} niet gevonden.` })
+    }
+
+    const dwi = JSON.parse(readFileSync(jsonPath, 'utf-8'))
+    dwi.status = status
+    dwi.goedgekeurdOp = status === 'goedgekeurd' ? new Date().toISOString() : undefined
+    writeFileSync(jsonPath, JSON.stringify(dwi, null, 2), 'utf-8')
+
+    res.json({ success: true, id, status })
+  } catch (err) {
+    console.error('Status update error:', err)
+    res.status(500).json({ error: err.message || 'Status bijwerken mislukt.' })
+  }
+})
+
+// ==========================================================================
 // PUT /api/dwi/:id
 // Updates an existing DWI with auto-versioning and history tracking
 // ==========================================================================
@@ -759,6 +803,33 @@ app.put('/api/context', rateLimit, (req, res) => {
 })
 
 // ==========================================================================
+// DELETE /api/dwi/:id
+// Delete a DWI and its images
+// ==========================================================================
+app.delete('/api/dwi/:id', (req, res) => {
+  try {
+    const { id } = req.params
+
+    // Delete JSON file
+    const jsonPath = join(GENERATED_DIR, `${id}.json`)
+    if (existsSync(jsonPath)) {
+      unlinkSync(jsonPath)
+    }
+
+    // Delete image directory
+    const imageDir = join(IMAGES_DIR, id)
+    if (existsSync(imageDir)) {
+      rmSync(imageDir, { recursive: true, force: true })
+    }
+
+    res.json({ success: true, id })
+  } catch (err) {
+    console.error('Delete error:', err)
+    res.status(500).json({ error: err.message || 'Verwijderen mislukt.' })
+  }
+})
+
+// ==========================================================================
 // GET /api/health
 // ==========================================================================
 app.get('/api/health', (req, res) => {
@@ -770,10 +841,8 @@ app.get('/api/health', (req, res) => {
 // Helper: Get next DWI ID for a station
 // ==========================================================================
 function getNextDwiId(station) {
-  // Check existing hardcoded IDs
   const existingIds = []
 
-  // Scan generated directory
   if (existsSync(GENERATED_DIR)) {
     const files = readdirSync(GENERATED_DIR).filter(f => f.endsWith('.json'))
     files.forEach(f => {
@@ -783,13 +852,11 @@ function getNextDwiId(station) {
     })
   }
 
-  // Scan image directories for hardcoded ones
   if (existsSync(IMAGES_DIR)) {
     const dirs = readdirSync(IMAGES_DIR).filter(d => d.startsWith(`DWI-${station}-`))
     dirs.forEach(d => existingIds.push(d))
   }
 
-  // Find max number
   let maxNum = 0
   existingIds.forEach(id => {
     const match = id.match(/DWI-\w+-(\d+)/)
@@ -805,7 +872,7 @@ function getNextDwiId(station) {
 // Start server
 // ==========================================================================
 const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`THG DWI API server draait op http://localhost:${PORT}`)
   console.log(`API key geconfigureerd: ${!!process.env.ANTHROPIC_API_KEY}`)
 })

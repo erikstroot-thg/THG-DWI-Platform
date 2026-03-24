@@ -223,6 +223,34 @@ export async function updateContext(stations) {
   return res.json()
 }
 
+export async function updateDwiStatus(id, status, pin = null) {
+  const res = await fetch(`/api/dwi/${id}/status`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status, pin }),
+  })
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Onbekende fout' }))
+    throw new Error(err.error || `Server error: ${res.status}`)
+  }
+
+  return res.json()
+}
+
+export async function deleteDwi(id) {
+  const res = await fetch(`/api/dwi/${id}`, {
+    method: 'DELETE',
+  })
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Onbekende fout' }))
+    throw new Error(err.error || `Server error: ${res.status}`)
+  }
+
+  return res.json()
+}
+
 export async function checkHealth() {
   try {
     const res = await fetch('/api/health')

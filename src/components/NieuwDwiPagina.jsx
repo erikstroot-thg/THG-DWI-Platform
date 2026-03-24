@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import {
   ArrowLeft,
   Sparkles,
@@ -11,6 +11,7 @@ import {
   Brain,
   Cpu,
   Zap,
+  Edit3,
 } from 'lucide-react'
 import { STATIONS } from '../data/werkinstructies'
 import MediaUpload from './MediaUpload'
@@ -48,6 +49,8 @@ function StreamProgress({ progress }) {
 
 export default function NieuwDwiPagina() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const revisieData = location.state?.revisie || null
 
   // Form state
   const [station, setStation] = useState('')
@@ -68,6 +71,18 @@ export default function NieuwDwiPagina() {
   // Save state
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+
+  // Pre-fill form when coming from revisie
+  useEffect(() => {
+    if (revisieData) {
+      setStation(revisieData.station || '')
+      setMachine(revisieData.machine || '')
+      setBeschrijving(revisieData.beschrijving || revisieData.titel || '')
+      setAuteur(revisieData.auteur || '')
+      // Show the existing DWI as generated preview
+      setGeneratedDwi(revisieData)
+    }
+  }, [revisieData])
 
   const selectedStation = WORK_STATIONS.find(s => s.code === station)
 
@@ -145,13 +160,18 @@ export default function NieuwDwiPagina() {
       </Link>
 
       {/* Title */}
-      <div className="bg-gradient-to-r from-thg-blue to-thg-blue-light rounded-xl p-6 text-white">
+      <div className={`rounded-xl p-6 text-white ${revisieData ? 'bg-gradient-to-r from-thg-orange to-orange-400' : 'bg-gradient-to-r from-thg-blue to-thg-blue-light'}`}>
         <div className="flex items-center gap-3">
-          <Sparkles className="w-8 h-8" />
+          {revisieData ? <Edit3 className="w-8 h-8" /> : <Sparkles className="w-8 h-8" />}
           <div>
-            <h1 className="text-2xl font-bold">Nieuwe DWI aanmaken met AI</h1>
-            <p className="text-blue-100 mt-1">
-              Upload foto's en beschrijf het proces — Claude genereert de werkinstructie
+            <h1 className="text-2xl font-bold">
+              {revisieData ? `Revisie: ${revisieData.id}` : 'Nieuwe DWI aanmaken met AI'}
+            </h1>
+            <p className="text-white/80 mt-1">
+              {revisieData
+                ? 'Bewerk de DWI en sla opnieuw op als concept'
+                : "Upload foto's en beschrijf het proces — Claude genereert de werkinstructie"
+              }
             </p>
           </div>
         </div>
@@ -190,7 +210,7 @@ export default function NieuwDwiPagina() {
           <div className="bg-green-50 border border-green-200 rounded-xl p-4">
             <p className="font-semibold text-green-800 flex items-center gap-2">
               <CheckCircle className="w-5 h-5" />
-              DWI gegenereerd! Controleer het resultaat hieronder.
+              {revisieData ? 'DWI geladen voor revisie. Controleer en pas aan.' : 'DWI gegenereerd! Controleer het resultaat hieronder.'}
             </p>
           </div>
 
@@ -204,17 +224,19 @@ export default function NieuwDwiPagina() {
                 font-semibold py-3 px-6 rounded-lg min-h-[44px] transition-colors disabled:opacity-50"
             >
               {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
-              {saving ? 'Opslaan...' : 'Opslaan'}
+              {saving ? 'Opslaan...' : 'Opslaan als concept'}
             </button>
-            <button
-              onClick={handleGenerate}
-              disabled={loading}
-              className="flex items-center gap-2 bg-thg-accent hover:bg-blue-600 text-white
-                font-semibold py-3 px-6 rounded-lg min-h-[44px] transition-colors disabled:opacity-50"
-            >
-              <RotateCcw className="w-5 h-5" />
-              Opnieuw genereren
-            </button>
+            {!revisieData && (
+              <button
+                onClick={handleGenerate}
+                disabled={loading}
+                className="flex items-center gap-2 bg-thg-accent hover:bg-blue-600 text-white
+                  font-semibold py-3 px-6 rounded-lg min-h-[44px] transition-colors disabled:opacity-50"
+              >
+                <RotateCcw className="w-5 h-5" />
+                Opnieuw genereren
+              </button>
+            )}
             <button
               onClick={handleReset}
               className="flex items-center gap-2 bg-white border border-gray-300 text-gray-700
