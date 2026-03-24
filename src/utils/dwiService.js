@@ -16,11 +16,11 @@ export async function generateDwi({ photos, documents, station, stationNummer, m
 }
 
 // Streaming DWI generation with Server-Sent Events
-export async function generateDwiStream({ photos, documents, station, stationNummer, machine, beschrijving, auteur, model }, onProgress) {
+export async function generateDwiStream({ photos, stappen, documents, station, stationNummer, machine, beschrijving, auteur, model }, onProgress) {
   const res = await fetch('/api/generate-dwi-stream', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ photos, documents, station, stationNummer, machine, beschrijving, auteur, model }),
+    body: JSON.stringify({ photos, stappen, documents, station, stationNummer, machine, beschrijving, auteur, model }),
   })
 
   if (!res.ok) {

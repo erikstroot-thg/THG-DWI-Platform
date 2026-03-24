@@ -74,11 +74,30 @@ const DEFAULT_MODEL = process.env.DEFAULT_MODEL || 'sonnet'
 const THINKING_BUDGET = parseInt(process.env.THINKING_BUDGET || '5000', 10)
 
 // Build user content blocks from photos + documents + text
-async function buildUserContent({ photos, documents, nextId, station, stationNummer, machine, auteur, beschrijving }) {
+async function buildUserContent({ photos, stappen, documents, nextId, station, stationNummer, machine, auteur, beschrijving }) {
   const contentBlocks = []
 
-  // Add photos as image blocks
-  if (photos?.length > 0) {
+  // If stappen array is provided (step-by-step builder), send per-step photo + text
+  // This gives Claude better context: each photo is paired with operator's description
+  if (stappen?.length > 0 && stappen.some(s => s.foto)) {
+    stappen.forEach((stap, i) => {
+      if (stap.foto) {
+        contentBlocks.push({
+          type: 'image',
+          source: {
+            type: 'base64',
+            media_type: stap.foto.mimeType || 'image/jpeg',
+            data: stap.foto.base64.replace(/^data:image\/\w+;base64,/, ''),
+          },
+        })
+      }
+      contentBlocks.push({
+        type: 'text',
+        text: `[Stap ${i + 1}] ${stap.tekst || 'Geen beschrijving opgegeven door operator. Analyseer de foto en beschrijf wat je ziet.'}`,
+      })
+    })
+  } else if (photos?.length > 0) {
+    // Legacy: bulk photos without per-step context
     photos.forEach((photo) => {
       contentBlocks.push({
         type: 'image',
@@ -175,21 +194,23 @@ function extractDwiFromResponse(response) {
 // ==========================================================================
 app.post('/api/generate-dwi', rateLimit, async (req, res) => {
   try {
-    const { photos, documents, station, stationNummer, machine, beschrijving, auteur, model: requestedModel } = req.body
+    const { photos, stappen, documents, station, stationNummer, machine, beschrijving, auteur, model: requestedModel } = req.body
 
     // Validate
-    if (!station || !machine || !beschrijving) {
-      return res.status(400).json({ error: 'Station, machine en beschrijving zijn verplicht.' })
+    if (!station || !machine) {
+      return res.status(400).json({ error: 'Station en machine zijn verplicht.' })
     }
-    if ((!photos || photos.length === 0) && (!documents || documents.length === 0)) {
-      return res.status(400).json({ error: 'Upload minimaal 1 foto of document.' })
+    const hasPhotos = (photos?.length > 0) || (stappen?.some(s => s.foto))
+    if (!hasPhotos && (!documents || documents.length === 0) && !beschrijving) {
+      return res.status(400).json({ error: 'Upload minimaal 1 foto of voeg een beschrijving toe.' })
     }
-    if (photos && photos.length > 30) {
+    const totalPhotos = stappen?.filter(s => s.foto).length || photos?.length || 0
+    if (totalPhotos > 30) {
       return res.status(400).json({ error: 'Maximaal 30 foto\'s per keer.' })
     }
 
     const nextId = getNextDwiId(station)
-    const userContent = await buildUserContent({ photos, documents, nextId, station, stationNummer, machine, auteur, beschrijving })
+    const userContent = await buildUserContent({ photos, stappen, documents, nextId, station, stationNummer, machine, auteur, beschrijving })
 
     // Determine model
     const modelKey = requestedModel && MODELS[requestedModel] ? requestedModel : DEFAULT_MODEL
@@ -244,7 +265,7 @@ app.post('/api/generate-dwi-stream', rateLimit, async (req, res) => {
   }
 
   try {
-    const { photos, documents, station, stationNummer, machine, beschrijving, auteur, model: requestedModel } = req.body
+    const { photos, stappen, documents, station, stationNummer, machine, beschrijving, auteur, model: requestedModel } = req.body
 
     // Validate
     if (!station || !machine || !beschrijving) {
@@ -259,7 +280,7 @@ app.post('/api/generate-dwi-stream', rateLimit, async (req, res) => {
     const nextId = getNextDwiId(station)
     sendEvent('progress', { fase: 'start', bericht: 'DWI-generatie gestart...', id: nextId })
 
-    const userContent = await buildUserContent({ photos, documents, nextId, station, stationNummer, machine, auteur, beschrijving })
+    const userContent = await buildUserContent({ photos, stappen, documents, nextId, station, stationNummer, machine, auteur, beschrijving })
 
     const modelKey = requestedModel && MODELS[requestedModel] ? requestedModel : DEFAULT_MODEL
     const modelId = MODELS[modelKey]
