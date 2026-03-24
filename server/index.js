@@ -69,6 +69,7 @@ const MODELS = {
   opus: 'claude-opus-4-20250514',
 }
 const DEFAULT_MODEL = process.env.DEFAULT_MODEL || 'sonnet'
+const THINKING_BUDGET = parseInt(process.env.THINKING_BUDGET || '5000', 10)
 
 // Build user content blocks from photos + documents + text
 function buildUserContent({ photos, documents, nextId, station, stationNummer, machine, auteur, beschrijving }) {
@@ -179,7 +180,7 @@ app.post('/api/generate-dwi', rateLimit, async (req, res) => {
       max_tokens: 16000,
       thinking: {
         type: 'enabled',
-        budget_tokens: 10000,
+        budget_tokens: THINKING_BUDGET,
       },
       system: getDwiSystemPrompt(station),
       messages: [{ role: 'user', content: userContent }],
@@ -254,7 +255,7 @@ app.post('/api/generate-dwi-stream', rateLimit, async (req, res) => {
       max_tokens: 16000,
       thinking: {
         type: 'enabled',
-        budget_tokens: 10000,
+        budget_tokens: THINKING_BUDGET,
       },
       system: getDwiSystemPrompt(station),
       messages: [{ role: 'user', content: userContent }],
@@ -325,7 +326,7 @@ app.post('/api/dwi/improve-step', rateLimit, async (req, res) => {
       max_tokens: 4000,
       thinking: {
         type: 'enabled',
-        budget_tokens: 5000,
+        budget_tokens: THINKING_BUDGET,
       },
       system: `Je bent een expert in het verbeteren van werkinstructies voor Timmermans Hardglas B.V.
 Je taak: verbeter EEN stap van een bestaande DWI op basis van de instructie van de gebruiker.
