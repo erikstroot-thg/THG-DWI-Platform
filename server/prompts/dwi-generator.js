@@ -52,9 +52,11 @@ Genereer EXACT dit formaat (geen extra velden, geen ontbrekende velden):
       "tip": "Handige tip of null",
       "substappen": ["a", "b", "c"],
       "afbeeldingen": ["/images/dwi/DWI-XXX-NNN/stap-01.jpg"],
-      "bijschrift": ["Beschrijving van de foto"]
+      "bijschrift": ["Beschrijving van de foto"],
+      "illustraties": [{"type": "svg", "titel": "Schema titel", "svg": "<svg>...</svg>"}]
     }
   ],
+  "procesdiagram": {"type": "mermaid", "code": "graph TD\\n    A --> B"},
   "afwijkingen": [
     {
       "afwijking": "Wat kan er misgaan",
@@ -130,15 +132,55 @@ Voeg toe op basis van wat je ziet in de foto's en de context.
 | QC | Inspectie | 10 |
 | EXP | Expeditie | 11 |
 
+## SVG Illustraties
+
+Bij stappen waar GEEN foto beschikbaar is, of waar een schematische illustratie verduidelijkend werkt, genereer een SVG-diagram:
+
+Voeg een "illustraties" veld toe aan de stap (array van objecten):
+\`\`\`json
+{
+  "illustraties": [
+    {
+      "type": "svg",
+      "titel": "Schema: nulpunt instellen",
+      "svg": "<svg viewBox='0 0 400 300' xmlns='http://www.w3.org/2000/svg'>...</svg>"
+    }
+  ]
+}
+\`\`\`
+
+Richtlijnen voor SVG-illustraties:
+- Gebruik viewBox="0 0 400 300" (landscape) of "0 0 300 400" (portrait)
+- Houd het simpel en technisch: lijnen, pijlen, labels, genummerde stappen
+- Gebruik THG-kleuren: #003366 (blauw), #F57C20 (oranje), #4CAF50 (groen), #333 (tekst)
+- Teken: machine-overzichten, procesflows, positie-schema's, waarschuwingssymbolen
+- Font: sans-serif, leesbaar op mobiel (min 12px)
+- Geen complexe gradients of animaties
+- illustraties is altijd een array (leeg [] als niet van toepassing)
+
+## Procesdiagram
+
+Als de instructie een duidelijke processtroom heeft, voeg een "procesdiagram" veld toe op het hoogste niveau:
+\`\`\`json
+{
+  "procesdiagram": {
+    "type": "mermaid",
+    "code": "graph TD\\n    A[Start] --> B[Stap 1]\\n    B --> C{Controle}\\n    C -->|OK| D[Stap 2]\\n    C -->|NOK| E[Corrigeer]"
+  }
+}
+\`\`\`
+
 ## Belangrijk
 
 - Retourneer ALLEEN het JSON object, geen extra tekst
 - Gebruik null voor lege waarschuwingen/tips, niet "" of undefined
-- substappen, afbeeldingen en bijschrift zijn altijd arrays (leeg [] als niet van toepassing)
+- substappen, afbeeldingen, bijschrift en illustraties zijn altijd arrays (leeg [] als niet van toepassing)
 - Datum formaat: DD-MM-YYYY
 - volgendeReview = datum + 6 maanden
 - Minimaal 3 afwijkingen genereren
-- Minimaal 3 relevante zoektermen in zoektermen veld`
+- Minimaal 3 relevante zoektermen in zoektermen veld
+- Genereer SVG-illustraties bij stappen waar visuele verduidelijking helpt
+- Genereer een procesdiagram als het proces een duidelijke flow heeft`
 }
 
 // Prompt voor het verrijken van een bestaande DWI met extra informatie

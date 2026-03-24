@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import {
   ShieldCheck,
   Wrench,
@@ -5,6 +6,7 @@ import {
   Lightbulb,
   ClipboardList,
   AlertCircle,
+  GitBranch,
 } from 'lucide-react'
 import { STATIONS } from '../data/werkinstructies'
 import StatusBadge from './StatusBadge'
@@ -12,6 +14,65 @@ import StatusBadge from './StatusBadge'
 function getStationLabel(code) {
   const s = STATIONS.find((st) => st.code === code)
   return s ? s.label : code
+}
+
+// SVG illustration renderer — renders inline SVG safely
+function SvgIllustratie({ illustratie }) {
+  if (!illustratie?.svg) return null
+  return (
+    <figure className="my-3 bg-gray-50 rounded-lg border border-gray-200 p-3">
+      {illustratie.titel && (
+        <figcaption className="text-sm font-medium text-gray-600 mb-2">{illustratie.titel}</figcaption>
+      )}
+      <div
+        className="w-full max-w-md mx-auto [&>svg]:w-full [&>svg]:h-auto"
+        dangerouslySetInnerHTML={{ __html: illustratie.svg }}
+      />
+    </figure>
+  )
+}
+
+// Mermaid diagram renderer
+function MermaidDiagram({ code }) {
+  const containerRef = useRef(null)
+
+  useEffect(() => {
+    if (!code || !containerRef.current) return
+
+    let cancelled = false
+    async function render() {
+      try {
+        const mermaid = (await import('mermaid')).default
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: 'base',
+          themeVariables: {
+            primaryColor: '#003366',
+            primaryTextColor: '#fff',
+            primaryBorderColor: '#002244',
+            lineColor: '#F57C20',
+            secondaryColor: '#E8F4FD',
+            tertiaryColor: '#F0F9FF',
+          },
+        })
+        const { svg } = await mermaid.render(`mermaid-${Date.now()}`, code)
+        if (!cancelled && containerRef.current) {
+          containerRef.current.innerHTML = svg
+        }
+      } catch (err) {
+        console.error('Mermaid render error:', err)
+        if (!cancelled && containerRef.current) {
+          containerRef.current.innerHTML = `<pre class="text-xs text-red-500">${err.message}</pre>`
+        }
+      }
+    }
+    render()
+    return () => { cancelled = true }
+  }, [code])
+
+  return (
+    <div ref={containerRef} className="w-full overflow-x-auto [&>svg]:mx-auto" />
+  )
 }
 
 function StapPreview({ stap }) {
@@ -35,6 +96,14 @@ function StapPreview({ stap }) {
                   <p className="text-xs text-gray-400 mt-1">{src}</p>
                 </div>
               </figure>
+            ))}
+          </div>
+        )}
+
+        {stap.illustraties && stap.illustraties.length > 0 && (
+          <div className={`grid gap-3 my-3 ${stap.illustraties.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+            {stap.illustraties.map((ill, i) => (
+              <SvgIllustratie key={i} illustratie={ill} />
             ))}
           </div>
         )}
@@ -176,6 +245,17 @@ export default function DwiVoorbeeld({ dwi }) {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Procesdiagram (Mermaid) */}
+      {dwi.procesdiagram?.code && (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6">
+          <h2 className="text-lg font-semibold text-thg-blue-dark flex items-center gap-2 mb-4">
+            <GitBranch className="w-5 h-5 text-thg-accent" />
+            Procesdiagram
+          </h2>
+          <MermaidDiagram code={dwi.procesdiagram.code} />
         </div>
       )}
 

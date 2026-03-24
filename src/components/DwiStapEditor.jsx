@@ -9,10 +9,16 @@ import {
   ChevronDown,
   ChevronUp,
   Image,
+  Sparkles,
+  Loader2,
 } from 'lucide-react'
+import { improveStep } from '../utils/dwiService'
 
-export default function DwiStapEditor({ stap, index, onChange, onRemove, onMoveUp, onMoveDown, isFirst, isLast }) {
+export default function DwiStapEditor({ stap, index, onChange, onRemove, onMoveUp, onMoveDown, isFirst, isLast, dwiContext }) {
   const [collapsed, setCollapsed] = useState(false)
+  const [improving, setImproving] = useState(false)
+  const [showAiInput, setShowAiInput] = useState(false)
+  const [aiInstruction, setAiInstruction] = useState('')
 
   function updateField(field, value) {
     onChange({ ...stap, [field]: value })
@@ -49,6 +55,26 @@ export default function DwiStapEditor({ stap, index, onChange, onRemove, onMoveU
     onChange({ ...stap, afbeeldingen: imgs, bijschrift: capts })
   }
 
+  async function handleImproveWithAi() {
+    if (!dwiContext) return
+    setImproving(true)
+    try {
+      const result = await improveStep(stap, dwiContext, aiInstruction || undefined)
+      if (result.stap) {
+        // Preserve the original step number
+        result.stap.nummer = stap.nummer
+        onChange(result.stap)
+        setShowAiInput(false)
+        setAiInstruction('')
+      }
+    } catch (err) {
+      console.error('AI verbetering mislukt:', err)
+      alert(`AI-verbetering mislukt: ${err.message}`)
+    } finally {
+      setImproving(false)
+    }
+  }
+
   return (
     <div className="border border-gray-200 rounded-xl bg-white shadow-sm">
       {/* Header — always visible */}
@@ -81,6 +107,13 @@ export default function DwiStapEditor({ stap, index, onChange, onRemove, onMoveU
             title={collapsed ? 'Uitklappen' : 'Inklappen'}>
             {collapsed ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
           </button>
+          <button
+            onClick={() => setShowAiInput(!showAiInput)}
+            disabled={improving || !dwiContext}
+            className="p-1 text-purple-400 hover:text-purple-600 disabled:opacity-30"
+            title="Verbeter met AI">
+            {improving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+          </button>
           <button onClick={onRemove}
             className="p-1 text-red-400 hover:text-red-600"
             title="Verwijder stap">
@@ -88,6 +121,36 @@ export default function DwiStapEditor({ stap, index, onChange, onRemove, onMoveU
           </button>
         </div>
       </div>
+
+      {/* AI improvement input */}
+      {showAiInput && (
+        <div className="px-4 py-3 bg-purple-50 border-b border-purple-200 space-y-2">
+          <p className="text-xs font-medium text-purple-700">
+            <Sparkles className="w-3 h-3 inline mr-1" />
+            Beschrijf hoe je deze stap wilt verbeteren, of laat leeg voor automatische verbetering:
+          </p>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={aiInstruction}
+              onChange={(e) => setAiInstruction(e.target.value)}
+              placeholder="Bijv. 'Maak duidelijker hoe de klem werkt' of 'Voeg substappen toe'"
+              className="flex-1 border border-purple-200 rounded-lg px-3 py-2 text-sm
+                focus:ring-2 focus:ring-purple-400 focus:border-purple-400"
+              onKeyDown={(e) => e.key === 'Enter' && handleImproveWithAi()}
+            />
+            <button
+              onClick={handleImproveWithAi}
+              disabled={improving}
+              className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium
+                hover:bg-purple-700 disabled:opacity-50 flex items-center gap-1.5 shrink-0"
+            >
+              {improving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              Verbeter
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Body — collapsible */}
       {!collapsed && (

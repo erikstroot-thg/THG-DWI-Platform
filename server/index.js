@@ -62,42 +62,59 @@ function getClient() {
 }
 
 // ==========================================================================
-// POST /api/generate-dwi
-// Accepts photos (base64) + context, calls Claude, returns DWI JSON
+// Model configuration
 // ==========================================================================
-app.post('/api/generate-dwi', rateLimit, async (req, res) => {
-  try {
-    const { photos, station, stationNummer, machine, beschrijving, auteur } = req.body
+const MODELS = {
+  sonnet: 'claude-sonnet-4-20250514',
+  opus: 'claude-opus-4-20250514',
+}
+const DEFAULT_MODEL = process.env.DEFAULT_MODEL || 'sonnet'
 
-    // Validate
-    if (!station || !machine || !beschrijving) {
-      return res.status(400).json({ error: 'Station, machine en beschrijving zijn verplicht.' })
-    }
-    if (!photos || photos.length === 0) {
-      return res.status(400).json({ error: 'Upload minimaal 1 foto.' })
-    }
-    if (photos.length > 30) {
-      return res.status(400).json({ error: 'Maximaal 30 foto\'s per keer.' })
-    }
+// Build user content blocks from photos + documents + text
+function buildUserContent({ photos, documents, nextId, station, stationNummer, machine, auteur, beschrijving }) {
+  const contentBlocks = []
 
-    // Determine next ID for this station
-    const nextId = getNextDwiId(station)
+  // Add photos as image blocks
+  if (photos?.length > 0) {
+    photos.forEach((photo) => {
+      contentBlocks.push({
+        type: 'image',
+        source: {
+          type: 'base64',
+          media_type: photo.mimeType || 'image/jpeg',
+          data: photo.base64.replace(/^data:image\/\w+;base64,/, ''),
+        },
+      })
+    })
+  }
 
-    // Build Claude messages with vision
-    const imageBlocks = photos.map((photo, i) => ({
-      type: 'image',
-      source: {
-        type: 'base64',
-        media_type: photo.mimeType || 'image/jpeg',
-        data: photo.base64.replace(/^data:image\/\w+;base64,/, ''),
-      },
-    }))
+  // Add documents as text context
+  if (documents?.length > 0) {
+    documents.forEach((doc) => {
+      if (doc.type === 'pdf' && doc.text) {
+        contentBlocks.push({
+          type: 'text',
+          text: `[BIJLAGE: ${doc.filename}]\n${doc.text}\n[/BIJLAGE]`,
+        })
+      } else if (doc.type === 'text' && doc.content) {
+        contentBlocks.push({
+          type: 'text',
+          text: `[BIJLAGE: ${doc.filename}]\n${doc.content}\n[/BIJLAGE]`,
+        })
+      }
+    })
+  }
 
-    const userContent = [
-      ...imageBlocks,
-      {
-        type: 'text',
-        text: `Genereer een werkinstructie (DWI) op basis van bovenstaande ${photos.length} foto's.
+  // Main instruction text
+  const photoCount = photos?.length || 0
+  const docCount = documents?.length || 0
+  let contextParts = []
+  if (photoCount > 0) contextParts.push(`${photoCount} foto's`)
+  if (docCount > 0) contextParts.push(`${docCount} document(en)`)
+
+  contentBlocks.push({
+    type: 'text',
+    text: `Genereer een werkinstructie (DWI) op basis van bovenstaande ${contextParts.join(' en ')}.
 
 Gegevens:
 - DWI ID: ${nextId}
@@ -106,35 +123,79 @@ Gegevens:
 - Auteur: ${auteur || 'Onbekend'}
 - Beschrijving/context van de operator: ${beschrijving}
 
-De foto's zijn genummerd van 1 t/m ${photos.length} in de volgorde hierboven.
-Gebruik pad: /images/dwi/${nextId}/stap-{NN}.jpg voor de afbeeldingen (01, 02, etc.).
+${photoCount > 0 ? `De foto's zijn genummerd van 1 t/m ${photoCount} in de volgorde hierboven.\nGebruik pad: /images/dwi/${nextId}/stap-{NN}.jpg voor de afbeeldingen (01, 02, etc.).` : 'Er zijn geen foto\'s beschikbaar. Genereer SVG-illustraties bij elke stap.'}
 
-Genereer de complete DWI als JSON object. Volg exact het schema uit de system prompt.`
+Genereer de complete DWI als JSON object. Volg exact het schema uit de system prompt.
+Genereer SVG-illustraties bij stappen waar een visueel schema helpt.
+Genereer een procesdiagram als het proces een duidelijke flow heeft.`
+  })
+
+  return contentBlocks
+}
+
+// Extract DWI JSON from Claude response (handles both thinking and non-thinking)
+function extractDwiFromResponse(response) {
+  // Find text blocks (skip thinking blocks)
+  for (const block of response.content) {
+    if (block.type === 'text') {
+      const jsonMatch = block.text.match(/\{[\s\S]*\}/)
+      if (jsonMatch) {
+        return JSON.parse(jsonMatch[0])
       }
-    ]
+    }
+  }
+  return null
+}
+
+// ==========================================================================
+// POST /api/generate-dwi
+// Accepts photos + documents + context, calls Claude with extended thinking
+// ==========================================================================
+app.post('/api/generate-dwi', rateLimit, async (req, res) => {
+  try {
+    const { photos, documents, station, stationNummer, machine, beschrijving, auteur, model: requestedModel } = req.body
+
+    // Validate
+    if (!station || !machine || !beschrijving) {
+      return res.status(400).json({ error: 'Station, machine en beschrijving zijn verplicht.' })
+    }
+    if ((!photos || photos.length === 0) && (!documents || documents.length === 0)) {
+      return res.status(400).json({ error: 'Upload minimaal 1 foto of document.' })
+    }
+    if (photos && photos.length > 30) {
+      return res.status(400).json({ error: 'Maximaal 30 foto\'s per keer.' })
+    }
+
+    const nextId = getNextDwiId(station)
+    const userContent = buildUserContent({ photos, documents, nextId, station, stationNummer, machine, auteur, beschrijving })
+
+    // Determine model
+    const modelKey = requestedModel && MODELS[requestedModel] ? requestedModel : DEFAULT_MODEL
+    const modelId = MODELS[modelKey]
 
     const client = getClient()
     const response = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 8000,
+      model: modelId,
+      max_tokens: 16000,
+      thinking: {
+        type: 'enabled',
+        budget_tokens: 10000,
+      },
       system: getDwiSystemPrompt(station),
       messages: [{ role: 'user', content: userContent }],
     })
 
-    // Extract JSON from response
-    const text = response.content[0].text
-    const jsonMatch = text.match(/\{[\s\S]*\}/)
-    if (!jsonMatch) {
+    // Extract JSON from response (skipping thinking blocks)
+    const dwi = extractDwiFromResponse(response)
+    if (!dwi) {
       return res.status(500).json({ error: 'Claude gaf geen geldig JSON terug.' })
     }
-
-    const dwi = JSON.parse(jsonMatch[0])
 
     // Ensure required fields
     dwi.id = nextId
     dwi.status = 'concept'
 
-    res.json({ dwi, usage: response.usage })
+    res.json({ dwi, usage: response.usage, model: modelKey })
   } catch (err) {
     console.error('Generate error:', err)
     if (err.message?.includes('ANTHROPIC_API_KEY')) {
@@ -142,6 +203,177 @@ Genereer de complete DWI als JSON object. Volg exact het schema uit de system pr
     }
     res.status(500).json({ error: err.message || 'Er ging iets mis bij het genereren.' })
   }
+})
+
+// ==========================================================================
+// POST /api/generate-dwi-stream
+// Same as above but with Server-Sent Events for real-time progress
+// ==========================================================================
+app.post('/api/generate-dwi-stream', rateLimit, async (req, res) => {
+  // Set SSE headers
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+  })
+
+  function sendEvent(type, data) {
+    res.write(`data: ${JSON.stringify({ type, ...data })}\n\n`)
+  }
+
+  try {
+    const { photos, documents, station, stationNummer, machine, beschrijving, auteur, model: requestedModel } = req.body
+
+    // Validate
+    if (!station || !machine || !beschrijving) {
+      sendEvent('error', { error: 'Station, machine en beschrijving zijn verplicht.' })
+      return res.end()
+    }
+    if ((!photos || photos.length === 0) && (!documents || documents.length === 0)) {
+      sendEvent('error', { error: 'Upload minimaal 1 foto of document.' })
+      return res.end()
+    }
+
+    const nextId = getNextDwiId(station)
+    sendEvent('progress', { fase: 'start', bericht: 'DWI-generatie gestart...', id: nextId })
+
+    const userContent = buildUserContent({ photos, documents, nextId, station, stationNummer, machine, auteur, beschrijving })
+
+    const modelKey = requestedModel && MODELS[requestedModel] ? requestedModel : DEFAULT_MODEL
+    const modelId = MODELS[modelKey]
+
+    sendEvent('progress', { fase: 'thinking', bericht: `Claude (${modelKey}) analyseert foto's en denkt na...` })
+
+    const client = getClient()
+    let fullText = ''
+    let thinkingText = ''
+    let isThinking = true
+
+    const stream = await client.messages.stream({
+      model: modelId,
+      max_tokens: 16000,
+      thinking: {
+        type: 'enabled',
+        budget_tokens: 10000,
+      },
+      system: getDwiSystemPrompt(station),
+      messages: [{ role: 'user', content: userContent }],
+    })
+
+    for await (const event of stream) {
+      if (event.type === 'content_block_start') {
+        if (event.content_block?.type === 'thinking') {
+          isThinking = true
+          sendEvent('progress', { fase: 'thinking', bericht: 'Claude denkt na over de beste instructie...' })
+        } else if (event.content_block?.type === 'text') {
+          isThinking = false
+          sendEvent('progress', { fase: 'generating', bericht: 'Werkinstructie wordt gegenereerd...' })
+        }
+      } else if (event.type === 'content_block_delta') {
+        if (event.delta?.type === 'thinking_delta') {
+          thinkingText += event.delta.thinking || ''
+          // Send periodic thinking updates
+          if (thinkingText.length % 200 < 10) {
+            sendEvent('progress', { fase: 'thinking', bericht: 'Claude analyseert details...' })
+          }
+        } else if (event.delta?.type === 'text_delta') {
+          fullText += event.delta.text || ''
+        }
+      }
+    }
+
+    // Extract JSON
+    const jsonMatch = fullText.match(/\{[\s\S]*\}/)
+    if (!jsonMatch) {
+      sendEvent('error', { error: 'Claude gaf geen geldig JSON terug.' })
+      return res.end()
+    }
+
+    const dwi = JSON.parse(jsonMatch[0])
+    dwi.id = nextId
+    dwi.status = 'concept'
+
+    const finalMessage = await stream.finalMessage()
+
+    sendEvent('complete', { dwi, usage: finalMessage.usage, model: modelKey })
+    res.end()
+  } catch (err) {
+    console.error('Stream generate error:', err)
+    sendEvent('error', { error: err.message || 'Er ging iets mis bij het genereren.' })
+    res.end()
+  }
+})
+
+// ==========================================================================
+// POST /api/dwi/improve-step
+// AI-assisted improvement of a single step
+// ==========================================================================
+app.post('/api/dwi/improve-step', rateLimit, async (req, res) => {
+  try {
+    const { stap, dwiContext, instructie, model: requestedModel } = req.body
+
+    if (!stap || !dwiContext) {
+      return res.status(400).json({ error: 'Stap en DWI-context zijn verplicht.' })
+    }
+
+    const modelKey = requestedModel && MODELS[requestedModel] ? requestedModel : DEFAULT_MODEL
+    const modelId = MODELS[modelKey]
+
+    const client = getClient()
+    const response = await client.messages.create({
+      model: modelId,
+      max_tokens: 4000,
+      thinking: {
+        type: 'enabled',
+        budget_tokens: 5000,
+      },
+      system: `Je bent een expert in het verbeteren van werkinstructies voor Timmermans Hardglas B.V.
+Je taak: verbeter EEN stap van een bestaande DWI op basis van de instructie van de gebruiker.
+
+Regels:
+- Alle tekst in het NEDERLANDS
+- Behoud het JSON-schema van de stap
+- Retourneer ALLEEN het verbeterde stap-object als JSON
+- Genereer een SVG-illustratie als dat de stap verduidelijkt
+- Schrijf kort, duidelijk, werkvloertaal`,
+      messages: [{
+        role: 'user',
+        content: `DWI-context: ${dwiContext.titel} (${dwiContext.station} - ${dwiContext.machine})
+
+Huidige stap:
+${JSON.stringify(stap, null, 2)}
+
+${instructie ? `Instructie voor verbetering: ${instructie}` : 'Verbeter deze stap: maak de beschrijving duidelijker, voeg substappen toe als nodig, en genereer een SVG-illustratie als dat helpt.'}
+
+Retourneer de verbeterde stap als JSON object.`
+      }],
+    })
+
+    const improved = extractDwiFromResponse(response)
+    if (!improved) {
+      return res.status(500).json({ error: 'Geen geldig resultaat.' })
+    }
+
+    res.json({ stap: improved, usage: response.usage })
+  } catch (err) {
+    console.error('Improve step error:', err)
+    res.status(500).json({ error: err.message || 'Verbetering mislukt.' })
+  }
+})
+
+// ==========================================================================
+// GET /api/models
+// Returns available models
+// ==========================================================================
+app.get('/api/models', (req, res) => {
+  res.json({
+    models: Object.keys(MODELS).map(key => ({
+      key,
+      id: MODELS[key],
+      label: key === 'sonnet' ? 'Sonnet 4 (snel, goedkoper)' : 'Opus 4 (best, duurder)',
+    })),
+    default: DEFAULT_MODEL,
+  })
 })
 
 // ==========================================================================

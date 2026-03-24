@@ -464,6 +464,7 @@ export default function DwiEditor() {
                 onMoveDown={() => moveStap(i, 1)}
                 isFirst={i === 0}
                 isLast={i === (dwi.stappen || []).length - 1}
+                dwiContext={dwi ? { titel: dwi.titel, station: dwi.station, machine: dwi.machine } : null}
               />
             ))}
           </div>

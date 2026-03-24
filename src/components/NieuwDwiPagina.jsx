@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   ArrowLeft,
@@ -8,13 +8,43 @@ import {
   Loader2,
   CheckCircle,
   AlertTriangle,
+  Brain,
+  Cpu,
+  Zap,
 } from 'lucide-react'
 import { STATIONS } from '../data/werkinstructies'
 import FotoUpload from './FotoUpload'
 import DwiVoorbeeld from './DwiVoorbeeld'
-import { generateDwi, saveDwi } from '../utils/dwiService'
+import { generateDwiStream, saveDwi, getModels } from '../utils/dwiService'
 
 const WORK_STATIONS = STATIONS.filter(s => s.code !== 'alle')
+
+// Streaming progress indicator
+function StreamProgress({ progress }) {
+  if (!progress) return null
+
+  const faseIcons = {
+    start: <Zap className="w-5 h-5" />,
+    thinking: <Brain className="w-5 h-5 animate-pulse" />,
+    generating: <Cpu className="w-5 h-5 animate-spin" />,
+  }
+
+  const faseColors = {
+    start: 'bg-blue-50 border-blue-200 text-blue-800',
+    thinking: 'bg-purple-50 border-purple-200 text-purple-800',
+    generating: 'bg-green-50 border-green-200 text-green-800',
+  }
+
+  return (
+    <div className={`flex items-center gap-3 rounded-xl p-4 border ${faseColors[progress.fase] || 'bg-gray-50 border-gray-200'}`}>
+      {faseIcons[progress.fase] || <Loader2 className="w-5 h-5 animate-spin" />}
+      <div>
+        <p className="font-semibold">{progress.bericht}</p>
+        {progress.id && <p className="text-xs opacity-70 mt-0.5">ID: {progress.id}</p>}
+      </div>
+    </div>
+  )
+}
 
 export default function NieuwDwiPagina() {
   const navigate = useNavigate()
@@ -25,11 +55,14 @@ export default function NieuwDwiPagina() {
   const [beschrijving, setBeschrijving] = useState('')
   const [auteur, setAuteur] = useState('')
   const [photos, setPhotos] = useState([])
+  const [selectedModel, setSelectedModel] = useState('sonnet')
+  const [availableModels, setAvailableModels] = useState([])
 
   // Generation state
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [generatedDwi, setGeneratedDwi] = useState(null)
+  const [streamProgress, setStreamProgress] = useState(null)
 
   // Save state
   const [saving, setSaving] = useState(false)
@@ -37,23 +70,37 @@ export default function NieuwDwiPagina() {
 
   const selectedStation = WORK_STATIONS.find(s => s.code === station)
 
+  // Load available models
+  useEffect(() => {
+    getModels().then(data => {
+      setAvailableModels(data.models || [])
+      setSelectedModel(data.default || 'sonnet')
+    })
+  }, [])
+
   async function handleGenerate(e) {
     e.preventDefault()
     setError(null)
     setLoading(true)
+    setStreamProgress(null)
 
     try {
-      const result = await generateDwi({
+      const result = await generateDwiStream({
         photos,
         station,
         stationNummer: selectedStation?.nummer,
         machine,
         beschrijving,
         auteur: auteur || 'Onbekend',
+        model: selectedModel,
+      }, (progress) => {
+        setStreamProgress(progress)
       })
       setGeneratedDwi(result.dwi)
+      setStreamProgress(null)
     } catch (err) {
       setError(err.message)
+      setStreamProgress(null)
     } finally {
       setLoading(false)
     }
@@ -67,7 +114,6 @@ export default function NieuwDwiPagina() {
     try {
       await saveDwi(generatedDwi, photos)
       setSaved(true)
-      // Navigate to the new DWI after a short delay
       setTimeout(() => navigate(`/dwi/${generatedDwi.id}`), 1500)
     } catch (err) {
       setError(err.message)
@@ -79,6 +125,7 @@ export default function NieuwDwiPagina() {
   function handleReset() {
     setGeneratedDwi(null)
     setError(null)
+    setStreamProgress(null)
   }
 
   const canGenerate = station && machine && beschrijving.length >= 10 && photos.length > 0
@@ -128,6 +175,11 @@ export default function NieuwDwiPagina() {
             <p className="text-sm text-red-600 mt-1">{error}</p>
           </div>
         </div>
+      )}
+
+      {/* Streaming progress */}
+      {loading && streamProgress && (
+        <StreamProgress progress={streamProgress} />
       )}
 
       {/* Generated preview */}
@@ -218,18 +270,50 @@ export default function NieuwDwiPagina() {
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Auteur / Melder
-              </label>
-              <input
-                type="text"
-                value={auteur}
-                onChange={(e) => setAuteur(e.target.value)}
-                placeholder="Je naam"
-                className="w-full border border-gray-300 rounded-lg py-3 px-4 min-h-[44px]
-                  text-base focus:ring-2 focus:ring-thg-accent focus:border-thg-accent"
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Auteur / Melder
+                </label>
+                <input
+                  type="text"
+                  value={auteur}
+                  onChange={(e) => setAuteur(e.target.value)}
+                  placeholder="Je naam"
+                  className="w-full border border-gray-300 rounded-lg py-3 px-4 min-h-[44px]
+                    text-base focus:ring-2 focus:ring-thg-accent focus:border-thg-accent"
+                />
+              </div>
+
+              {/* Model selector */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  AI Model
+                </label>
+                <div className="flex gap-2">
+                  {availableModels.map(m => (
+                    <button
+                      key={m.key}
+                      type="button"
+                      onClick={() => setSelectedModel(m.key)}
+                      className={`flex-1 py-3 px-4 rounded-lg border text-sm font-medium transition-all min-h-[44px]
+                        ${selectedModel === m.key
+                          ? 'bg-thg-blue text-white border-thg-blue shadow-sm'
+                          : 'bg-white text-gray-600 border-gray-300 hover:border-thg-accent'
+                        }`}
+                    >
+                      {m.key === 'sonnet' && <Zap className="w-4 h-4 inline mr-1.5" />}
+                      {m.key === 'opus' && <Brain className="w-4 h-4 inline mr-1.5" />}
+                      {m.label}
+                    </button>
+                  ))}
+                  {availableModels.length === 0 && (
+                    <div className="flex-1 py-3 px-4 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-400">
+                      Modellen laden...
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             <div>
@@ -258,7 +342,7 @@ export default function NieuwDwiPagina() {
             </h2>
             <p className="text-sm text-gray-500">
               Upload foto's van de machine, knoppen, schermen, en het proces.
-              Claude analyseert de foto's en genereert stap-voor-stap instructies.
+              Claude analyseert de foto's en genereert stap-voor-stap instructies met SVG-illustraties.
             </p>
             <FotoUpload photos={photos} setPhotos={setPhotos} />
           </div>
@@ -277,12 +361,13 @@ export default function NieuwDwiPagina() {
             {loading ? (
               <>
                 <Loader2 className="w-6 h-6 animate-spin" />
-                Claude analyseert je foto's...
+                Claude genereert je DWI...
               </>
             ) : (
               <>
                 <Sparkles className="w-6 h-6" />
                 Genereer DWI met AI
+                {selectedModel === 'opus' && <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full ml-2">Opus</span>}
               </>
             )}
           </button>

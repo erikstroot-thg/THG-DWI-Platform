@@ -1,10 +1,10 @@
 // API client for DWI generation, persistence, and editing
 
-export async function generateDwi({ photos, station, stationNummer, machine, beschrijving, auteur }) {
+export async function generateDwi({ photos, documents, station, stationNummer, machine, beschrijving, auteur, model }) {
   const res = await fetch('/api/generate-dwi', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ photos, station, stationNummer, machine, beschrijving, auteur }),
+    body: JSON.stringify({ photos, documents, station, stationNummer, machine, beschrijving, auteur, model }),
   })
 
   if (!res.ok) {
@@ -12,6 +12,83 @@ export async function generateDwi({ photos, station, stationNummer, machine, bes
     throw new Error(err.error || `Server error: ${res.status}`)
   }
 
+  return res.json()
+}
+
+// Streaming DWI generation with Server-Sent Events
+export async function generateDwiStream({ photos, documents, station, stationNummer, machine, beschrijving, auteur, model }, onProgress) {
+  const res = await fetch('/api/generate-dwi-stream', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ photos, documents, station, stationNummer, machine, beschrijving, auteur, model }),
+  })
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Onbekende fout' }))
+    throw new Error(err.error || `Server error: ${res.status}`)
+  }
+
+  const reader = res.body.getReader()
+  const decoder = new TextDecoder()
+  let buffer = ''
+  let result = null
+
+  while (true) {
+    const { done, value } = await reader.read()
+    if (done) break
+
+    buffer += decoder.decode(value, { stream: true })
+
+    // Parse SSE events from buffer
+    const lines = buffer.split('\n')
+    buffer = lines.pop() || ''
+
+    for (const line of lines) {
+      if (line.startsWith('data: ')) {
+        try {
+          const event = JSON.parse(line.slice(6))
+
+          if (event.type === 'progress' && onProgress) {
+            onProgress(event)
+          } else if (event.type === 'complete') {
+            result = { dwi: event.dwi, usage: event.usage, model: event.model }
+          } else if (event.type === 'error') {
+            throw new Error(event.error)
+          }
+        } catch (e) {
+          if (e.message && !e.message.includes('JSON')) throw e
+        }
+      }
+    }
+  }
+
+  if (!result) {
+    throw new Error('Geen resultaat ontvangen van server.')
+  }
+
+  return result
+}
+
+// AI-assisted step improvement
+export async function improveStep(stap, dwiContext, instructie, model) {
+  const res = await fetch('/api/dwi/improve-step', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ stap, dwiContext, instructie, model }),
+  })
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Onbekende fout' }))
+    throw new Error(err.error || `Server error: ${res.status}`)
+  }
+
+  return res.json()
+}
+
+// Get available models
+export async function getModels() {
+  const res = await fetch('/api/models')
+  if (!res.ok) return { models: [], default: 'sonnet' }
   return res.json()
 }
 
