@@ -5,25 +5,14 @@ function ThgLogo({ className = 'w-10 h-10' }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 120 64"
+      viewBox="0 0 64 64"
       role="img"
       aria-label="Timmermans Hardglas logo"
       className={className}
     >
-      {/* Glass pane shape — light blue */}
-      <path d="M2 2h36v36H2z" fill="#D5E8F0" rx="2" />
-      {/* T letter — primary blue */}
-      <path d="M8 8h24v6H23v22h-6V14H8z" fill="#005A9C" />
-      {/* H letter — dark blue */}
-      <path d="M44 8h6v14h12V8h6v36h-6V28H50v16h-6z" fill="#004678" />
-      {/* G letter — primary blue */}
-      <path d="M74 8h22v6H80v8h14v6H80v10h16v6H74z" fill="#005A9C" />
-      {/* Accent bar — orange */}
-      <rect x="2" y="46" width="110" height="4" rx="2" fill="#E8750A" />
-      {/* Subtitle */}
-      <text x="2" y="60" fontSize="8" fontFamily="Calibri, sans-serif" fill="#595959" fontWeight="600">
-        TIMMERMANS HARDGLAS
-      </text>
+      <path d="M0 0h20v20H0zM0 20h20v16c0 8 6 14 14 14h10v14H26C11.6 64 0 52.4 0 38V20z" fill="#AECAE0" />
+      <rect x="20" y="20" width="12" height="12" fill="#F13C55" />
+      <rect x="20" y="50" width="24" height="14" fill="#2E4E90" />
     </svg>
   )
 }
@@ -36,8 +25,8 @@ export default function Header() {
     <header className="bg-thg-blue text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 min-h-[44px]">
-          <ThgLogo className="w-24 h-14" />
-          <div className="hidden sm:block">
+          <ThgLogo className="w-10 h-10" />
+          <div>
             <h1 className="text-lg font-bold leading-tight">
               Digitale Werkinstructies
             </h1>
