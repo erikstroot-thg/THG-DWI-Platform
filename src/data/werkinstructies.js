@@ -1004,7 +1004,185 @@ export const WERKINSTRUCTIES = [
       }
     ],
     zoektermen: 'polysun assemblage iso lijn lamellen screens pellini butyl foampjes bestmachina manco'
-  }
+  },
+
+  // ============================================================================
+  // DWI-ESG-001: Hardoven Opstarten (Station 7: ESG) — TEMPLATE
+  // Foto's moeten nog aangeleverd worden
+  // ============================================================================
+  {
+    id: 'DWI-ESG-001',
+    titel: 'Hardoven Opstarten & Bedienen',
+    station: 'ESG',
+    stationNummer: 7,
+    machine: 'Glaston FC Series hardoven',
+    auteur: 'Nog toe te wijzen',
+    goedgekeurd: 'Erik Stroot',
+    versie: '0.1',
+    datum: '24-03-2026',
+    volgendeReview: '24-09-2026',
+    status: 'concept',
+    gereedschap: [
+      'Hittebestendige handschoenen',
+      'Bedieningspaneel hardoven',
+      'Pyrometer (temperatuurmeting)',
+    ],
+    pbm: [
+      'Hittebestendige handschoenen',
+      'Veiligheidsschoenen',
+      'Veiligheidsbril',
+      'Beschermende werkkleding',
+    ],
+    materialen: [
+      { naam: 'Float glas (voorbewerkt)', samenstelling: 'Diverse diktes (4-19mm)', variant: 'ESG-kwaliteit' },
+    ],
+    kpis: [
+      'Opstarttijd hardoven: < 45 minuten tot bedrijfstemperatuur',
+      'Temperatuurnauwkeurigheid: ±5°C over volledige breedte',
+      'Breukpercentage: < 2% per batch',
+    ],
+    opmerkingenImportant: [
+      'Glas komt uit de oven op 620°C+ — NOOIT aanraken zonder hittebestendige handschoenen!',
+      'Spontane NiS-breuk mogelijk — houd veiligheidsafstand bij uitloop',
+      'Controleer ALTIJD de oven-temperatuur voordat je glas inlaadt',
+    ],
+    secties: [
+      {
+        nummer: 1,
+        titel: 'Voorbereiding & Veiligheidscheck',
+        stappen: [
+          {
+            nummer: 1,
+            titel: 'Visuele inspectie oven',
+            beschrijving: 'Controleer de rollen in de oven op glasresten of beschadigingen. Verwijder eventuele resten.',
+            waarschuwing: 'Oven kan nog warm zijn van vorige cyclus — controleer temperatuur eerst',
+            tip: null,
+            substappen: ['Kijk door het inspectieluik', 'Controleer rollen op glasresten', 'Controleer koelsectie op obstakels'],
+            afbeeldingen: [],
+            bijschrift: [],
+          },
+          {
+            nummer: 2,
+            titel: 'Koelsysteem controleren',
+            beschrijving: 'Controleer of het koelsysteem (blowers) operationeel is. Zonder werkend koelsysteem mag de oven niet gestart worden.',
+            waarschuwing: 'NOOIT de oven starten zonder werkend koelsysteem!',
+            tip: 'Luister naar het geluid van de blowers — abnormale geluiden melden.',
+            substappen: [],
+            afbeeldingen: [],
+            bijschrift: [],
+          },
+        ],
+      },
+      {
+        nummer: 2,
+        titel: 'Oven Opstarten',
+        stappen: [
+          {
+            nummer: 3,
+            titel: 'Hoofdschakelaar inschakelen',
+            beschrijving: 'Zet de hoofdschakelaar van de hardoven aan. Wacht tot het bedieningspaneel opstart.',
+            waarschuwing: null,
+            tip: null,
+            substappen: ['Draai hoofdschakelaar naar ON', 'Wacht op paneel-initialisatie (~30 sec)'],
+            afbeeldingen: [],
+            bijschrift: [],
+          },
+          {
+            nummer: 4,
+            titel: 'Temperatuur instellen',
+            beschrijving: 'Stel de oventemperatuur in op het bedieningspaneel. Standaard: **620°C** voor regulier ESG.',
+            waarschuwing: 'Temperatuur afwijking >10°C kan leiden tot spontane breuk of onvoldoende harding',
+            tip: 'Voor dun glas (4mm) iets hogere temperatuur, voor dik glas (12mm+) langere verblijftijd.',
+            substappen: [
+              'Selecteer recept op bedieningspaneel',
+              'Controleer temperatuurinstelling (standaard 620°C)',
+              'Stel verblijftijd in op basis van glasdikte',
+            ],
+            afbeeldingen: [],
+            bijschrift: [],
+          },
+          {
+            nummer: 5,
+            titel: 'Opwarmfase starten',
+            beschrijving: 'Start de opwarmfase. De oven heeft **30-45 minuten** nodig om bedrijfstemperatuur te bereiken.',
+            waarschuwing: null,
+            tip: 'Gebruik de opwarmtijd om het glas voor te bereiden op de invoerrol.',
+            substappen: ['Druk START op bedieningspaneel', 'Monitor temperatuurstijging op display'],
+            afbeeldingen: [],
+            bijschrift: [],
+          },
+        ],
+      },
+      {
+        nummer: 3,
+        titel: 'Productie',
+        stappen: [
+          {
+            nummer: 6,
+            titel: 'Glas inladen',
+            beschrijving: 'Plaats het voorbewerkte glas op de invoerrol. Controleer of het glas schoon en vrij van defecten is.',
+            waarschuwing: 'Glas met scheuren of chips NOOIT in de oven — explosiegevaar bij verhitting!',
+            tip: 'Positioneer het glas centraal op de rollen voor gelijkmatige verhitting.',
+            substappen: [
+              'Controleer glasplaat op defecten',
+              'Plaats glas centraal op invoerrol',
+              'Activeer invoer op bedieningspaneel',
+            ],
+            afbeeldingen: [],
+            bijschrift: [],
+          },
+          {
+            nummer: 7,
+            titel: 'Hardingsproces monitoren',
+            beschrijving: 'Monitor het hardingsproces via het bedieningspaneel. Het glas wordt verhit tot ~620°C en vervolgens snel afgekoeld (quenching).',
+            waarschuwing: null,
+            tip: 'Let op de quench-fase — gelijkmatige afkoeling is essentieel voor de hardingskwaliteit.',
+            substappen: [],
+            afbeeldingen: [],
+            bijschrift: [],
+          },
+          {
+            nummer: 8,
+            titel: 'Gehard glas uitnemen',
+            beschrijving: 'Neem het geharde glas van de uitvoerrol. Het glas is nog **warm** — gebruik hittebestendige handschoenen.',
+            waarschuwing: 'Glas is nog 100-150°C warm bij uitname — ALTIJD hittebestendige handschoenen dragen!',
+            tip: 'Controleer direct visueel op optische vervorming of breuk.',
+            substappen: [
+              'Wacht tot uitvoersignaal',
+              'Pak glas met hittebestendige handschoenen',
+              'Plaats op koelrek',
+              'Visuele kwaliteitscontrole',
+            ],
+            afbeeldingen: [],
+            bijschrift: [],
+          },
+        ],
+      },
+    ],
+    afwijkingen: [
+      {
+        afwijking: 'Glas breekt spontaan in oven',
+        oorzaak: 'NiS-inclusie, kras of chip in glas, temperatuurschok',
+        actie: 'Stop productie, reinig oven van glasresten, registreer breuk',
+      },
+      {
+        afwijking: 'Ongelijke harding (anisotropie zichtbaar)',
+        oorzaak: 'Temperatuurverschil in oven, rollen vuil, glas niet centraal',
+        actie: 'Controleer rollenreinheid, kalibreer temperatuursensoren',
+      },
+      {
+        afwijking: 'Oven bereikt temperatuur niet',
+        oorzaak: 'Verwarmingselement defect, thermokoppel defect',
+        actie: 'Meld aan onderhoud, niet produceren tot probleem opgelost',
+      },
+      {
+        afwijking: 'Koelsysteem valt uit tijdens productie',
+        oorzaak: 'Blower defect, stroomuitval',
+        actie: 'NOODSTOP! Glas in oven laten tot koeling hersteld is. Meld direct!',
+      },
+    ],
+    zoektermen: 'hardoven ESG harden glaston quenching temperatuur 620 graden koeling blowers rollen breuk NiS',
+  },
 ];
 
 // ============================================================================

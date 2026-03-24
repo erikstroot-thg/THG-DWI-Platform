@@ -1034,6 +1034,185 @@ Rules:
 })
 
 // ==========================================================================
+// 5S Audit system
+// ==========================================================================
+const VIJFS_DIR = join(ROOT, 'src', 'data', 'generated', 'vijfs')
+mkdirSync(VIJFS_DIR, { recursive: true })
+
+// POST /api/vijfs/:station — Save a 5S audit
+app.post('/api/vijfs/:station', (req, res) => {
+  try {
+    const { station } = req.params
+    const audit = req.body
+
+    if (!audit.auditor || !audit.scores) {
+      return res.status(400).json({ error: 'Auditor en scores zijn verplicht.' })
+    }
+
+    audit.id = `5S-${station}-${Date.now()}`
+    audit.station = station
+
+    const stationDir = join(VIJFS_DIR, station)
+    mkdirSync(stationDir, { recursive: true })
+    writeFileSync(join(stationDir, `${audit.id}.json`), JSON.stringify(audit, null, 2), 'utf-8')
+
+    res.json({ success: true, id: audit.id })
+  } catch (err) {
+    console.error('5S save error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// GET /api/vijfs/:station/historie — Get 5S audit history
+app.get('/api/vijfs/:station/historie', (req, res) => {
+  try {
+    const { station } = req.params
+    const stationDir = join(VIJFS_DIR, station)
+
+    if (!existsSync(stationDir)) {
+      return res.json({ audits: [] })
+    }
+
+    const files = readdirSync(stationDir).filter(f => f.endsWith('.json')).sort().reverse()
+    const audits = files.slice(0, 50).map(f => JSON.parse(readFileSync(join(stationDir, f), 'utf-8')))
+    res.json({ audits })
+  } catch (err) {
+    console.error('5S history error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// GET /api/vijfs/overzicht — Latest 5S scores per station
+app.get('/api/vijfs/overzicht', (req, res) => {
+  try {
+    const result = {}
+    if (!existsSync(VIJFS_DIR)) return res.json({ stations: result })
+
+    const stationDirs = readdirSync(VIJFS_DIR).filter(d => {
+      const p = join(VIJFS_DIR, d)
+      return existsSync(p) && readdirSync(p).length > 0
+    })
+
+    for (const station of stationDirs) {
+      const dir = join(VIJFS_DIR, station)
+      const files = readdirSync(dir).filter(f => f.endsWith('.json')).sort().reverse()
+      if (files.length > 0) {
+        const latest = JSON.parse(readFileSync(join(dir, files[0]), 'utf-8'))
+        result[station] = {
+          datum: latest.datum,
+          auditor: latest.auditor,
+          totaalPercentage: latest.totaalScores?._totaal?.percentage || 0,
+          aantalAudits: files.length,
+        }
+      }
+    }
+
+    res.json({ stations: result })
+  } catch (err) {
+    console.error('5S overview error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// ==========================================================================
+// IST/SOLL/GAP analysis
+// ==========================================================================
+const IST_SOLL_DIR = join(ROOT, 'src', 'data', 'generated', 'ist-soll-gap')
+mkdirSync(IST_SOLL_DIR, { recursive: true })
+
+// POST /api/ist-soll-gap/:station — Save analysis
+app.post('/api/ist-soll-gap/:station', rateLimit, (req, res) => {
+  try {
+    const { station } = req.params
+    const analyse = req.body
+
+    if (!analyse.auteur) {
+      return res.status(400).json({ error: 'Auteur is verplicht.' })
+    }
+
+    analyse.station = station
+    analyse.datum = new Date().toISOString()
+    analyse.id = `ISG-${station}-${Date.now()}`
+
+    writeFileSync(join(IST_SOLL_DIR, `${analyse.id}.json`), JSON.stringify(analyse, null, 2), 'utf-8')
+    res.json({ success: true, id: analyse.id })
+  } catch (err) {
+    console.error('IST/SOLL/GAP save error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// GET /api/ist-soll-gap — List all analyses
+app.get('/api/ist-soll-gap', (req, res) => {
+  try {
+    if (!existsSync(IST_SOLL_DIR)) return res.json({ analyses: [] })
+    const files = readdirSync(IST_SOLL_DIR).filter(f => f.endsWith('.json')).sort().reverse()
+    const analyses = files.map(f => JSON.parse(readFileSync(join(IST_SOLL_DIR, f), 'utf-8')))
+    res.json({ analyses })
+  } catch (err) {
+    console.error('IST/SOLL/GAP list error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// POST /api/ist-soll-gap/:station/generate — AI-generated analysis
+app.post('/api/ist-soll-gap/:station/generate', rateLimit, async (req, res) => {
+  try {
+    const { station } = req.params
+    const { beschrijving, knelpunten } = req.body
+
+    const client = getClient()
+    const response = await client.messages.create({
+      model: process.env.DEFAULT_MODEL || 'claude-sonnet-4-20250514',
+      max_tokens: 8000,
+      system: `Je bent een procesoptimalisatie expert voor Timmermans Hardglas B.V. (THG), een glasfabriek in Hardenberg.
+
+Genereer een IST/SOLL/GAP analyse voor het opgegeven station in JSON-formaat.
+
+JSON schema:
+{
+  "station": "STATIONCODE",
+  "titel": "Korte titel",
+  "ist": [
+    { "categorie": "Bijv. Proces/Kwaliteit/Veiligheid/Doorlooptijd", "beschrijving": "Hoe het nu werkt", "score": 1-5 }
+  ],
+  "soll": [
+    { "categorie": "Zelfde categorie als IST", "beschrijving": "Hoe het zou moeten werken", "score": 1-5 }
+  ],
+  "gap": [
+    { "categorie": "Zelfde", "verschil": "Wat is het verschil", "impact": "hoog/midden/laag", "actie": "Concrete verbeteractie", "prioriteit": 1-5, "verantwoordelijke": "Functie/rol" }
+  ],
+  "samenvatting": "Korte samenvatting van de analyse"
+}
+
+Retourneer ALLEEN het JSON object.`,
+      messages: [{
+        role: 'user',
+        content: `Genereer een IST/SOLL/GAP analyse voor station ${station} bij THG.
+
+Beschrijving huidige situatie: ${beschrijving || 'Niet opgegeven'}
+Bekende knelpunten: ${knelpunten || 'Niet opgegeven'}
+
+Gebruik je kennis van glasfabrieken en productie-optimalisatie.`
+      }]
+    })
+
+    const text = response.content.find(b => b.type === 'text')?.text || ''
+    const jsonMatch = text.match(/\{[\s\S]*\}/)
+    if (!jsonMatch) {
+      return res.status(500).json({ error: 'Kon analyse niet parsen.' })
+    }
+
+    const analyse = JSON.parse(jsonMatch[0])
+    analyse.station = station
+    res.json({ analyse })
+  } catch (err) {
+    console.error('IST/SOLL/GAP generate error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// ==========================================================================
 // GET /api/health
 // ==========================================================================
 app.get('/api/health', (req, res) => {
