@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url'
 import dotenv from 'dotenv'
 import { getDwiSystemPrompt, getDwiEnrichPrompt } from './prompts/dwi-generator.js'
 import { THG_KNOWLEDGE_BASE } from './context/thg-knowledge-base.js'
+import { parseWhatsAppZip } from './whatsapp/parser.js'
 
 dotenv.config()
 
@@ -359,6 +360,129 @@ Retourneer de verbeterde stap als JSON object.`
   } catch (err) {
     console.error('Improve step error:', err)
     res.status(500).json({ error: err.message || 'Verbetering mislukt.' })
+  }
+})
+
+// ==========================================================================
+// POST /api/dwi/:id/enrich
+// Enrich existing DWI with WhatsApp export or additional context
+// ==========================================================================
+app.post('/api/dwi/:id/enrich', rateLimit, async (req, res) => {
+  try {
+    const { id } = req.params
+    const { dwi, berichten, afbeeldingen, extraContext, model: requestedModel } = req.body
+
+    if (!dwi) {
+      return res.status(400).json({ error: 'DWI object is verplicht.' })
+    }
+
+    const modelKey = requestedModel && MODELS[requestedModel] ? requestedModel : DEFAULT_MODEL
+    const modelId = MODELS[modelKey]
+
+    // Build content for Claude
+    const userContent = []
+
+    // Add new images
+    if (afbeeldingen?.length > 0) {
+      afbeeldingen.forEach(img => {
+        userContent.push({
+          type: 'image',
+          source: {
+            type: 'base64',
+            media_type: img.mimeType || 'image/jpeg',
+            data: img.base64.replace(/^data:image\/\w+;base64,/, ''),
+          },
+        })
+      })
+    }
+
+    // Build text context
+    let contextText = `Verrijk de volgende bestaande DWI met aanvullende informatie.\n\n`
+    contextText += `BESTAANDE DWI:\n${JSON.stringify(dwi, null, 2)}\n\n`
+
+    if (berichten?.length > 0) {
+      contextText += `WHATSAPP BERICHTEN VAN OPERATORS:\n`
+      berichten.forEach(b => {
+        if (b.tekst) {
+          contextText += `[${b.datum} ${b.tijd}] ${b.afzender}: ${b.tekst}\n`
+        } else if (b.isMedia) {
+          contextText += `[${b.datum} ${b.tijd}] ${b.afzender}: [foto/media]\n`
+        }
+      })
+      contextText += `\n`
+    }
+
+    if (extraContext) {
+      contextText += `EXTRA CONTEXT: ${extraContext}\n\n`
+    }
+
+    if (afbeeldingen?.length > 0) {
+      contextText += `Er zijn ${afbeeldingen.length} nieuwe foto's bijgevoegd (hierboven). Verwerk deze in de instructie.\n`
+    }
+
+    contextText += `\nRetourneer de VOLLEDIGE bijgewerkte DWI als JSON.`
+
+    userContent.push({ type: 'text', text: contextText })
+
+    const client = getClient()
+    const response = await client.messages.create({
+      model: modelId,
+      max_tokens: 16000,
+      thinking: {
+        type: 'enabled',
+        budget_tokens: THINKING_BUDGET,
+      },
+      system: getDwiEnrichPrompt(dwi.station),
+      messages: [{ role: 'user', content: userContent }],
+    })
+
+    const enriched = extractDwiFromResponse(response)
+    if (!enriched) {
+      return res.status(500).json({ error: 'Claude gaf geen geldig JSON terug.' })
+    }
+
+    // Preserve immutable fields
+    enriched.id = dwi.id
+    enriched.station = dwi.station
+    enriched.stationNummer = dwi.stationNummer
+    enriched.status = dwi.status
+
+    res.json({ dwi: enriched, usage: response.usage })
+  } catch (err) {
+    console.error('Enrich error:', err)
+    res.status(500).json({ error: err.message || 'Verrijking mislukt.' })
+  }
+})
+
+// ==========================================================================
+// POST /api/whatsapp/parse
+// Parse a WhatsApp export ZIP and return structured data
+// ==========================================================================
+app.post('/api/whatsapp/parse', rateLimit, async (req, res) => {
+  try {
+    const { zipBase64 } = req.body
+    if (!zipBase64) {
+      return res.status(400).json({ error: 'ZIP-bestand is verplicht.' })
+    }
+
+    const buffer = Buffer.from(zipBase64.replace(/^data:[^;]+;base64,/, ''), 'base64')
+    const result = await parseWhatsAppZip(buffer)
+
+    res.json({
+      berichten: result.berichten,
+      afbeeldingenCount: result.afbeeldingen.length,
+      afbeeldingen: result.afbeeldingen.map(a => ({
+        filename: a.filename,
+        mimeType: a.mimeType,
+        // Only send first 100 chars of base64 as preview indicator
+        hasData: true,
+      })),
+      // Store full images in memory for the enrich call
+      _afbeeldingen: result.afbeeldingen,
+    })
+  } catch (err) {
+    console.error('WhatsApp parse error:', err)
+    res.status(500).json({ error: err.message || 'ZIP verwerking mislukt.' })
   }
 })
 

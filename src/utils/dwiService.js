@@ -85,6 +85,38 @@ export async function improveStep(stap, dwiContext, instructie, model) {
   return res.json()
 }
 
+// Enrich existing DWI with WhatsApp data or additional context
+export async function enrichDwi(id, dwi, { berichten, afbeeldingen, extraContext, model } = {}) {
+  const res = await fetch(`/api/dwi/${encodeURIComponent(id)}/enrich`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ dwi, berichten, afbeeldingen, extraContext, model }),
+  })
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Onbekende fout' }))
+    throw new Error(err.error || `Server error: ${res.status}`)
+  }
+
+  return res.json()
+}
+
+// Parse a WhatsApp ZIP export
+export async function parseWhatsAppZip(zipBase64) {
+  const res = await fetch('/api/whatsapp/parse', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ zipBase64 }),
+  })
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Onbekende fout' }))
+    throw new Error(err.error || `Server error: ${res.status}`)
+  }
+
+  return res.json()
+}
+
 // Get available models
 export async function getModels() {
   const res = await fetch('/api/models')

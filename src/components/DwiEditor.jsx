@@ -1,6 +1,20 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
+import {
   ArrowLeft,
   Save,
   Eye,
@@ -126,6 +140,27 @@ export default function DwiEditor() {
     ;[stappen[index], stappen[newIndex]] = [stappen[newIndex], stappen[index]]
     stappen.forEach((s, i) => { s.nummer = i + 1 })
     updateDwiField('stappen', stappen)
+  }
+
+  // ─── DnD sensors ───
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  )
+
+  function handleDragEnd(event) {
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+
+    const stappen = [...(dwi.stappen || [])]
+    const oldIndex = stappen.findIndex(s => `stap-${s.nummer}` === active.id)
+    const newIndex = stappen.findIndex(s => `stap-${s.nummer}` === over.id)
+
+    if (oldIndex !== -1 && newIndex !== -1) {
+      const reordered = arrayMove(stappen, oldIndex, newIndex)
+      reordered.forEach((s, i) => { s.nummer = i + 1 })
+      updateDwiField('stappen', reordered)
+    }
   }
 
   // ─── Array field helpers (gereedschap, pbm, afwijkingen) ───
@@ -440,7 +475,7 @@ export default function DwiEditor() {
             </div>
           </div>
 
-          {/* Stappen */}
+          {/* Stappen met drag-and-drop */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-thg-blue-dark">
@@ -453,20 +488,28 @@ export default function DwiEditor() {
               </button>
             </div>
 
-            {(dwi.stappen || []).map((stap, i) => (
-              <DwiStapEditor
-                key={`${stap.nummer}-${i}`}
-                stap={stap}
-                index={i}
-                onChange={(updated) => updateStap(i, updated)}
-                onRemove={() => removeStap(i)}
-                onMoveUp={() => moveStap(i, -1)}
-                onMoveDown={() => moveStap(i, 1)}
-                isFirst={i === 0}
-                isLast={i === (dwi.stappen || []).length - 1}
-                dwiContext={dwi ? { titel: dwi.titel, station: dwi.station, machine: dwi.machine } : null}
-              />
-            ))}
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+              <SortableContext
+                items={(dwi.stappen || []).map(s => `stap-${s.nummer}`)}
+                strategy={verticalListSortingStrategy}
+              >
+                {(dwi.stappen || []).map((stap, i) => (
+                  <DwiStapEditor
+                    key={`stap-${stap.nummer}`}
+                    stap={stap}
+                    index={i}
+                    sortableId={`stap-${stap.nummer}`}
+                    onChange={(updated) => updateStap(i, updated)}
+                    onRemove={() => removeStap(i)}
+                    onMoveUp={() => moveStap(i, -1)}
+                    onMoveDown={() => moveStap(i, 1)}
+                    isFirst={i === 0}
+                    isLast={i === (dwi.stappen || []).length - 1}
+                    dwiContext={dwi ? { titel: dwi.titel, station: dwi.station, machine: dwi.machine } : null}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
           </div>
 
           {/* Afwijkingen */}

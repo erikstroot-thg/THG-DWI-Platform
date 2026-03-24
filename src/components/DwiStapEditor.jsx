@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import {
   GripVertical,
   Trash2,
@@ -14,11 +16,27 @@ import {
 } from 'lucide-react'
 import { improveStep } from '../utils/dwiService'
 
-export default function DwiStapEditor({ stap, index, onChange, onRemove, onMoveUp, onMoveDown, isFirst, isLast, dwiContext }) {
+export default function DwiStapEditor({ stap, index, sortableId, onChange, onRemove, onMoveUp, onMoveDown, isFirst, isLast, dwiContext }) {
   const [collapsed, setCollapsed] = useState(false)
   const [improving, setImproving] = useState(false)
   const [showAiInput, setShowAiInput] = useState(false)
   const [aiInstruction, setAiInstruction] = useState('')
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: sortableId || `stap-${stap.nummer}` })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 50 : 'auto',
+  }
 
   function updateField(field, value) {
     onChange({ ...stap, [field]: value })
@@ -76,10 +94,12 @@ export default function DwiStapEditor({ stap, index, onChange, onRemove, onMoveU
   }
 
   return (
-    <div className="border border-gray-200 rounded-xl bg-white shadow-sm">
+    <div ref={setNodeRef} style={style} {...attributes} className="border border-gray-200 rounded-xl bg-white shadow-sm">
       {/* Header — always visible */}
       <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-t-xl border-b border-gray-200">
-        <GripVertical className="w-4 h-4 text-gray-400 shrink-0 cursor-grab" />
+        <button {...listeners} className="touch-none cursor-grab active:cursor-grabbing p-0.5" title="Sleep om te verplaatsen">
+          <GripVertical className="w-4 h-4 text-gray-400 shrink-0" />
+        </button>
         <div className="w-8 h-8 rounded-full bg-thg-blue text-white flex items-center justify-center font-bold text-sm shrink-0">
           {stap.nummer}
         </div>

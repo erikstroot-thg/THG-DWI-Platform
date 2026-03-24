@@ -13,7 +13,7 @@ import {
   Zap,
 } from 'lucide-react'
 import { STATIONS } from '../data/werkinstructies'
-import FotoUpload from './FotoUpload'
+import MediaUpload from './MediaUpload'
 import DwiVoorbeeld from './DwiVoorbeeld'
 import { generateDwiStream, saveDwi, getModels } from '../utils/dwiService'
 
@@ -55,6 +55,7 @@ export default function NieuwDwiPagina() {
   const [beschrijving, setBeschrijving] = useState('')
   const [auteur, setAuteur] = useState('')
   const [photos, setPhotos] = useState([])
+  const [documents, setDocuments] = useState([])
   const [selectedModel, setSelectedModel] = useState('sonnet')
   const [availableModels, setAvailableModels] = useState([])
 
@@ -87,6 +88,7 @@ export default function NieuwDwiPagina() {
     try {
       const result = await generateDwiStream({
         photos,
+        documents,
         station,
         stationNummer: selectedStation?.nummer,
         machine,
@@ -335,16 +337,22 @@ export default function NieuwDwiPagina() {
             </div>
           </div>
 
-          {/* Step 2: Photos */}
+          {/* Step 2: Media upload */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6 space-y-4">
             <h2 className="text-lg font-semibold text-thg-blue-dark">
-              2. Foto's uploaden
+              2. Bestanden uploaden
             </h2>
             <p className="text-sm text-gray-500">
               Upload foto's van de machine, knoppen, schermen, en het proces.
-              Claude analyseert de foto's en genereert stap-voor-stap instructies met SVG-illustraties.
+              Je kunt ook PDF's, tekstbestanden of ZIP-bestanden (bijv. WhatsApp export) meesturen als extra context.
+              Claude analyseert alles en genereert stap-voor-stap instructies met SVG-illustraties.
             </p>
-            <FotoUpload photos={photos} setPhotos={setPhotos} />
+            <MediaUpload
+              photos={photos}
+              setPhotos={setPhotos}
+              documents={documents}
+              setDocuments={setDocuments}
+            />
           </div>
 
           {/* Generate button */}
