@@ -1,0 +1,17 @@
+{
+  "name": "THG Werkinstructies",
+  "short_name": "THG DWI",
+  "description": "Digitale Werkinstructies voor Timmermans Hardglas B.V.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#005A9C",
+  "icons": [
+    {
+      "src": "/images/thg-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -251,6 +251,46 @@ export async function deleteDwi(id) {
   return res.json()
 }
 
+// Analytics
+export async function trackView(dwiId, station) {
+  try {
+    await fetch('/api/analytics/view', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dwiId, station }),
+    })
+  } catch {
+    // Silent fail — analytics should never block UX
+  }
+}
+
+export async function getAnalytics() {
+  const res = await fetch('/api/analytics')
+  if (!res.ok) return { totals: {}, last30: [], top10: [], recent: [], totalViews: 0 }
+  return res.json()
+}
+
+// Translation
+export async function translateDwi(id, taal) {
+  const res = await fetch(`/api/dwi/${encodeURIComponent(id)}/translate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ taal }),
+  })
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Onbekende fout' }))
+    throw new Error(err.error || `Server error: ${res.status}`)
+  }
+
+  return res.json()
+}
+
+// PDF export — opens printable HTML in new tab
+export function openPdfExport(dwiId) {
+  window.open(`/api/dwi/${encodeURIComponent(dwiId)}/pdf`, '_blank')
+}
+
 export async function checkHealth() {
   try {
     const res = await fetch('/api/health')

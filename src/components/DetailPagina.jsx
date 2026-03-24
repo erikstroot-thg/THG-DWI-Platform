@@ -16,11 +16,16 @@ import {
   ListChecks,
   ZoomIn,
   Pencil,
+  QrCode,
+  FileDown,
+  Languages,
+  Loader2,
 } from 'lucide-react'
 import { WERKINSTRUCTIES, STATIONS } from '../data/werkinstructies'
-import { getGeneratedDwis } from '../utils/dwiService'
+import { getGeneratedDwis, trackView, openPdfExport, translateDwi } from '../utils/dwiService'
 import StatusBadge from './StatusBadge'
 import Lightbox from './Lightbox'
+import QrCodeModal from './QrCodeModal'
 
 function getStationLabel(code) {
   const s = STATIONS.find((st) => st.code === code)
@@ -126,6 +131,8 @@ export default function DetailPagina() {
   const { id } = useParams()
   const [generatedDwis, setGeneratedDwis] = useState([])
   const [lightbox, setLightbox] = useState(null) // { images, captions, index }
+  const [showQr, setShowQr] = useState(false)
+  const [translating, setTranslating] = useState(null) // 'en' | 'ro' | null
 
   useEffect(() => {
     getGeneratedDwis().then(setGeneratedDwis).catch(() => {})
@@ -133,6 +140,23 @@ export default function DetailPagina() {
 
   const dwi = WERKINSTRUCTIES.find((w) => w.id === id)
     || generatedDwis.find((w) => w.id === id)
+
+  // Track view
+  useEffect(() => {
+    if (dwi) trackView(dwi.id, dwi.station)
+  }, [dwi?.id]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function handleTranslate(taal) {
+    setTranslating(taal)
+    try {
+      const result = await translateDwi(dwi.id, taal)
+      window.open(`/dwi/${result.id}`, '_blank')
+    } catch (err) {
+      alert(`Vertaling mislukt: ${err.message}`)
+    } finally {
+      setTranslating(null)
+    }
+  }
 
   const openLightbox = (images, captions, index) => {
     setLightbox({ images, captions, index })
@@ -162,6 +186,14 @@ export default function DetailPagina() {
 
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
+      {/* QR Code modal */}
+      <QrCodeModal
+        open={showQr}
+        onClose={() => setShowQr(false)}
+        dwiId={dwi.id}
+        dwiTitel={dwi.titel}
+      />
+
       {/* Lightbox overlay */}
       {lightbox && (
         <Lightbox
@@ -182,14 +214,61 @@ export default function DetailPagina() {
           <ArrowLeft className="w-5 h-5" />
           Terug naar overzicht
         </Link>
-        <Link
-          to={`/dwi/${id}/bewerken`}
-          className="inline-flex items-center gap-2 bg-thg-accent hover:bg-thg-blue
-            text-white font-semibold py-2 px-4 rounded-lg min-h-[44px] transition-colors text-sm"
-        >
-          <Pencil className="w-4 h-4" />
-          Bewerken
-        </Link>
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={() => setShowQr(true)}
+            className="inline-flex items-center gap-1.5 bg-white border border-gray-300 hover:bg-gray-50
+              text-gray-700 font-medium py-2 px-3 rounded-lg min-h-[44px] transition-colors text-sm"
+            title="QR-code genereren"
+          >
+            <QrCode className="w-4 h-4" />
+            QR
+          </button>
+          <button
+            onClick={() => openPdfExport(dwi.id)}
+            className="inline-flex items-center gap-1.5 bg-white border border-gray-300 hover:bg-gray-50
+              text-gray-700 font-medium py-2 px-3 rounded-lg min-h-[44px] transition-colors text-sm"
+            title="PDF exporteren"
+          >
+            <FileDown className="w-4 h-4" />
+            PDF
+          </button>
+          <div className="relative group">
+            <button
+              className="inline-flex items-center gap-1.5 bg-white border border-gray-300 hover:bg-gray-50
+                text-gray-700 font-medium py-2 px-3 rounded-lg min-h-[44px] transition-colors text-sm"
+              title="Vertalen"
+            >
+              {translating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Languages className="w-4 h-4" />}
+              Vertaal
+            </button>
+            <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg
+              opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 min-w-[140px]">
+              <button
+                onClick={() => handleTranslate('en')}
+                disabled={!!translating}
+                className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 disabled:opacity-50 rounded-t-lg"
+              >
+                🇬🇧 English
+              </button>
+              <button
+                onClick={() => handleTranslate('ro')}
+                disabled={!!translating}
+                className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 disabled:opacity-50 rounded-b-lg"
+              >
+                🇷🇴 Română
+              </button>
+            </div>
+          </div>
+          <Link
+            to={`/dwi/${id}/bewerken`}
+            className="inline-flex items-center gap-2 bg-thg-accent hover:bg-thg-blue
+              text-white font-semibold py-2 px-4 rounded-lg min-h-[44px] transition-colors text-sm"
+          >
+            <Pencil className="w-4 h-4" />
+            Bewerken
+          </Link>
+        </div>
       </div>
 
       {/* Koptekst */}

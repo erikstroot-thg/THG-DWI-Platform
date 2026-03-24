@@ -1,12 +1,15 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { STATIONS, WERKINSTRUCTIES } from '../data/werkinstructies'
-import { getGeneratedDwis, getContext, updateContext } from '../utils/dwiService'
+import { getGeneratedDwis, getContext, updateContext, getAnalytics, updateDwiStatus, deleteDwi } from '../utils/dwiService'
 import StatusBadge from './StatusBadge'
 import {
   Settings, ArrowLeft, Factory, FileText, ClipboardCheck, Pencil,
   Plus, Trash2, Save, Loader2, CheckCircle, AlertTriangle, Cpu,
+  BarChart3, Eye, TrendingUp, ShieldCheck,
 } from 'lucide-react'
+import PincodeModal from './PincodeModal'
+import { ALLOWED_TRANSITIONS } from './StatusBadge'
 
 export default function BeheerPagina() {
   const [activeTab, setActiveTab] = useState('beoordeling')
@@ -20,9 +23,23 @@ export default function BeheerPagina() {
   const [contextError, setContextError] = useState(null)
   const [selectedStation, setSelectedStation] = useState('BOR')
 
+  // Analytics state
+  const [analytics, setAnalytics] = useState(null)
+
+  // Status workflow state
+  const [pinModal, setPinModal] = useState(null) // { dwiId, targetStatus }
+  const [statusUpdating, setStatusUpdating] = useState(null)
+
   useEffect(() => {
     getGeneratedDwis().then(setGeneratedDwis).catch(() => {})
   }, [])
+
+  // Load analytics when tab is active
+  useEffect(() => {
+    if (activeTab === 'analytics') {
+      getAnalytics().then(setAnalytics).catch(() => {})
+    }
+  }, [activeTab])
 
   // Load context when Instellingen tab is active
   useEffect(() => {
@@ -93,6 +110,40 @@ export default function BeheerPagina() {
     }
   }
 
+  // ─── Status workflow helpers ───
+  function handleStatusChange(dwiId, targetStatus) {
+    if (targetStatus === 'goedgekeurd' || targetStatus === 'gepubliceerd') {
+      setPinModal({ dwiId, targetStatus })
+    } else {
+      doStatusUpdate(dwiId, targetStatus)
+    }
+  }
+
+  async function doStatusUpdate(dwiId, targetStatus, pin = null) {
+    setStatusUpdating(dwiId)
+    try {
+      await updateDwiStatus(dwiId, targetStatus, pin)
+      // Refresh list
+      const updated = await getGeneratedDwis()
+      setGeneratedDwis(updated)
+      setPinModal(null)
+    } catch (err) {
+      throw err // Let PincodeModal handle the error display
+    } finally {
+      setStatusUpdating(null)
+    }
+  }
+
+  async function handleDelete(dwiId) {
+    if (!confirm(`Weet je zeker dat je ${dwiId} wilt verwijderen? Dit kan niet ongedaan worden.`)) return
+    try {
+      await deleteDwi(dwiId)
+      setGeneratedDwis(prev => prev.filter(d => d.id !== dwiId))
+    } catch (err) {
+      alert(`Verwijderen mislukt: ${err.message}`)
+    }
+  }
+
   const WORK_STATIONS = STATIONS.filter(s => s.code !== 'alle')
 
   return (
@@ -138,6 +189,7 @@ export default function BeheerPagina() {
         {[
           { key: 'beoordeling', label: `Ter beoordeling (${conceptDwis.length})` },
           { key: 'dwis', label: 'Alle werkinstructies' },
+          { key: 'analytics', label: 'Analytics' },
           { key: 'overzicht', label: 'Stations' },
           { key: 'instellingen', label: 'AI Instellingen' },
         ].map(tab => (
@@ -187,20 +239,49 @@ export default function BeheerPagina() {
                         <p className="mt-1 text-sm text-gray-400">{dwi.stappen.length} stappen</p>
                       )}
                     </div>
-                    <div className="flex gap-2 shrink-0">
-                      <Link
-                        to={`/dwi/${dwi.id}/bewerken`}
-                        className="px-4 py-2 bg-thg-accent text-white rounded-lg hover:bg-thg-blue text-sm font-medium flex items-center gap-1"
-                      >
-                        <Pencil size={14} />
-                        Bewerken
-                      </Link>
-                      <Link
-                        to={`/dwi/${dwi.id}`}
-                        className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium"
-                      >
-                        Bekijken
-                      </Link>
+                    <div className="flex flex-col gap-2 shrink-0 items-end">
+                      <div className="flex gap-2">
+                        <Link
+                          to={`/dwi/${dwi.id}/bewerken`}
+                          className="px-3 py-2 bg-thg-accent text-white rounded-lg hover:bg-thg-blue text-sm font-medium flex items-center gap-1"
+                        >
+                          <Pencil size={14} />
+                          Bewerken
+                        </Link>
+                        <Link
+                          to={`/dwi/${dwi.id}`}
+                          className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium"
+                        >
+                          Bekijken
+                        </Link>
+                      </div>
+                      {/* Status workflow buttons */}
+                      <div className="flex gap-1.5">
+                        {(ALLOWED_TRANSITIONS[dwi.status] || []).map(nextStatus => (
+                          <button
+                            key={nextStatus}
+                            onClick={() => handleStatusChange(dwi.id, nextStatus)}
+                            disabled={statusUpdating === dwi.id}
+                            className={`px-2.5 py-1 text-xs font-medium rounded-lg transition-colors disabled:opacity-50
+                              ${nextStatus === 'goedgekeurd' || nextStatus === 'gepubliceerd'
+                                ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                                : nextStatus === 'review'
+                                ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                              }`}
+                          >
+                            {nextStatus === 'goedgekeurd' && <ShieldCheck size={12} className="inline mr-1" />}
+                            {nextStatus === 'review' ? 'Ter review' : nextStatus.charAt(0).toUpperCase() + nextStatus.slice(1)}
+                          </button>
+                        ))}
+                        <button
+                          onClick={() => handleDelete(dwi.id)}
+                          className="px-2 py-1 text-xs text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
+                          title="Verwijderen"
+                        >
+                          <Trash2 size={12} />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -246,6 +327,152 @@ export default function BeheerPagina() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* Pincode Modal */}
+      {pinModal && (
+        <PincodeModal
+          open={!!pinModal}
+          onClose={() => setPinModal(null)}
+          onSubmit={(pin) => doStatusUpdate(pinModal.dwiId, pinModal.targetStatus, pin)}
+          laden={statusUpdating === pinModal?.dwiId}
+        />
+      )}
+
+      {/* Analytics */}
+      {activeTab === 'analytics' && (
+        <div className="space-y-6">
+          {!analytics ? (
+            <div className="text-center py-8">
+              <Loader2 className="w-6 h-6 animate-spin mx-auto text-thg-blue" />
+              <p className="mt-2 text-gray-500 text-sm">Laden...</p>
+            </div>
+          ) : (
+            <>
+              {/* Stats cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="bg-white rounded-xl shadow p-5 flex items-center gap-4">
+                  <Eye size={28} className="text-thg-blue" />
+                  <div>
+                    <p className="text-2xl font-bold">{analytics.totalViews}</p>
+                    <p className="text-sm text-gray-500">Totaal views</p>
+                  </div>
+                </div>
+                <div className="bg-white rounded-xl shadow p-5 flex items-center gap-4">
+                  <TrendingUp size={28} className="text-thg-green" />
+                  <div>
+                    <p className="text-2xl font-bold">
+                      {analytics.last30.reduce((sum, d) => sum + d.views, 0)}
+                    </p>
+                    <p className="text-sm text-gray-500">Views (30 dagen)</p>
+                  </div>
+                </div>
+                <div className="bg-white rounded-xl shadow p-5 flex items-center gap-4">
+                  <BarChart3 size={28} className="text-thg-accent" />
+                  <div>
+                    <p className="text-2xl font-bold">{analytics.top10.length}</p>
+                    <p className="text-sm text-gray-500">Actieve DWI's</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Simple bar chart — last 30 days */}
+              <div className="bg-white rounded-xl shadow p-5">
+                <h3 className="text-lg font-semibold text-thg-blue-dark mb-4 flex items-center gap-2">
+                  <BarChart3 size={20} />
+                  Views per dag (laatste 30 dagen)
+                </h3>
+                <div className="flex items-end gap-1 h-32">
+                  {analytics.last30.map((day, i) => {
+                    const max = Math.max(...analytics.last30.map(d => d.views), 1)
+                    const height = day.views > 0 ? Math.max((day.views / max) * 100, 4) : 0
+                    return (
+                      <div key={i} className="flex-1 flex flex-col items-center justify-end group relative">
+                        <div
+                          className="w-full bg-thg-blue rounded-t transition-all hover:bg-thg-accent"
+                          style={{ height: `${height}%` }}
+                          title={`${day.datum}: ${day.views} views`}
+                        />
+                        {/* Tooltip */}
+                        <div className="absolute bottom-full mb-1 bg-gray-800 text-white text-xs px-2 py-1
+                          rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                          {day.datum.slice(5)}: {day.views}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+                <div className="flex justify-between text-xs text-gray-400 mt-1">
+                  <span>{analytics.last30[0]?.datum.slice(5)}</span>
+                  <span>Vandaag</span>
+                </div>
+              </div>
+
+              {/* Top 10 most viewed */}
+              <div className="bg-white rounded-xl shadow overflow-hidden">
+                <div className="px-5 py-4 border-b">
+                  <h3 className="text-lg font-semibold text-thg-blue-dark flex items-center gap-2">
+                    <TrendingUp size={20} />
+                    Top 10 meest bekeken
+                  </h3>
+                </div>
+                {analytics.top10.length === 0 ? (
+                  <div className="p-8 text-center text-gray-400">
+                    <Eye size={32} className="mx-auto mb-2 opacity-50" />
+                    <p>Nog geen views geregistreerd.</p>
+                  </div>
+                ) : (
+                  <table className="w-full text-left">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-5 py-3 text-sm font-medium text-gray-600">#</th>
+                        <th className="px-5 py-3 text-sm font-medium text-gray-600">DWI</th>
+                        <th className="px-5 py-3 text-sm font-medium text-gray-600 text-right">Views</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                      {analytics.top10.map((item, i) => (
+                        <tr key={item.id} className="hover:bg-gray-50">
+                          <td className="px-5 py-3 text-sm font-bold text-thg-blue">{i + 1}</td>
+                          <td className="px-5 py-3 text-sm">
+                            <Link to={`/dwi/${item.id}`} className="text-thg-blue hover:underline font-medium">
+                              {item.id}
+                            </Link>
+                          </td>
+                          <td className="px-5 py-3 text-sm text-right font-semibold">{item.views}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+
+              {/* Recent views */}
+              {analytics.recent.length > 0 && (
+                <div className="bg-white rounded-xl shadow p-5">
+                  <h3 className="text-lg font-semibold text-thg-blue-dark mb-3 flex items-center gap-2">
+                    <Eye size={20} />
+                    Recente views
+                  </h3>
+                  <div className="space-y-1 max-h-64 overflow-y-auto">
+                    {analytics.recent.slice(0, 20).map((v, i) => (
+                      <div key={i} className="flex items-center justify-between py-1.5 text-sm">
+                        <Link to={`/dwi/${v.dwiId}`} className="text-thg-blue hover:underline font-medium">
+                          {v.dwiId}
+                        </Link>
+                        <span className="text-gray-400 text-xs">
+                          {new Date(v.timestamp).toLocaleString('nl-NL', {
+                            day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+                          })}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
         </div>
       )}
 

@@ -5,6 +5,7 @@ import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import dotenv from 'dotenv'
 import { getDwiSystemPrompt, getDwiEnrichPrompt } from './prompts/dwi-generator.js'
+import { generateDwiHtml } from './pdf-generator.js'
 import { THG_KNOWLEDGE_BASE } from './context/thg-knowledge-base.js'
 import { parseWhatsAppZip } from './whatsapp/parser.js'
 
@@ -73,7 +74,7 @@ const DEFAULT_MODEL = process.env.DEFAULT_MODEL || 'sonnet'
 const THINKING_BUDGET = parseInt(process.env.THINKING_BUDGET || '5000', 10)
 
 // Build user content blocks from photos + documents + text
-function buildUserContent({ photos, documents, nextId, station, stationNummer, machine, auteur, beschrijving }) {
+async function buildUserContent({ photos, documents, nextId, station, stationNummer, machine, auteur, beschrijving }) {
   const contentBlocks = []
 
   // Add photos as image blocks
@@ -92,19 +93,38 @@ function buildUserContent({ photos, documents, nextId, station, stationNummer, m
 
   // Add documents as text context
   if (documents?.length > 0) {
-    documents.forEach((doc) => {
+    for (const doc of documents) {
       if (doc.type === 'pdf' && doc.text) {
         contentBlocks.push({
           type: 'text',
           text: `[BIJLAGE: ${doc.filename}]\n${doc.text}\n[/BIJLAGE]`,
         })
+      } else if (doc.type === 'pdf' && doc.base64) {
+        // Server-side PDF text extraction
+        try {
+          const pdfParse = (await import('pdf-parse')).default
+          const pdfBuffer = Buffer.from(doc.base64.replace(/^data:application\/pdf;base64,/, ''), 'base64')
+          const pdfData = await pdfParse(pdfBuffer)
+          if (pdfData.text?.trim()) {
+            contentBlocks.push({
+              type: 'text',
+              text: `[BIJLAGE: ${doc.filename} (${pdfData.numpages} pagina's)]\n${pdfData.text.slice(0, 50000)}\n[/BIJLAGE]`,
+            })
+          }
+        } catch (pdfErr) {
+          console.warn('PDF parse failed:', doc.filename, pdfErr.message)
+          contentBlocks.push({
+            type: 'text',
+            text: `[BIJLAGE: ${doc.filename}] (PDF kon niet gelezen worden)\n[/BIJLAGE]`,
+          })
+        }
       } else if (doc.type === 'text' && doc.content) {
         contentBlocks.push({
           type: 'text',
           text: `[BIJLAGE: ${doc.filename}]\n${doc.content}\n[/BIJLAGE]`,
         })
       }
-    })
+    }
   }
 
   // Main instruction text
@@ -169,7 +189,7 @@ app.post('/api/generate-dwi', rateLimit, async (req, res) => {
     }
 
     const nextId = getNextDwiId(station)
-    const userContent = buildUserContent({ photos, documents, nextId, station, stationNummer, machine, auteur, beschrijving })
+    const userContent = await buildUserContent({ photos, documents, nextId, station, stationNummer, machine, auteur, beschrijving })
 
     // Determine model
     const modelKey = requestedModel && MODELS[requestedModel] ? requestedModel : DEFAULT_MODEL
@@ -239,7 +259,7 @@ app.post('/api/generate-dwi-stream', rateLimit, async (req, res) => {
     const nextId = getNextDwiId(station)
     sendEvent('progress', { fase: 'start', bericht: 'DWI-generatie gestart...', id: nextId })
 
-    const userContent = buildUserContent({ photos, documents, nextId, station, stationNummer, machine, auteur, beschrijving })
+    const userContent = await buildUserContent({ photos, documents, nextId, station, stationNummer, machine, auteur, beschrijving })
 
     const modelKey = requestedModel && MODELS[requestedModel] ? requestedModel : DEFAULT_MODEL
     const modelId = MODELS[modelKey]
@@ -594,13 +614,13 @@ app.patch('/api/dwi/:id/status', (req, res) => {
       return res.status(400).json({ error: 'Status is verplicht.' })
     }
 
-    const validStatuses = ['concept', 'goedgekeurd']
+    const validStatuses = ['concept', 'review', 'goedgekeurd', 'gepubliceerd', 'gearchiveerd']
     if (!validStatuses.includes(status)) {
       return res.status(400).json({ error: `Ongeldige status. Kies uit: ${validStatuses.join(', ')}` })
     }
 
-    // Pin verification for approval
-    if (status === 'goedgekeurd') {
+    // Pin verification for approval and publish
+    if (status === 'goedgekeurd' || status === 'gepubliceerd') {
       const correctPin = process.env.DWI_APPROVE_PIN || '7772'
       if (!pin || pin !== correctPin) {
         return res.status(403).json({ error: 'Ongeldige pincode.' })
@@ -615,7 +635,10 @@ app.patch('/api/dwi/:id/status', (req, res) => {
 
     const dwi = JSON.parse(readFileSync(jsonPath, 'utf-8'))
     dwi.status = status
-    dwi.goedgekeurdOp = status === 'goedgekeurd' ? new Date().toISOString() : undefined
+    const now = new Date().toISOString()
+    if (status === 'goedgekeurd') dwi.goedgekeurdOp = now
+    if (status === 'gepubliceerd') dwi.gepubliceerdOp = now
+    if (status === 'gearchiveerd') dwi.gearchiveerdOp = now
     writeFileSync(jsonPath, JSON.stringify(dwi, null, 2), 'utf-8')
 
     res.json({ success: true, id, status })
@@ -826,6 +849,187 @@ app.delete('/api/dwi/:id', (req, res) => {
   } catch (err) {
     console.error('Delete error:', err)
     res.status(500).json({ error: err.message || 'Verwijderen mislukt.' })
+  }
+})
+
+// ==========================================================================
+// GET /api/dwi/:id/pdf — Generate printable HTML for PDF export
+// ==========================================================================
+app.get('/api/dwi/:id/pdf', (req, res) => {
+  try {
+    const { id } = req.params
+    const jsonPath = join(GENERATED_DIR, `${id}.json`)
+
+    let dwi
+    if (existsSync(jsonPath)) {
+      dwi = JSON.parse(readFileSync(jsonPath, 'utf-8'))
+    } else {
+      return res.status(404).json({ error: `DWI ${id} niet gevonden.` })
+    }
+
+    const html = generateDwiHtml(dwi)
+    res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    res.send(html)
+  } catch (err) {
+    console.error('PDF generation error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// ==========================================================================
+// Analytics — View tracking
+// ==========================================================================
+const ANALYTICS_FILE = join(ROOT, 'src', 'data', 'generated', 'analytics.json')
+
+function loadAnalytics() {
+  if (existsSync(ANALYTICS_FILE)) {
+    return JSON.parse(readFileSync(ANALYTICS_FILE, 'utf-8'))
+  }
+  return { views: [], dailyStats: {} }
+}
+
+function saveAnalytics(data) {
+  writeFileSync(ANALYTICS_FILE, JSON.stringify(data, null, 2), 'utf-8')
+}
+
+// POST /api/analytics/view — Track a DWI view
+app.post('/api/analytics/view', (req, res) => {
+  try {
+    const { dwiId, station } = req.body
+    if (!dwiId) return res.status(400).json({ error: 'dwiId is verplicht.' })
+
+    const analytics = loadAnalytics()
+    const now = new Date()
+    const dateKey = now.toISOString().split('T')[0] // YYYY-MM-DD
+
+    // Add view event
+    analytics.views.push({
+      dwiId,
+      station: station || null,
+      timestamp: now.toISOString(),
+      ip: req.ip,
+    })
+
+    // Keep only last 10000 views to prevent file bloat
+    if (analytics.views.length > 10000) {
+      analytics.views = analytics.views.slice(-10000)
+    }
+
+    // Update daily stats
+    if (!analytics.dailyStats[dateKey]) {
+      analytics.dailyStats[dateKey] = {}
+    }
+    analytics.dailyStats[dateKey][dwiId] = (analytics.dailyStats[dateKey][dwiId] || 0) + 1
+
+    saveAnalytics(analytics)
+    res.json({ success: true })
+  } catch (err) {
+    console.error('Analytics error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// GET /api/analytics — Get analytics summary
+app.get('/api/analytics', (req, res) => {
+  try {
+    const analytics = loadAnalytics()
+
+    // Calculate totals per DWI
+    const totals = {}
+    for (const [, dwis] of Object.entries(analytics.dailyStats)) {
+      for (const [dwiId, count] of Object.entries(dwis)) {
+        totals[dwiId] = (totals[dwiId] || 0) + count
+      }
+    }
+
+    // Last 30 days daily views
+    const now = new Date()
+    const last30 = []
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(now)
+      d.setDate(d.getDate() - i)
+      const key = d.toISOString().split('T')[0]
+      const dayTotal = analytics.dailyStats[key]
+        ? Object.values(analytics.dailyStats[key]).reduce((a, b) => a + b, 0)
+        : 0
+      last30.push({ datum: key, views: dayTotal })
+    }
+
+    // Top 10 most viewed
+    const top10 = Object.entries(totals)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([id, views]) => ({ id, views }))
+
+    // Recent views (last 50)
+    const recent = analytics.views.slice(-50).reverse().map(v => ({
+      dwiId: v.dwiId,
+      timestamp: v.timestamp,
+    }))
+
+    res.json({ totals, last30, top10, recent, totalViews: analytics.views.length })
+  } catch (err) {
+    console.error('Analytics error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// ==========================================================================
+// POST /api/dwi/:id/translate — AI translation
+// ==========================================================================
+app.post('/api/dwi/:id/translate', rateLimit, async (req, res) => {
+  try {
+    const { id } = req.params
+    const { taal } = req.body // 'en' or 'ro'
+
+    if (!taal || !['en', 'ro'].includes(taal)) {
+      return res.status(400).json({ error: 'Taal moet "en" (Engels) of "ro" (Roemeens) zijn.' })
+    }
+
+    const jsonPath = join(GENERATED_DIR, `${id}.json`)
+    if (!existsSync(jsonPath)) {
+      return res.status(404).json({ error: `DWI ${id} niet gevonden.` })
+    }
+
+    const dwi = JSON.parse(readFileSync(jsonPath, 'utf-8'))
+    const taalNamen = { en: 'English', ro: 'Romanian' }
+
+    const response = await client.messages.create({
+      model: process.env.DEFAULT_MODEL || 'claude-sonnet-4-20250514',
+      max_tokens: 16000,
+      system: `You are a professional translator specializing in manufacturing and industrial documentation. Translate the given DWI (Digital Work Instruction) JSON to ${taalNamen[taal]}.
+
+Rules:
+- Translate ALL text fields: titel, beschrijving, waarschuwing, tip, substappen, bijschrift, afwijkingen, zoektermen, pbm, gereedschap, materialen.naam, kpis, opmerkingenImportant
+- Do NOT translate: id, station, stationNummer, machine brand names, versie, datum, auteur, goedgekeurd, status, afbeeldingen paths
+- Keep the exact same JSON structure
+- Use industry-standard terminology for the target language
+- Return ONLY the translated JSON object, no other text`,
+      messages: [{
+        role: 'user',
+        content: `Translate this DWI to ${taalNamen[taal]}:\n\n${JSON.stringify(dwi, null, 2)}`
+      }]
+    })
+
+    const text = response.content.find(b => b.type === 'text')?.text || ''
+    const jsonMatch = text.match(/\{[\s\S]*\}/)
+    if (!jsonMatch) {
+      return res.status(500).json({ error: 'Kon vertaling niet parsen.' })
+    }
+
+    const translated = JSON.parse(jsonMatch[0])
+    translated.id = `${id}-${taal}`
+    translated.taal = taal
+    translated.bronDwi = id
+
+    // Save translated version
+    const transPath = join(GENERATED_DIR, `${id}-${taal}.json`)
+    writeFileSync(transPath, JSON.stringify(translated, null, 2), 'utf-8')
+
+    res.json({ success: true, dwi: translated, id: translated.id })
+  } catch (err) {
+    console.error('Translation error:', err)
+    res.status(500).json({ error: err.message || 'Vertaling mislukt.' })
   }
 })
 
