@@ -195,7 +195,7 @@ Vite 8 + React 19 + Tailwind CSS v4 + React Router + Lucide React icons
 ### Foto's
 - Locatie: `public/images/dwi/[DWI-ID]/` → bereikbaar als `/images/dwi/[DWI-ID]/bestandsnaam.jpg`
 - Mapping: zie `DWI-FOTO-MAPPING.md` in project root
-- **Ontwerpprincipe DWI's: 80% beeld, 20% tekst** — productiepersoneel leert door te ZIEN
+- **Ontwerpprincipe DWI's: visueel ingesteld, kort en scanbaar** — productiepersoneel leert door te ZIEN, niet door lange lappen tekst. Elke stap heeft een duidelijke foto + korte instructie (1-2 zinnen). Foto's op normale grootte (niet oversized), clickbaar voor detail. Denk IKEA-handleiding: plaatje + korte tekst, door naar de volgende stap.
 
 ### DWI auteurs (eigenaarschap bij medewerkers)
 | Auteur | DWI's |
@@ -214,7 +214,7 @@ Erik Stroot verzamelt het bronmateriaal en is goedkeurder van alle DWI's.
 
 ## Volgende stappen (backlog)
 - [ ] Foto's integreren in werkinstructies.js (afbeeldingen + bijschrift per stap)
-- [ ] DetailPagina.jsx: 80% beeld layout met lightbox
+- [ ] DetailPagina.jsx: visueel-eerst layout met lightbox (foto + korte tekst per stap, IKEA-stijl)
 - [ ] DWI-ESG-001: Hardoven opstarten (Station 7)
 - [ ] DWI-ISO-POL-001: Foto's van Simone verzamelen
 - [ ] 5S checklists per station
