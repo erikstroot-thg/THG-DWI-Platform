@@ -1,0 +1,202 @@
+{
+  "id": "DWI-SNI-004",
+  "titel": "Bokbelading 33.1/33.2 Float en 33.1 Iplus voor Lenferink orders",
+  "station": "SNI",
+  "stationNummer": 2,
+  "machine": "Intermac Genius LM",
+  "auteur": "Hendry Kooistra / Mark van den Poll",
+  "goedgekeurd": "Erik Stroot",
+  "versie": "1.0",
+  "datum": "23-03-2024",
+  "volgendeReview": "23-09-2024",
+  "status": "concept",
+  "gereedschap": [
+    "Kleurlabels",
+    "Spanband",
+    "Rubbertussenstrips"
+  ],
+  "pbm": [
+    "Veiligheidsschoenen",
+    "Veiligheidsbril",
+    "Snijbestendige handschoenen"
+  ],
+  "secties": [
+    {
+      "nummer": 1,
+      "titel": "Voorbereiding bok en zone-indeling",
+      "stappen": [
+        {
+          "nummer": 1,
+          "titel": "Controleer de bok",
+          "beschrijving": "Zorg dat de bok schoon is, stabiel staat en voldoende rubbertussenstrips heeft om glaskrassen te voorkomen",
+          "waarschuwing": "Nooit bokken verplaatsen met glas erin als de bok niet volledig geborgd is",
+          "tip": "Gebruik altijd de spanband of vergrendelklem voor het borgen",
+          "substappen": [
+            "Inspecteer bok op beschadigingen",
+            "Controleer stabiliteit van de bok",
+            "Plaats voldoende rubbertussenstrips"
+          ],
+          "afbeeldingen": [
+            "/images/dwi/DWI-SNI-004/stap-01.jpg"
+          ],
+          "bijschrift": [
+            "Voorbeeld van correcte bokindeling met 33.1 Float (blauw) en 33.1 Iplus (groen) compartimenten"
+          ]
+        },
+        {
+          "nummer": 2,
+          "titel": "Markeer de zones met kleuren",
+          "beschrijving": "Breng kleurstickers aan op de bok volgens het schema: blauw (links achter), groen (rechts beide zijden), rood (links voor)",
+          "waarschuwing": null,
+          "tip": "Groen (33.1 Iplus) komt aan beide zijden rechts - zo hoeft de operator nooit te zoeken",
+          "substappen": [
+            "Plaats blauw label op linker vak achterzijde (33.1 Float)",
+            "Plaats groen labels op rechter vakken beide zijden (33.1 Iplus)",
+            "Plaats rood label op linker vak voorzijde (33.2 Float)"
+          ],
+          "afbeeldingen": [],
+          "bijschrift": []
+        },
+        {
+          "nummer": 3,
+          "titel": "Check orderlijst in A+W",
+          "beschrijving": "Controleer welke formaten 33.1 float, 33.2 float en 33.1 Iplus er voor de Lenferink-order uitgesorteerd moeten worden",
+          "waarschuwing": null,
+          "tip": "Sorteer alvast op formaat: groot achteraan, klein vooraan",
+          "substappen": [
+            "Open A+W systeem",
+            "Zoek Lenferink order op",
+            "Noteer benodigde formaten per glassoort"
+          ],
+          "afbeeldingen": [],
+          "bijschrift": []
+        }
+      ]
+    },
+    {
+      "nummer": 2,
+      "titel": "Belading achterzijde (A + B)",
+      "stappen": [
+        {
+          "nummer": 4,
+          "titel": "Vak A - 33.1 Float (blauw)",
+          "beschrijving": "Plaats de 33.1 float-ruiten in het linker vak aan de achterzijde. Sorteer op formaat met groot achteraan en klein vooraan",
+          "waarschuwing": "Let op het gewicht van de glasplaten en gebruik juiste tiltechniek",
+          "tip": "Begin met de grootste formaten onderaan voor stabiliteit",
+          "substappen": [
+            "Selecteer 33.1 Float glasplaten",
+            "Sorteer op formaat (groot naar klein)",
+            "Plaats in linker vak achterzijde met rubbertussenstrips"
+          ],
+          "afbeeldingen": [],
+          "bijschrift": []
+        },
+        {
+          "nummer": 5,
+          "titel": "Vak B - 33.1 Iplus (groen)",
+          "beschrijving": "Plaats een deel van de 33.1 Iplus-ruiten in het rechter vak aan de achterzijde. Let goed op de coatingzijde",
+          "waarschuwing": "Iplus-glas altijd met coating naar binnen plaatsen. Voorkom contact van coatingzijde met andere glasplaten",
+          "tip": "Herken de coatingzijde aan de lichte verkleuring of gebruik een coatingdetector",
+          "substappen": [
+            "Identificeer coatingzijde van Iplus glas",
+            "Plaats coating naar binnen gericht",
+            "Gebruik extra rubbertussenstrips voor bescherming"
+          ],
+          "afbeeldingen": [],
+          "bijschrift": []
+        }
+      ]
+    },
+    {
+      "nummer": 3,
+      "titel": "Belading voorzijde (C + B)",
+      "stappen": [
+        {
+          "nummer": 6,
+          "titel": "Vak C - 33.2 Float (rood)",
+          "beschrijving": "Plaats de 33.2 float-ruiten in het linker vak aan de voorzijde. Dit is dikker glas dus zorg voor extra draagkracht",
+          "waarschuwing": "33.2 Float is zwaarder dan 33.1 - gebruik hulpmiddelen bij grote formaten",
+          "tip": "Plaats de zwaarste platen onderin voor stabiliteit van de hele bok",
+          "substappen": [
+            "Selecteer 33.2 Float glasplaten",
+            "Controleer draagkracht van onderste strips",
+            "Plaats met zwaarste platen onderaan"
+          ],
+          "afbeeldingen": [],
+          "bijschrift": []
+        },
+        {
+          "nummer": 7,
+          "titel": "Vak B - 33.1 Iplus (groen) restant",
+          "beschrijving": "Plaats het overige deel van de 33.1 Iplus-ruiten in het rechter vak aan de voorzijde. Zelfde voorzorgsmaatregelen als stap 5",
+          "waarschuwing": "Coating altijd beschermen - dit is het duurste glas in de bok",
+          "tip": "Verdeel Iplus gelijk over beide groene vakken voor balans",
+          "substappen": [
+            "Verdeel resterende Iplus glas",
+            "Controleer coatingrichting",
+            "Plaats met coating naar binnen"
+          ],
+          "afbeeldingen": [],
+          "bijschrift": []
+        }
+      ]
+    },
+    {
+      "nummer": 4,
+      "titel": "Positionering en afronding",
+      "stappen": [
+        {
+          "nummer": 8,
+          "titel": "Positioneer bok richting ISO-lijn",
+          "beschrijving": "Positioneer de bok zo dat de voorzijde (rood + groen) naar de ISO-lijn wijst. Het opgooiteam kan dan direct bij 33.2 float en Iplus",
+          "waarschuwing": "Houd gangpaden vrij voor heftruck en vacuümkraan",
+          "tip": "Voorzijde = eerste pakkans, geen omdraaien van bok nodig",
+          "substappen": [
+            "Draai bok met voorzijde naar ISO-lijn",
+            "Controleer vrije doorgang voor apparatuur",
+            "Zet bok zo dicht mogelijk bij opgooipunt"
+          ],
+          "afbeeldingen": [],
+          "bijschrift": []
+        },
+        {
+          "nummer": 9,
+          "titel": "Borg de bok en eindcontrole",
+          "beschrijving": "Vergrendel de bok met spanband en voer eindcontrole uit volgens de controlelijst",
+          "waarschuwing": "Bok mag alleen verplaatst worden als deze volledig geborgd is",
+          "tip": "Dubbele controle voorkomt kostbare fouten bij de ISO-lijn",
+          "substappen": [
+            "Plaats spanband of vergrendelklem",
+            "Controleer alle vier de vakken op juiste inhoud",
+            "Verifieer positionering en toegankelijkheid"
+          ],
+          "afbeeldingen": [],
+          "bijschrift": []
+        }
+      ]
+    }
+  ],
+  "afwijkingen": [
+    {
+      "afwijking": "Iplus coating is beschadigd tijdens belading",
+      "oorzaak": "Coating kwam in contact met andere glasplaten of harde oppervlakken",
+      "actie": "Beschadigde platen apart leggen, coating altijd naar binnen richten"
+    },
+    {
+      "afwijking": "Bok kantelt tijdens transport",
+      "oorzaak": "Ongelijke gewichtsverdeling of ontbrekende borgmiddelen",
+      "actie": "Stop transport, herverdeelglas, controleer spanband/vergrendeling"
+    },
+    {
+      "afwijking": "Verkeerde glassoort in vak geplaatst",
+      "oorzaak": "Kleurlabels niet aangebracht of verkeerd geïnterpreteerd",
+      "actie": "Herladen volgens kleurschema: blauw=33.1 Float, rood=33.2 Float, groen=33.1 Iplus"
+    },
+    {
+      "afwijking": "ISO-lijn kan niet bij juiste glas",
+      "oorzaak": "Bok verkeerd gepositioneerd of voorzijde niet naar ISO-lijn gericht",
+      "actie": "Herpositioneer bok met voorzijde (rood+groen) richting ISO-lijn"
+    }
+  ],
+  "zoektermen": "bokbelading lenferink float iplus coating 33.1 33.2 snijlijn iso-lijn glassortering"
+}

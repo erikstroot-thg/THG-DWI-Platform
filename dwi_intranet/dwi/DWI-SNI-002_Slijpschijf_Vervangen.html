@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DWI-SNI-002 - Slijpschijf Vervangen - Timmermans Hardglas</title>
+<style>
+:root{--thg:#005A9C;--thg-dk:#004678;--thg-li:#E8F0F8;--thg-gr:#595959;--bg:#F7F9FB;--bdr:#D4DDE6;--ok:#2E8B57;--ok-li:#E8F5EE;--warn:#E6A817;--warn-li:#FFF8E1;--err:#C62828;--err-li:#FDEAEA;--gold:#B8860B;--gold-li:#FDF6E3;--font:'Calibri',Arial,Helvetica,sans-serif}*{box-sizing:border-box;margin:0;padding:0}body{font:14px/1.6 var(--font);color:#222;background:var(--bg)}
+header{background:#fff;border-bottom:3px solid var(--thg);padding:14px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06)}header .brand{display:flex;align-items:center;gap:14px}header .brand .logo{width:42px;height:42px;background:var(--thg);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px}header .title-block h1{font-size:17px;font-weight:700;color:var(--thg);line-height:1.2}header .title-block .sub{font-size:12px;color:var(--thg-gr)}header .doc-meta{text-align:right;font-size:11px;color:var(--thg-gr);line-height:1.5}
+nav{background:#fff;border-bottom:1px solid var(--bdr);padding:0 24px;display:flex;gap:0;overflow-x:auto}nav .nb{padding:10px 18px;background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;font:600 13px var(--font);color:var(--thg-gr);white-space:nowrap;transition:.15s}nav .nb:hover{color:var(--thg)}nav .nb.on{color:var(--thg);border-bottom-color:var(--thg)}
+.wrap{max-width:960px;margin:0 auto;padding:24px}.view{display:none}.view.on{display:block}
+.card{background:#fff;border:1px solid var(--bdr);border-radius:10px;padding:20px;margin-bottom:18px;box-shadow:0 1px 4px rgba(0,0,0,.04)}.card .ct{font-size:15px;font-weight:700;color:var(--thg);margin-bottom:12px;display:flex;align-items:center;gap:8px}.card .ct .ic{font-size:18px}
+.pg-title{font-size:20px;font-weight:800;color:var(--thg);margin-bottom:4px}.pg-sub{font-size:13px;color:var(--thg-gr);margin-bottom:22px}
+.steps{list-style:none;margin-bottom:14px}.step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}.sn{background:var(--thg);color:#fff;border-radius:50%;width:28px;height:28px;min-width:28px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}.sn.red{background:var(--err)}.sn.green{background:var(--ok)}.sn.gold{background:var(--gold)}.st{padding-top:3px;line-height:1.55}
+.al{display:flex;gap:10px;padding:12px 16px;border-radius:8px;margin:12px 0;font-size:13px;line-height:1.5}.al .ai{font-size:17px;min-width:22px}.al-r{background:var(--err-li);border-left:4px solid var(--err)}.al-y{background:var(--warn-li);border-left:4px solid var(--warn)}.al-b{background:var(--thg-li);border-left:4px solid var(--thg)}.al-g{background:var(--ok-li);border-left:4px solid var(--ok)}.al-gold{background:var(--gold-li);border-left:4px solid var(--gold)}
+.tabs{display:flex;border-bottom:2px solid var(--bdr);margin-bottom:18px;gap:0}.tb{padding:8px 16px;background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-2px;cursor:pointer;font:600 13px var(--font);color:var(--thg-gr);transition:.12s}.tb:hover{color:var(--thg)}.tb.on{color:var(--thg);border-bottom-color:var(--thg)}.tp{display:none}.tp.on{display:block}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}@media(max-width:720px){.g2,.g3{grid-template-columns:1fr}}
+.kpi{background:#fff;border:1px solid var(--bdr);border-radius:8px;padding:16px;text-align:center;border-top:3px solid var(--thg)}.kpi.gold{border-top-color:var(--gold)}.kpi.green{border-top-color:var(--ok)}.kpi.red{border-top-color:var(--err)}.kn{font-size:26px;font-weight:800;color:var(--thg)}.kpi.gold .kn{color:var(--gold)}.kpi.green .kn{color:var(--ok)}.kpi.red .kn{color:var(--err)}.kl{font-size:11px;color:var(--thg-gr);margin-top:4px}
+table.t{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:14px}table.t th{background:var(--thg);color:#fff;padding:8px 11px;text-align:left;font-size:12px;font-weight:600}table.t td{padding:8px 11px;border-bottom:1px solid var(--bdr)}table.t tr:nth-child(even) td{background:var(--bg)}
+.cl{margin:12px 0}.ci{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bdr);font-size:13px}.ci input[type="checkbox"]{width:18px;height:18px;accent-color:var(--thg)}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0}.flow-step{background:var(--thg);color:#fff;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;text-align:center;min-width:110px}.flow-step.warn{background:var(--warn);color:#000}.flow-step.green{background:var(--ok)}.flow-arrow{color:var(--thg-gr);font-size:20px;font-weight:700}
+.photo-ref{background:#f5f5f5;border:2px dashed var(--thg-gr);border-radius:4px;padding:12px;margin:12px 0;font-size:12px;color:var(--thg-gr);text-align:center;line-height:1.4}
+footer{background:#fff;border-top:2px solid var(--thg);padding:12px 24px;display:flex;justify-content:space-between;font-size:11px;color:var(--thg-gr);margin-top:40px}
+@media print{header,nav,footer{position:static}.view{display:block!important;page-break-before:always}.view:first-child{page-break-before:avoid}nav{display:none}body{font-size:11pt}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">TH</div>
+    <div class="title-block">
+      <h1>DWI-SNI-002 - Slijpschijf Vervangen</h1>
+      <div class="sub">Werkinstructie Snijlijn - Vervangen slijpschijf bij slijtage</div>
+    </div>
+  </div>
+  <div class="doc-meta">
+    <strong>DWI-SNI-002</strong><br>
+    Versie v1.0 - <span id="doc-date"></span><br>
+    Station 2 - Snijlijn
+  </div>
+</header>
+<nav>
+  <button class="nb on" onclick="go('overzicht')">Overzicht</button>
+  <button class="nb" onclick="go('voorbereiding')">1. Voorbereiding</button>
+  <button class="nb" onclick="go('demontage')">2. Demontage</button>
+  <button class="nb" onclick="go('montage')">3. Montage</button>
+  <button class="nb" onclick="go('software')">4. Software Update</button>
+  <button class="nb" onclick="go('testen')">5. Testen</button>
+  <button class="nb" onclick="go('checklist')">Checklist</button>
+</nav>
+<div class="wrap">
+<div id="view-overzicht" class="view on">
+  <div class="pg-title">Slijpschijf Vervangen - Overzicht</div>
+  <div class="pg-sub">Vervangen van de slijpschijf op de snijlijn bij slijtage</div>
+  <div class="card">
+    <div class="ct"><span class="ic">Doel</span></div>
+    <p>Deze DWI beschrijft het volledige proces voor het vervangen van de slijpschijf op de snijlijn (Station 2). De slijpschijf wordt gebruikt voor het slijpen van glasranden na het snijden. Deze handleiding volgt de stappen voor controle, demontage, montage en software-update.</p>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Procesflow</span></div>
+    <div class="flow">
+      <div class="flow-step">Sticker<br>controleren</div>
+      <span class="flow-arrow">-></span>
+      <div class="flow-step">Nieuwe schijf<br>checken</div>
+      <span class="flow-arrow">-></span>
+      <div class="flow-step">Software<br>openen</div>
+      <span class="flow-arrow">-></span>
+      <div class="flow-step">Kap<br>losdraaien</div>
+      <span class="flow-arrow">-></span>
+      <div class="flow-step">Oude schijf<br>verwijderen</div>
+      <span class="flow-arrow">-></span>
+      <div class="flow-step">Nieuwe schijf<br>plaatsen</div>
+      <span class="flow-arrow">-></span>
+      <div class="flow-step">Buitenkap<br>monteren</div>
+      <span class="flow-arrow">-></span>
+      <div class="flow-step">Code invoeren<br>in software</div>
+      <span class="flow-arrow">-></span>
+      <div class="flow-step green">Testen</div>
+    </div>
+  </div>
+  <div class="g3">
+    <div class="kpi gold"><div class="kn">Sticker</div><div class="kl">Codes moeten matchen</div></div>
+    <div class="kpi green"><div class="kn">0 mm</div><div class="kl">Geen beweging/speling na montage</div></div>
+    <div class="kpi gold"><div class="kn">Auto</div><div class="kl">Diameter aangepast in software</div></div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Benodigdheden</span></div>
+    <table class="t">
+      <thead><tr><th>Materiaal/Gereedschap</th><th>Type</th><th>Opmerking</th></tr></thead>
+      <tbody>
+        <tr><td>Nieuwe slijpschijf</td><td>Conform sticker/code</td><td>Controleer code voor correctheid</td></tr>
+        <tr><td>Steeksleutel</td><td>Maat 4</td><td>Voor eerste bevestigingsbout</td></tr>
+        <tr><td>Steeksleutel</td><td>Maat 5</td><td>Voor overige twee bouten</td></tr>
+        <tr><td>Luchtspuit</td><td>Optioneel</td><td>Voor schoonmaken van stof</td></tr>
+        <tr><td>Slijpprogramma</td><td>PC bij tafel 1</td><td>Voor diameter en code-invoer</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">KPI's en Kwaliteit</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st"><strong>Stickercodes moeten matchen:</strong> Code op nieuwe schijf = code op sticker bij PC</span></li>
+      <li class="step"><span class="sn">2</span><span class="st"><strong>Geen beweging na montage:</strong> De schijf moet volledig vast zitten, geen speling voelbaar</span></li>
+      <li class="step"><span class="sn">3</span><span class="st"><strong>Diameter automatisch aangepast:</strong> Software berekent diameter op basis van schijfcode</span></li>
+    </ul>
+  </div>
+</div>
+
+<div id="view-voorbereiding" class="view">
+  <div class="pg-title">1. Voorbereiding</div>
+  <div class="pg-sub">Stap 1 - Controle stickers en voorbereiding tools</div>
+  <div class="card">
+    <div class="ct"><span class="ic">Controlestappen</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Controleer de <strong>sticker naast de PC bij tafel 1</strong> — hier staat welke slijpschijf momenteel geïnstalleerd is</span></li>
+      <li class="step"><span class="sn">2</span><span class="st">Controleer de <strong>sticker op de nieuwe schijf in de doos</strong> — deze moet overeenkomen met het juiste type</span></li>
+      <li class="step"><span class="sn">3</span><span class="st">Open het <strong>slijpprogramma op de PC</strong> om de huidige diameter/code te bekijken</span></li>
+      <li class="step"><span class="sn">4</span><span class="st">Noteer de <strong>huidige code en diameter</strong> voor referentie</span></li>
+    </ul>
+    <div class="photo-ref">Foto: IMG-20260313-WA0002.jpg<br>Sticker bij PC (welke schijf is momenteel geïnstalleerd)</div>
+    <div class="photo-ref">Foto: IMG-20260313-WA0003.jpg<br>Sticker op nieuwe schijf in doos</div>
+    <div class="photo-ref">Foto: IMG-20260313-WA0004.jpg<br>Software scherm met huidige gegevens</div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Gereedschap voorbereiding</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn green">1</span><span class="st">Leg <strong>steeksleutel maat 4</strong> klaar</span></li>
+      <li class="step"><span class="sn green">2</span><span class="st">Leg <strong>steeksleutel maat 5</strong> klaar (2 stuks nodig)</span></li>
+      <li class="step"><span class="sn green">3</span><span class="st">Optioneel: zet <strong>luchtspuit klaar</strong> voor schoonmaken</span></li>
+    </ul>
+    <div class="al al-r"><span class="ai">STOP</span><span><strong>Controleer ALTIJD of de code op de nieuwe schijf matcht met de sticker bij de PC.</strong> Bij twijfel: overleg met teamleider.</span></div>
+  </div>
+</div>
+
+<div id="view-demontage" class="view">
+  <div class="pg-title">2. Demontage</div>
+  <div class="pg-sub">Stap 2 - Verwijderen van oude slijpschijf</div>
+  <div class="card">
+    <div class="ct"><span class="ic">Stappen demontage</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Open het slijpprogramma en klik op het <strong>schijf-icoon</strong> om de bewerkingsinstellingen weer te geven</span></li>
+      <li class="step"><span class="sn">2</span><span class="st">Draai de <strong>buitenkap los</strong> — let op de interne draadrichting</span></li>
+      <li class="step"><span class="sn">3</span><span class="st">Draai de <strong>3 bevestigingsbouten los:</strong> gebruik <strong>steeksleutel maat 4</strong> voor de eerste bout en <strong>steeksleutel maat 5</strong> voor de overige twee</span></li>
+      <li class="step"><span class="sn red">4</span><span class="st">Verwijder de <strong>oude slijpschijf</strong> — de houder is nu leeg</span></li>
+    </ul>
+    <div class="photo-ref">Foto: IMG-20260313-WA0019.jpg<br>Schijf-icoon in software (klik hier eerst)</div>
+    <div class="photo-ref">Foto: IMG-20260313-WA0006.jpg<br>Buitenkap losdraaien</div>
+    <div class="photo-ref">Foto: IMG-20260313-WA0007.jpg<br>Bevestigingsbouten losdraaien (3 bouten)</div>
+    <div class="photo-ref">Foto: IMG-20260313-WA0008.jpg<br>Oude schijf verwijderd</div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Voorzorgsmaatregel</span></div>
+    <div class="al al-g"><span class="ai">OK</span><span><strong>Leg de bouten op een vaste plek zodat je ze niet kwijtraakt.</strong> Gebruik bijvoorbeeld een kleine bakje of een magnetische schaal.</span></div>
+  </div>
+</div>
+
+<div id="view-montage" class="view">
+  <div class="pg-title">3. Montage</div>
+  <div class="pg-sub">Stap 3 - Plaatsen van nieuwe slijpschijf</div>
+  <div class="card">
+    <div class="ct"><span class="ic">Installatiestappen</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Haal de <strong>nieuwe slijpschijf uit de doos</strong></span></li>
+      <li class="step"><span class="sn">2</span><span class="st">Verwijder de <strong>sticker van de nieuwe schijf</strong> — deze is voorzien van grijpstukken</span></li>
+      <li class="step"><span class="sn">3</span><span class="st">Plaats de <strong>nieuwe schijf in de houder</strong> — <strong>LET OP: de markering/platte kant moet aan de BINNENZIJDE zitten</strong></span></li>
+      <li class="step"><span class="sn">4</span><span class="st">Plaats het <strong>plaatje/borgring terug</strong> — deze kant aan de binnenzijde</span></li>
+      <li class="step"><span class="sn">5</span><span class="st">Draai de bouten vast <strong>"als een autoband"</strong> — kruislings en gelijkmatig aandraaien (niet in één richting)</span></li>
+      <li class="step"><span class="sn">6</span><span class="st">Draai alles goed aan — <strong>er mag GEEN beweging in zitten!</strong> Voel dit na met de hand</span></li>
+      <li class="step"><span class="sn green">7</span><span class="st">Plaats de <strong>buitenkap terug</strong> en draai goed vast</span></li>
+    </ul>
+    <div class="photo-ref">Foto: IMG-20260313-WA0009.jpg<br>Sticker van nieuwe schijf verwijderd</div>
+    <div class="photo-ref">Foto: IMG-20260313-WA0010.jpg<br>Schijf correct geplaatst (markering aan binnenzijde), borgring teruggeplaatst</div>
+    <div class="photo-ref">Foto: IMG-20260313-WA0011.jpg<br>Bouten kruislings aandraaien (stap 1)</div>
+    <div class="photo-ref">Foto: IMG-20260313-WA0012.jpg<br>Bouten kruislings aandraaien (stap 2 en 3)</div>
+    <div class="photo-ref">Foto: IMG-20260313-WA0013.jpg<br>Controleren: geen beweging voelbaar</div>
+    <div class="photo-ref">Foto: IMG-20260313-WA0014.jpg<br>Buitenkap teruggeplaatst en vastgedraaid</div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Waarschuwingen en voorzorgsmaatregelen</span></div>
+    <div class="al al-r"><span class="ai">STOP</span><span><strong>Er mag GEEN beweging in de schijf zitten na montage.</strong> Als er speling is, zit de schijf verkeerd. Demonteer en monteer opnieuw.</span></div>
+    <div class="al al-gold"><span class="ai">BELANGRIJK</span><span><strong>Aandraaien als een autoband = kruislings, niet in één richting rond.</strong> Dit zorgt voor gelijkmatige spanning en voorkomt dat de schijf scheef zit.</span></div>
+  </div>
+</div>
+
+<div id="view-software" class="view">
+  <div class="pg-title">4. Software Update</div>
+  <div class="pg-sub">Stap 4 - Schijfcode invoeren en diameter aanpassen</div>
+  <div class="card">
+    <div class="ct"><span class="ic">Code-invoeringsprocedure</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Voer de <strong>code van de nieuwe slijpschijf in op het softwarescherm</strong> — dezelfde code als op de sticker</span></li>
+      <li class="step"><span class="sn">2</span><span class="st">Druk op <strong>OK</strong> om de code in te dienen</span></li>
+      <li class="step"><span class="sn">3</span><span class="st">De <strong>diameter wordt automatisch aangepast</strong> door de software</span></li>
+      <li class="step"><span class="sn green">4</span><span class="st">Controleer dat de <strong>nieuwe diameter correct wordt weergegeven</strong> op het scherm</span></li>
+    </ul>
+    <div class="photo-ref">Foto: IMG-20260313-WA0015.jpg<br>Software invoerscherm (voer schijfcode in)</div>
+    <div class="photo-ref">Foto: IMG-20260313-WA0016.jpg<br>OK-knop drukken</div>
+    <div class="photo-ref">Foto: IMG-20260313-WA0017.jpg<br>Diameter aangepast (stap 1)</div>
+    <div class="photo-ref">Foto: IMG-20260313-WA0018.jpg<br>Diameter aangepast (stap 2 - controle)</div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Automatische berekening</span></div>
+    <div class="al al-b"><span class="ai">Info</span><span><strong>De software berekent automatisch de juiste diameter op basis van de ingevoerde schijfcode.</strong> Je hoeft de diameter niet handmatig aan te passen.</span></div>
+  </div>
+</div>
+
+<div id="view-testen" class="view">
+  <div class="pg-title">5. Testen</div>
+  <div class="pg-sub">Stap 5 - Controleren en kwaliteitstesten</div>
+  <div class="card">
+    <div class="ct"><span class="ic">Teststappen</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Voer een <strong>testronde uit met een proefstuk glas</strong> — haal een klein stuk glas door de slijpunit</span></li>
+      <li class="step"><span class="sn">2</span><span class="st">Controleer de <strong>slijpkwaliteit:</strong></span>
+        <ul style="margin-top:8px;margin-left:32px;list-style:disc;">
+          <li>Gladde rand (geen ruw oppervlak)</li>
+          <li>Geen uitbrokkeling (scheuren/breuken in de rand)</li>
+          <li>Geen trillingen (vloeiende slijpbeweging)</li>
+        </ul>
+      </li>
+      <li class="step"><span class="sn red">3</span><span class="st">Als de kwaliteit niet goed is: controleer of de <strong>schijf goed vastzit</strong> en of de <strong>code correct is ingevoerd</strong></span></li>
+      <li class="step"><span class="sn">4</span><span class="st">Bij aanhoudende problemen: <strong>meld bij teamleider</strong></span></li>
+    </ul>
+    <div class="photo-ref">Foto: IMG-20260313-WA0021.jpg<br>Test resultaat (goed)</div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Vervangingsplanning</span></div>
+    <div class="al al-gold"><span class="ai">BELANGRIJK</span><span><strong>Vervangen? Bestel nieuwe!</strong> Bestel tijdig een nieuwe slijpschijf zodat er altijd voorraad is en de productie niet hoeft stil te staan.</span></div>
+    <div class="photo-ref">Foto: IMG-20260313-WA0020.jpg<br>Bestelproces/voorraadbeheer</div>
+  </div>
+</div>
+
+<div id="view-checklist" class="view">
+  <div class="pg-title">Checklist Slijpschijf Vervangen</div>
+  <div class="pg-sub">Gebruik per vervangingsbeurt — vink af wat gereed is</div>
+  <div class="card">
+    <div class="ct"><span class="ic">Voorbereiding</span></div>
+    <div class="cl">
+      <div class="ci"><input type="checkbox" id="c1"><label for="c1">Sticker bij PC gecontroleerd (welke schijf zit erin)</label></div>
+      <div class="ci"><input type="checkbox" id="c2"><label for="c2">Nieuwe schijf uit doos — code matcht met sticker</label></div>
+      <div class="ci"><input type="checkbox" id="c3"><label for="c3">Steeksleutels maat 4 en 5 klaargelegd</label></div>
+      <div class="ci"><input type="checkbox" id="c4"><label for="c4">Slijpprogramma geopend op PC</label></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Demontage</span></div>
+    <div class="cl">
+      <div class="ci"><input type="checkbox" id="c5"><label for="c5">Schijf-icoon geklikt in software</label></div>
+      <div class="ci"><input type="checkbox" id="c6"><label for="c6">Buitenkap losgedraaid</label></div>
+      <div class="ci"><input type="checkbox" id="c7"><label for="c7">3 bevestigingsbouten losgedraaid</label></div>
+      <div class="ci"><input type="checkbox" id="c8"><label for="c8">Oude schijf verwijderd</label></div>
+      <div class="ci"><input type="checkbox" id="c9"><label for="c9">Bouten opgeborgen op vaste plek</label></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Montage</span></div>
+    <div class="cl">
+      <div class="ci"><input type="checkbox" id="c10"><label for="c10">Sticker van nieuwe schijf verwijderd</label></div>
+      <div class="ci"><input type="checkbox" id="c11"><label for="c11">Schijf correct geplaatst (markering aan binnenzijde)</label></div>
+      <div class="ci"><input type="checkbox" id="c12"><label for="c12">Borgring/plaatje teruggeplaatst</label></div>
+      <div class="ci"><input type="checkbox" id="c13"><label for="c13">Bouten kruislings aangedraaid</label></div>
+      <div class="ci"><input type="checkbox" id="c14"><label for="c14">Geen beweging/speling voelbaar</label></div>
+      <div class="ci"><input type="checkbox" id="c15"><label for="c15">Buitenkap teruggeplaatst en vastgedraaid</label></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Software</span></div>
+    <div class="cl">
+      <div class="ci"><input type="checkbox" id="c16"><label for="c16">Schijfcode ingevoerd in software</label></div>
+      <div class="ci"><input type="checkbox" id="c17"><label for="c17">Diameter automatisch aangepast</label></div>
+      <div class="ci"><input type="checkbox" id="c18"><label for="c18">Nieuwe diameter correct weergegeven</label></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Afronding</span></div>
+    <div class="cl">
+      <div class="ci"><input type="checkbox" id="c19"><label for="c19">Testronde uitgevoerd met proefstuk</label></div>
+      <div class="ci"><input type="checkbox" id="c20"><label for="c20">Slijpkwaliteit goedgekeurd (glad, geen uitbrokkeling)</label></div>
+      <div class="ci"><input type="checkbox" id="c21"><label for="c21">Nieuwe schijf besteld (indien voorraadbeheer nodig)</label></div>
+      <div class="ci"><input type="checkbox" id="c22"><label for="c22">Vervangingsdate genoteerd voor volgende onderhoud</label></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<footer>
+  <span>DWI-SNI-002 - Slijpschijf Vervangen - v1.0 - <span id="footer-date"></span></span>
+  <span>Timmermans Hardglas B.V. | Handelsstraat 55-57 | 7772 TS Hardenberg</span>
+</footer>
+<script>
+var d=new Date().toLocaleDateString('nl-NL',{day:'2-digit',month:'2-digit',year:'numeric'});
+document.getElementById('doc-date').textContent=d;
+document.getElementById('footer-date').textContent=d;
+function go(name){document.querySelectorAll('.view').forEach(function(v){v.classList.remove('on')});document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on')});var el=document.getElementById('view-'+name);if(el)el.classList.add('on');document.querySelectorAll('.nb').forEach(function(b){var oc=b.getAttribute('onclick')||'';if(oc.indexOf("'"+name+"'")>-1)b.classList.add('on')});window.scrollTo(0,0)}
+function tab(btn,group,name){document.querySelectorAll('[id^="'+group+'-"]').forEach(function(p){p.classList.remove('on')});btn.closest('.tabs').querySelectorAll('.tb').forEach(function(b){b.classList.remove('on')});btn.classList.add('on');var panel=document.getElementById(group+'-'+name);if(panel)panel.classList.add('on')}
+</script>
+</body>
+</html>

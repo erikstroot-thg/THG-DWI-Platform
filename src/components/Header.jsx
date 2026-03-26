@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { Home, Plus } from 'lucide-react'
+import { Home, Plus, ShieldCheck } from 'lucide-react'
 
 function ThgLogo({ className = 'w-10 h-10' }) {
   return (
@@ -47,6 +47,15 @@ export default function Header() {
               <span className="hidden md:inline">Overzicht</span>
             </Link>
           )}
+          <Link
+            to="/beheer"
+            className="flex items-center gap-2 bg-thg-blue-light hover:bg-thg-blue-dark
+              text-white font-semibold py-2 px-4 rounded-lg min-h-[44px]
+              transition-colors duration-150"
+          >
+            <ShieldCheck className="w-5 h-5" />
+            <span className="hidden md:inline">Beheer</span>
+          </Link>
           <Link
             to="/nieuw"
             className="flex items-center gap-2 bg-thg-green hover:bg-green-600

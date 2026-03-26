@@ -1,0 +1,233 @@
+{
+  "naam": "DWI Basisstructuur THG",
+  "beschrijving": "Standaard opbouw van een Digitale Werkinstructie (DWI) voor alle productiestations bij Timmermans Hardglas",
+  "toepassingsgebied": "Alle productiestations (ESG, VSG, ISO, KVD, expeditie, etc.)",
+  "secties": [
+    {
+      "volgnummer": 1,
+      "titel": "Kop / Identificatie",
+      "velden": [
+        {
+          "veld": "stationsnaam",
+          "type": "string",
+          "beschrijving": "Naam van het productiestation",
+          "voorbeeld": "Bokbelading 33.1/33.2"
+        },
+        {
+          "veld": "processtap",
+          "type": "string",
+          "beschrijving": "Positie binnen de productielijn"
+        },
+        {
+          "veld": "dwi_nummer",
+          "type": "string",
+          "beschrijving": "Uniek volgnummer",
+          "formaat": "DWI-[station]-[volgnr]"
+        },
+        {
+          "veld": "versie",
+          "type": "string",
+          "beschrijving": "Versienummer van het document"
+        },
+        {
+          "veld": "datum",
+          "type": "date",
+          "beschrijving": "Datum van de huidige versie"
+        },
+        {
+          "veld": "auteur",
+          "type": "string",
+          "beschrijving": "Opsteller van de DWI"
+        }
+      ]
+    },
+    {
+      "volgnummer": 2,
+      "titel": "Doel van de instructie",
+      "velden": [
+        {
+          "veld": "beoogd_resultaat",
+          "type": "string",
+          "beschrijving": "Wat is het concrete resultaat van deze processtap?"
+        },
+        {
+          "veld": "relatie_productieproces",
+          "type": "string",
+          "beschrijving": "Waar komt het glas vandaan en waar gaat het naartoe?"
+        }
+      ]
+    },
+    {
+      "volgnummer": 3,
+      "titel": "Benodigdheden",
+      "velden": [
+        {
+          "veld": "materialen",
+          "type": "array",
+          "beschrijving": "Glassoorten, folies, spacers, gas, etc."
+        },
+        {
+          "veld": "gereedschappen",
+          "type": "array",
+          "beschrijving": "Gereedschappen en hulpmiddelen"
+        },
+        {
+          "veld": "machines",
+          "type": "array",
+          "beschrijving": "Machines/apparatuur (incl. referentie naar machinehandleiding)"
+        },
+        {
+          "veld": "software",
+          "type": "array",
+          "beschrijving": "Software en systemen (A+W, scanners, etc.)"
+        }
+      ]
+    },
+    {
+      "volgnummer": 4,
+      "titel": "Veiligheid & PBM's",
+      "velden": [
+        {
+          "veld": "pbm_verplicht",
+          "type": "array",
+          "beschrijving": "Verplichte persoonlijke beschermingsmiddelen"
+        },
+        {
+          "veld": "risicos",
+          "type": "array",
+          "beschrijving": "Specifieke veiligheidsrisico's bij dit station"
+        },
+        {
+          "veld": "noodprocedures",
+          "type": "string",
+          "beschrijving": "Noodprocedures en escalatiepad bij incidenten"
+        }
+      ]
+    },
+    {
+      "volgnummer": 5,
+      "titel": "Stap-voor-stap instructie",
+      "velden": [
+        {
+          "veld": "stappen",
+          "type": "array",
+          "items": {
+            "stap_nummer": "integer",
+            "actie": "string",
+            "verwacht_resultaat": "string",
+            "visuele_ondersteuning": "string | null",
+            "aw_referentie": "string | null"
+          },
+          "beschrijving": "Genummerde stappen met actie, verwacht resultaat en optionele visuele ondersteuning"
+        }
+      ]
+    },
+    {
+      "volgnummer": 6,
+      "titel": "Kwaliteitscontrole / Checkpoints",
+      "velden": [
+        {
+          "veld": "checkpoints",
+          "type": "array",
+          "items": {
+            "controle": "string",
+            "wanneer": "string",
+            "acceptatiecriteria": "string",
+            "registratie": "string"
+          },
+          "beschrijving": "Wat, wanneer, acceptatiecriteria en registratiewijze"
+        },
+        {
+          "veld": "normen_referenties",
+          "type": "array",
+          "beschrijving": "Verwijzingen naar NEN/EN-normen indien relevant"
+        }
+      ]
+    },
+    {
+      "volgnummer": 7,
+      "titel": "Afwijkingen & Escalatie",
+      "velden": [
+        {
+          "veld": "veelvoorkomende_afwijkingen",
+          "type": "array",
+          "items": {
+            "afwijking": "string",
+            "actie": "string"
+          },
+          "beschrijving": "Bekende afwijkingen en hoe hiermee om te gaan"
+        },
+        {
+          "veld": "escalatie",
+          "type": "object",
+          "beschrijving": "Wanneer stoppen en naar wie escaleren",
+          "velden": {
+            "criteria": "string",
+            "contactpersonen": ["teamleider", "kwaliteit", "productie"]
+          }
+        },
+        {
+          "veld": "registratie_afwijkingen",
+          "type": "string",
+          "beschrijving": "Hoe en waar afwijkingen registreren"
+        }
+      ]
+    },
+    {
+      "volgnummer": 8,
+      "titel": "Gerelateerde documenten",
+      "velden": [
+        {
+          "veld": "documenten",
+          "type": "array",
+          "items": {
+            "titel": "string",
+            "type": "string (SOP | machinehandleiding | NEN-norm | IST-SOLL-GAP)",
+            "referentie": "string"
+          },
+          "beschrijving": "Links naar relevante SOP's, handleidingen, normen en analyses"
+        }
+      ]
+    },
+    {
+      "volgnummer": 9,
+      "titel": "Versiebeheer",
+      "velden": [
+        {
+          "veld": "versienummer",
+          "type": "string"
+        },
+        {
+          "veld": "datum",
+          "type": "date"
+        },
+        {
+          "veld": "wijzigingslog",
+          "type": "array",
+          "items": {
+            "versie": "string",
+            "datum": "date",
+            "wijziging": "string"
+          },
+          "beschrijving": "Wat is aangepast t.o.v. vorige versie"
+        },
+        {
+          "veld": "goedgekeurd_door",
+          "type": "object",
+          "beschrijving": "Naam en functie van degene die goedkeurt",
+          "velden": {
+            "naam": "string",
+            "functie": "string"
+          }
+        }
+      ]
+    }
+  ],
+  "ontwerpprincipes": {
+    "taal": "Helder Nederlands, geen jargon tenzij gangbaar op de werkvloer (en dan uitgelegd)",
+    "visueel": "Gebruik foto's/afbeeldingen waar mogelijk — een beeld zegt meer dan tekst",
+    "beknopt": "Alleen wat de medewerker nodig heeft, geen overbodige informatie",
+    "stationsgebonden": "Elke DWI hoort bij precies één station/processtap",
+    "levend_document": "DWI's worden bijgewerkt bij proceswijzigingen (SOLL-updates)"
+  }
+}

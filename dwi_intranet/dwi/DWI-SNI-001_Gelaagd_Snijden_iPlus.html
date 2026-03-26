@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DWI-SNI-001 - Gelaagd Snijden iPlus/331 op Intermac Genius LM - Timmermans Hardglas</title>
+<style>
+:root{--thg:#005A9C;--thg-dk:#004678;--thg-li:#E8F0F8;--thg-gr:#595959;--bg:#F7F9FB;--bdr:#D4DDE6;--ok:#2E8B57;--ok-li:#E8F5EE;--warn:#E6A817;--warn-li:#FFF8E1;--err:#C62828;--err-li:#FDEAEA;--gold:#B8860B;--gold-li:#FDF6E3;--font:'Calibri',Arial,Helvetica,sans-serif}*{box-sizing:border-box;margin:0;padding:0}body{font:14px/1.6 var(--font);color:#222;background:var(--bg)}
+header{background:#fff;border-bottom:3px solid var(--thg);padding:14px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06)}header .brand{display:flex;align-items:center;gap:14px}header .brand .logo{width:42px;height:42px;background:var(--thg);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px}header .title-block h1{font-size:17px;font-weight:700;color:var(--thg);line-height:1.2}header .title-block .sub{font-size:12px;color:var(--thg-gr)}header .doc-meta{text-align:right;font-size:11px;color:var(--thg-gr);line-height:1.5}
+nav{background:#fff;border-bottom:1px solid var(--bdr);padding:0 24px;display:flex;gap:0;overflow-x:auto}nav .nb{padding:10px 18px;background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;font:600 13px var(--font);color:var(--thg-gr);white-space:nowrap;transition:.15s}nav .nb:hover{color:var(--thg)}nav .nb.on{color:var(--thg);border-bottom-color:var(--thg)}
+.wrap{max-width:960px;margin:0 auto;padding:24px}.view{display:none}.view.on{display:block}
+.card{background:#fff;border:1px solid var(--bdr);border-radius:10px;padding:20px;margin-bottom:18px;box-shadow:0 1px 4px rgba(0,0,0,.04)}.card .ct{font-size:15px;font-weight:700;color:var(--thg);margin-bottom:12px;display:flex;align-items:center;gap:8px}.card .ct .ic{font-size:18px}
+.pg-title{font-size:20px;font-weight:800;color:var(--thg);margin-bottom:4px}.pg-sub{font-size:13px;color:var(--thg-gr);margin-bottom:22px}
+.steps{list-style:none;margin-bottom:14px}.step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}.sn{background:var(--thg);color:#fff;border-radius:50%;width:28px;height:28px;min-width:28px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}.sn.red{background:var(--err)}.sn.green{background:var(--ok)}.sn.gold{background:var(--gold)}.st{padding-top:3px;line-height:1.55}
+.al{display:flex;gap:10px;padding:12px 16px;border-radius:8px;margin:12px 0;font-size:13px;line-height:1.5}.al .ai{font-size:17px;min-width:22px}.al-r{background:var(--err-li);border-left:4px solid var(--err)}.al-y{background:var(--warn-li);border-left:4px solid var(--warn)}.al-b{background:var(--thg-li);border-left:4px solid var(--thg)}.al-g{background:var(--ok-li);border-left:4px solid var(--ok)}.al-gold{background:var(--gold-li);border-left:4px solid var(--gold)}
+.tabs{display:flex;border-bottom:2px solid var(--bdr);margin-bottom:18px;gap:0}.tb{padding:8px 16px;background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-2px;cursor:pointer;font:600 13px var(--font);color:var(--thg-gr);transition:.12s}.tb:hover{color:var(--thg)}.tb.on{color:var(--thg);border-bottom-color:var(--thg)}.tp{display:none}.tp.on{display:block}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}@media(max-width:720px){.g2,.g3{grid-template-columns:1fr}}
+.kpi{background:#fff;border:1px solid var(--bdr);border-radius:8px;padding:16px;text-align:center;border-top:3px solid var(--thg)}.kpi.gold{border-top-color:var(--gold)}.kpi.green{border-top-color:var(--ok)}.kpi.red{border-top-color:var(--err)}.kn{font-size:26px;font-weight:800;color:var(--thg)}.kpi.gold .kn{color:var(--gold)}.kpi.green .kn{color:var(--ok)}.kpi.red .kn{color:var(--err)}.kl{font-size:11px;color:var(--thg-gr);margin-top:4px}
+table.t{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:14px}table.t th{background:var(--thg);color:#fff;padding:8px 11px;text-align:left;font-size:12px;font-weight:600}table.t td{padding:8px 11px;border-bottom:1px solid var(--bdr)}table.t tr:nth-child(even) td{background:var(--bg)}
+.cl{margin:12px 0}.ci{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bdr);font-size:13px}.ci input[type="checkbox"]{width:18px;height:18px;accent-color:var(--thg)}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0}.flow-step{background:var(--thg);color:#fff;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;text-align:center;min-width:110px}.flow-step.warn{background:var(--warn);color:#000}.flow-step.green{background:var(--ok)}.flow-arrow{color:var(--thg-gr);font-size:20px;font-weight:700}
+.photo-placeholder{background:#f5f5f5;border:2px dashed var(--bdr);border-radius:6px;padding:24px;margin:12px 0;text-align:center;color:var(--thg-gr);font-size:12px;font-weight:600}
+footer{background:#fff;border-top:2px solid var(--thg);padding:12px 24px;display:flex;justify-content:space-between;font-size:11px;color:var(--thg-gr);margin-top:40px}
+@media print{header,nav,footer{position:static}.view{display:block!important;page-break-before:always}.view:first-child{page-break-before:avoid}nav{display:none}body{font-size:11pt}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">TH</div>
+    <div class="title-block">
+      <h1>DWI-SNI-001 - Gelaagd Snijden iPlus/331</h1>
+      <div class="sub">Werkinstructie snijlijn - Handmatig snijden op Intermac Genius LM</div>
+    </div>
+  </div>
+  <div class="doc-meta">
+    <strong>DWI-SNI-001</strong><br>
+    Versie 1.0 - <span id="doc-date"></span><br>
+    Station 2 - Snijlijn
+  </div>
+</header>
+<nav>
+  <button class="nb on" onclick="go('overzicht')">Overzicht</button>
+  <button class="nb" onclick="go('voorbereiding')">1. Voorbereiding</button>
+  <button class="nb" onclick="go('programma')">2. Programma</button>
+  <button class="nb" onclick="go('laden')">3. Plaat Laden</button>
+  <button class="nb" onclick="go('snijproces')">4. Snijproces</button>
+  <button class="nb" onclick="go('afwerking')">5. Afwerking</button>
+  <button class="nb" onclick="go('onderhoud')">6. Mesjes & Onderhoud</button>
+  <button class="nb" onclick="go('checklist')">Checklist</button>
+</nav>
+<div class="wrap">
+
+<div id="view-overzicht" class="view on">
+  <div class="pg-title">Gelaagd Snijden iPlus/331 - Overzicht</div>
+  <div class="pg-sub">Handmatig snijden van gelaagd glas op de Intermac Genius LM snijlijn met Movetro glaslader</div>
+  <div class="card">
+    <div class="ct"><span class="ic">Doel</span></div>
+    <p>Deze DWI beschrijft het volledige proces van <strong>handmatig snijden van gelaagd glas</strong> (iPlus 331 en 442) op de <strong>Intermac Genius LM</strong> snijlijn met <strong>Movetro glaslader</strong>. Het snijproces bestaat uit PerfectCut programmering, glaslading via Movetro, Free Cut modus instellen, en handmatig snijden met gecontroleerde mesafstelling en rand 60mm overstek.</p>
+    <div class="al al-b"><span class="ai">Info</span><span><strong>Gelaagd glas</strong> vereist nauwkeurig meswerk: correct mesje per glastype, juiste druk, en voorzichtig breken van het glas.</span></div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Procesflow</span></div>
+    <div class="flow">
+      <div class="flow-step">PerfectCut<br><small>Programma</small></div>
+      <span class="flow-arrow">-></span>
+      <div class="flow-step">Plaat laden<br><small>Movetro</small></div>
+      <span class="flow-arrow">-></span>
+      <div class="flow-step">Free Cut<br><small>instellen</small></div>
+      <span class="flow-arrow">-></span>
+      <div class="flow-step warn">Handmatig<br><small>snijden</small></div>
+      <span class="flow-arrow">-></span>
+      <div class="flow-step">Breken &<br><small>afwerken</small></div>
+      <span class="flow-arrow">-></span>
+      <div class="flow-step green">Klaar voor<br><small>volgende proces</small></div>
+    </div>
+  </div>
+  <div class="g3">
+    <div class="kpi red"><div class="kn">60 mm</div><div class="kl">Minimale rand overstek (beide zijden)</div></div>
+    <div class="kpi gold"><div class="kn">331 / 442</div><div class="kl">Glastype + juiste mesje per type</div></div>
+    <div class="kpi green"><div class="kn">Geen breuken</div><div class="kl">Controleer glas na snijden</div></div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Materialen & Equipment</span></div>
+    <table class="t">
+      <thead><tr><th>Item</th><th>Specificatie</th><th>Opmerking</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Gelaagd glas 331</strong></td><td>3mm+3mm+1mm PVB</td><td>Standaard laminaat</td></tr>
+        <tr><td><strong>Gelaagd glas 442</strong></td><td>4mm+4mm+2mm PVB</td><td>Dikker laminaat</td></tr>
+        <tr><td><strong>Stanley mesje 331</strong></td><td>Groter profiel</td><td>Voor 331 glas ALLEEN</td></tr>
+        <tr><td><strong>Stanley mesje 442</strong></td><td>Kleiner profiel</td><td>Voor 442 glas ALLEEN</td></tr>
+        <tr><td><strong>Snijwieltje 331</strong></td><td>Standaard</td><td>Voor 331 glas</td></tr>
+        <tr><td><strong>Snijwieltje 442</strong></td><td>Variant</td><td>Voor 442 glas</td></tr>
+        <tr><td><strong>PerfectCut software</strong></td><td>Snijoptimalisatie</td><td>Layout & maatberekening</td></tr>
+        <tr><td><strong>Intermac Genius LM</strong></td><td>Machinebesturing</td><td>Free Cut modus</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="view-voorbereiding" class="view">
+  <div class="pg-title">1. Voorbereiding</div>
+  <div class="pg-sub">Stap 1 - PC-instellingen controleren, sleutels omdraaien, stoplichten groen</div>
+  <div class="card">
+    <div class="ct"><span class="ic">PC-instellingen (Lamineren modus)</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Zet de <strong>voorste computer op stand "L"</strong> (Lamineren) - draai de sleutel om.</span></li>
+      <li class="step"><span class="sn">2</span><span class="st">Controleer dat het <strong>stoplicht op groen</strong> staat.</span></li>
+      <li class="step"><span class="sn">3</span><span class="st">Doe hetzelfde bij de <strong>PC van tafel 3</strong> - sleutel omdraaien naar "L".</span></li>
+      <li class="step"><span class="sn">4</span><span class="st">Controleer ook hier dat het <strong>stoplicht op groen</strong> staat.</span></li>
+      <li class="step"><span class="sn">5</span><span class="st">Zorg dat <strong>niets onder de lamineertafel</strong> ligt - dit kan verstelling blokkeren.</span></li>
+    </ul>
+    <div class="al al-y"><span class="ai">Let op</span><span><strong>Beide computers moeten op "L" staan en beide stoplichten op groen</strong> voor je met PerfectCut start.</span></div>
+  </div>
+  <div class="photo-placeholder">
+    📷 IMG-20260306-WA0049.jpg - Voorste PC met sleutel stand "L"
+  </div>
+  <div class="photo-placeholder">
+    📷 IMG-20260306-WA0048.jpg - Achterste PC sleutel positie
+  </div>
+  <div class="photo-placeholder">
+    📷 IMG-20260306-WA0001.jpg - PC-scherm indicatoren controle
+  </div>
+</div>
+
+<div id="view-programma" class="view">
+  <div class="pg-title">2. Programma (PerfectCut)</div>
+  <div class="pg-sub">Stap 2 - Snijprogramma maken en layout berekenen</div>
+  <div class="card">
+    <div class="ct"><span class="ic">PerfectCut - Nieuw project</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Open <strong>PerfectCut</strong> software op de PC.</span></li>
+      <li class="step"><span class="sn">2</span><span class="st">Ga naar <strong>Project → New</strong> (nieuw project).</span></li>
+      <li class="step"><span class="sn">3</span><span class="st">Selecteer platen aan de rechterkant: <strong>Stock</strong> bevat bijv. <strong>3210 × 2550</strong> (volledige plaat uit Movetro).</span></li>
+      <li class="step"><span class="sn">4</span><span class="st">Sleep de <strong>juiste plaat</strong> naar het project.</span></li>
+      <li class="step"><span class="sn">5</span><span class="st">Vul <strong>alle glasmaten in</strong> conform werkopdracht (breedte, hoogte, aantal stuks).</span></li>
+      <li class="step"><span class="sn">6</span><span class="st"><strong>Controle stap:</strong> juiste plaat, juiste maten, juiste aantallen - DUBBEL CONTROLEREN.</span></li>
+      <li class="step"><span class="sn">7</span><span class="st">Klik <strong>"Start processing for current family"</strong> voor layout-berekening.</span></li>
+      <li class="step"><span class="sn green">8</span><span class="st">Opslaan met het <strong>messenger-icoon</strong>.</span></li>
+    </ul>
+    <div class="al al-b"><span class="ai">Tip</span><span>PerfectCut berekent automatisch de <strong>60mm rand overstek</strong> in de layout. Dit is vastgelegd in de software.</span></div>
+  </div>
+  <div class="photo-placeholder">
+    📷 IMG-20260306-WA0006.jpg - PerfectCut Stock selectie
+  </div>
+  <div class="photo-placeholder">
+    📷 IMG-20260306-WA0007.jpg - PerfectCut projectinvoer
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Programma naar machine (Intermac)</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Na layout: display loading transfer - zorg dat <strong>juiste instelling aanstaat</strong>.</span></li>
+      <li class="step"><span class="sn">2</span><span class="st">Genereer <strong>loading order list</strong> (laadlijst).</span></li>
+      <li class="step"><span class="sn">3</span><span class="st">Druk op <strong>Start</strong>.</span></li>
+      <li class="step"><span class="sn">4</span><span class="st">Sleep programma naar map <strong>"dati" → kw 26 2022</strong>.</span></li>
+      <li class="step"><span class="sn green">5</span><span class="st">Open het op de <strong>PC bij tafel 2</strong> - sleep van kw-map naar dati.</span></li>
+    </ul>
+  </div>
+  <div class="photo-placeholder">
+    📷 IMG-20260306-WA0009.jpg - Loading transfer display
+  </div>
+  <div class="photo-placeholder">
+    📷 IMG-20260306-WA0010.jpg - Programma naar dati-map
+  </div>
+</div>
+
+<div id="view-laden" class="view">
+  <div class="pg-title">3. Plaat Laden (Movetro)</div>
+  <div class="pg-sub">Stap 3 - Glasplaat via Movetro automatisch laden op snijtafel</div>
+  <div class="card">
+    <div class="ct"><span class="ic">Movetro bedieningsprocedure</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Houd de <strong>laadknop ingedrukt</strong> tot je de <strong>Movetro hoort</strong> (stopt met knipperen).</span></li>
+      <li class="step"><span class="sn">2</span><span class="st">De <strong>plaat wordt automatisch opgehaald</strong> uit de stack.</span></li>
+      <li class="step"><span class="sn">3</span><span class="st">Houd de <strong>doorstuurknop ingedrukt</strong> tot de plaat op de snijtafel ligt.</span></li>
+      <li class="step"><span class="sn">4</span><span class="st">Vinkje <strong>uitzetten</strong> en op de <strong>groene knop drukken</strong>.</span></li>
+      <li class="step"><span class="sn green">5</span><span class="st">Zwarte knop (reset) <strong>indrukken</strong> - systeem is reset.</span></li>
+    </ul>
+    <div class="al al-g"><span class="ai">OK</span><span>Plaat is nu klaar op de snijtafel. De Movetro geeft signaal wanneer klaar.</span></div>
+  </div>
+  <div class="photo-placeholder">
+    📷 IMG-20260306-WA0008.jpg - Movetro bedieningspaneel
+  </div>
+  <div class="photo-placeholder">
+    📷 IMG-20260306-WA0011.jpg - Doorstuurknop positie
+  </div>
+</div>
+
+<div id="view-snijproces" class="view">
+  <div class="pg-title">4. Snijproces (Free Cut Modus)</div>
+  <div class="pg-sub">Stap 4 - Intermac software, Free Cut instellen, handmatig snijden met parameters</div>
+  <div class="card">
+    <div class="ct"><span class="ic">Intermac Genius LM Software openen</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Open <strong>Intermac Genius LM</strong> software - <strong>PerfectCut moet gesloten zijn!</strong></span></li>
+      <li class="step"><span class="sn">2</span><span class="st">Zet <strong>printer aan</strong> (boven op de kast).</span></li>
+      <li class="step"><span class="sn">3</span><span class="st">Print het <strong>volledige programma</strong>.</span></li>
+      <li class="step"><span class="sn">4</span><span class="st">Modify Family → verander naar <strong>"4iplus"</strong> - <strong>DIT IS BELANGRIJK!</strong></span></li>
+      <li class="step"><span class="sn">5</span><span class="st">Druk op <strong>Yes</strong>, sla op.</span></li>
+    </ul>
+    <div class="al al-r"><span class="ai">STOP</span><span><strong>Family MOET "4iplus" zijn!</strong> Anders werken de parameters niet goed.</span></div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Programma inladen en berekeningen</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Open het programma en zet op <strong>"Removal Only"</strong>.</span></li>
+      <li class="step"><span class="sn">2</span><span class="st">Druk op <strong>Start</strong>.</span></li>
+      <li class="step"><span class="sn">3</span><span class="st">Nu heb je de <strong>tekeningen met berekende maten</strong> (60mm rand overstek).</span></li>
+      <li class="step"><span class="sn">4</span><span class="st">Noteer <strong>parameter 1 en 2</strong> - dit zijn jouw snijmaten.</span></li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Free Cut Modus - Handmatig snijden</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Ga naar <strong>Free Cut modus</strong> op de machine.</span></li>
+      <li class="step"><span class="sn">2</span><span class="st">Voer <strong>parameter 1 en 2 in</strong> (de berekende maten uit stap 4).</span></li>
+      <li class="step"><span class="sn">3</span><span class="st">Zorg dat <strong>Material Code op 331 staat</strong> (of 442 bij dikker glas) - <strong>CONTROLEER DIT!</strong></span></li>
+      <li class="step"><span class="sn red">4</span><span class="st"><strong>Controleer dat het juiste mesje in de machine zit:</strong></span></li>
+      <li class="step"><span class="sn">   </span><span class="st">- Voor <strong>331 glas:</strong> groot Stanley mesje + snijwieltje 331</span></li>
+      <li class="step"><span class="sn">   </span><span class="st">- Voor <strong>442 glas:</strong> klein Stanley mesje + snijwieltje 442</span></li>
+      <li class="step"><span class="sn">5</span><span class="st">Druk op <strong>OK</strong>.</span></li>
+      <li class="step"><span class="sn">6</span><span class="st">Druk op het <strong>voetpedaal</strong> - snijkop start beweging.</span></li>
+      <li class="step"><span class="sn">7</span><span class="st">Breng de sheet <strong>naar je toe</strong>.</span></li>
+      <li class="step"><span class="sn">8</span><span class="st">Druk <strong>rechts of links knop</strong> voor positioneren.</span></li>
+      <li class="step"><span class="sn">9</span><span class="st">Druk glas <strong>strak tegen de gele knopjes</strong> en houd <strong>goed vast</strong> - niet losjes!</span></li>
+      <li class="step"><span class="sn">10</span><span class="st"><strong>Controleer of het mesje boven de lijn zit</strong> - visueel checken.</span></li>
+      <li class="step"><span class="sn">11</span><span class="st">Volg de <strong>instructies op het scherm</strong>.</span></li>
+      <li class="step"><span class="sn">12</span><span class="st">Na het snijden: <strong>laat de plaat los</strong> - machine maakt proces zelf af.</span></li>
+      <li class="step"><span class="sn green">13</span><span class="st">Houd goed in de gaten of er <strong>breuken zijn</strong> in het glas!</span></li>
+    </ul>
+    <div class="al al-r"><span class="ai">WAARSCHUWING</span><span><strong>Bij 442 glas gebruik je een ANDER mesje dan bij 331!</strong> Verkeerd mesje = slechte snijkwaliteit en beschadiging.</span></div>
+  </div>
+  <div class="photo-placeholder">
+    📷 IMG-20260306-WA0025.jpg - Voetpedaal bediening
+  </div>
+  <div class="photo-placeholder">
+    📷 IMG-20260306-WA0029.jpg - Glas op snijtafel positionering
+  </div>
+  <div class="photo-placeholder">
+    📷 IMG-20260306-WA0030.jpg - Mesje controle (boven de lijn)
+  </div>
+</div>
+
+<div id="view-afwerking" class="view">
+  <div class="pg-title">5. Afwerking</div>
+  <div class="pg-sub">Stap 5 - Breken, reststuk verwijderen, troubleshooting</div>
+  <div class="card">
+    <div class="ct"><span class="ic">Breken en afwerken</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Breng het <strong>reststuk ver genoeg naar achteren</strong>.</span></li>
+      <li class="step"><span class="sn">2</span><span class="st">Draai het sheet <strong>om voor de andere kant</strong> te snijden.</span></li>
+      <li class="step"><span class="sn">3</span><span class="st">Leg weer <strong>strak tegen gele bandjes</strong>.</span></li>
+      <li class="step"><span class="sn">4</span><span class="st"><strong>Controleer en herhaal</strong> cyclus tot alle ramen/deuren eruit zijn.</span></li>
+      <li class="step"><span class="sn">5</span><span class="st">Haal aan einde cyclus <strong>altijd het reststuk weg</strong> - kan anders tussen machine vallen.</span></li>
+      <li class="step"><span class="sn green">6</span><span class="st">Controleer alle delen op <strong>breuken en beschadigingen</strong>.</span></li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Hulpmiddelen & berekeningen</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Gebruik de <strong>calculator op de PC</strong> (snelbalk) voor maatberekeningen (als nodig).</span></li>
+      <li class="step"><span class="sn">2</span><span class="st">Print afdruk ter controle bij twijfel.</span></li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Storingsafhandeling</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn red">1</span><span class="st">Bij storing: druk op <strong>zwarte resetknop</strong>.</span></li>
+      <li class="step"><span class="sn">2</span><span class="st">Als machine vastloopt: <strong>open resetprogramma</strong>.</span></li>
+      <li class="step"><span class="sn">3</span><span class="st">Klik <strong>handje bovenaan</strong>.</span></li>
+      <li class="step"><span class="sn">4</span><span class="st">Zet rode items <strong>1 voor 1 uit</strong> (van onder, rechts naar links).</span></li>
+      <li class="step"><span class="sn">5</span><span class="st">Wacht tot machine reset is voltooid.</span></li>
+      <li class="step"><span class="sn green">6</span><span class="st">Start opnieuw.</span></li>
+    </ul>
+    <div class="al al-y"><span class="ai">Let op</span><span>Reset niet te snel uitvoeren - wacht tot machine volledig stil staat.</span></div>
+  </div>
+  <div class="photo-placeholder">
+    📷 IMG-20260306-WA0037.jpg - Breken procedure
+  </div>
+  <div class="photo-placeholder">
+    📷 IMG-20260306-WA0040.jpg - Resetknop positie
+  </div>
+  <div class="photo-placeholder">
+    📷 IMG-20260306-WA0042.jpg - Resetprogramma interface
+  </div>
+</div>
+
+<div id="view-onderhoud" class="view">
+  <div class="pg-title">6. Mesjes & Onderhoud</div>
+  <div class="pg-sub">Stap 6 - Stanley mesje controle, snijwieltje inspectie</div>
+  <div class="card">
+    <div class="ct"><span class="ic">Dagelijk onderhoud - Stanley mesje</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Open de <strong>kast van de snijkop</strong>.</span></li>
+      <li class="step"><span class="sn">2</span><span class="st">Controleer <strong>Stanley mesje</strong> (voor plastic snijden):</span></li>
+      <li class="step"><span class="sn">   </span><span class="st">- Losdraaien moertjes</span></li>
+      <li class="step"><span class="sn">   </span><span class="st">- Mesje eruit</span></li>
+      <li class="step"><span class="sn">   </span><span class="st">- Controleren op reststukjes</span></li>
+      <li class="step"><span class="sn">   </span><span class="st">- Schoon maken met luchtspuit</span></li>
+      <li class="step"><span class="sn">3</span><span class="st">Controleer <strong>snijwieltje</strong>: moet <strong>soepel draaien</strong>.</span></li>
+      <li class="step"><span class="sn">4</span><span class="st">Wieltje eruit halen via <strong>pinnetje</strong>, schoonblazen met <strong>luchtspuit</strong>.</span></li>
+      <li class="step"><span class="sn">5</span><span class="st">Controleer <strong>afmetingen mesje:</strong></span></li>
+      <li class="step"><span class="sn">   </span><span class="st">- <strong>331 mesje:</strong> groter</span></li>
+      <li class="step"><span class="sn">   </span><span class="st">- <strong>442 mesje:</strong> kleiner</span></li>
+      <li class="step"><span class="sn green">6</span><span class="st">Kast weer dicht, sleutels omdraaien.</span></li>
+    </ul>
+    <div class="al al-gold"><span class="ai">Belangrijk</span><span><strong>Controleer dagelijks of het juiste mesje in de machine zit.</strong> Verkeerd mesje = slechte snijkwaliteit.</span></div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">PC-instellingen check (einde dag)</span></div>
+    <ul class="steps">
+      <li class="step"><span class="sn">1</span><span class="st">Controleer dat beide computers correct staan (sleutels op "L", stoplichten groen).</span></li>
+      <li class="step"><span class="sn">2</span><span class="st">Zorg dat <strong>niets onder de lamineertafel</strong> ligt.</span></li>
+      <li class="step"><span class="sn green">3</span><span class="st">Systeem is klaar voor volgende dag.</span></li>
+    </ul>
+  </div>
+  <div class="photo-placeholder">
+    📷 IMG-20260306-WA0044.jpg - Stanley mesje houder
+  </div>
+  <div class="photo-placeholder">
+    📷 IMG-20260306-WA0045.jpg - Mesje inspectie detail
+  </div>
+  <div class="photo-placeholder">
+    📷 IMG-20260306-WA0046.jpg - Snijwieltje
+  </div>
+  <div class="card">
+    <div class="ct"><span class="ic">Repetities (meerdere identieke maten)</span></div>
+    <p>Voor het snijden van meerdere identieke maten kun je de <strong>repetities-functie</strong> gebruiken in PerfectCut.</p>
+    <div class="al al-b"><span class="ai">Tip</span><span>Dit bespaart programmeerwerk en maakt het proces sneller.</span></div>
+  </div>
+  <div class="photo-placeholder">
+    📷 IMG-20260306-WA0051.jpg - Repetities feature in PerfectCut
+  </div>
+</div>
+
+<div id="view-checklist" class="view">
+  <div class="pg-title">Checklist Gelaagd Snijden iPlus/331</div>
+  <div class="pg-sub">Gebruik per werkdag - vink af wat gereed is</div>
+
+  <div class="card">
+    <div class="ct"><span class="ic">Voor start werkdag</span></div>
+    <div class="cl">
+      <div class="ci"><input type="checkbox" id="c1"><label for="c1">Voorste PC op "L" (Lamineren), sleutel omgedraaid</label></div>
+      <div class="ci"><input type="checkbox" id="c2"><label for="c2">Achterste PC sleutel omgedraaid, op "L"</label></div>
+      <div class="ci"><input type="checkbox" id="c3"><label for="c3">Stoplichten beide computers op groen</label></div>
+      <div class="ci"><input type="checkbox" id="c4"><label for="c4">Niets onder lamineertafel (vrij pad)</label></div>
+      <div class="ci"><input type="checkbox" id="c5"><label for="c5">Juiste mesje in machine (331 of 442)</label></div>
+      <div class="ci"><input type="checkbox" id="c6"><label for="c6">Snijwieltje soepel draaiend</label></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct"><span class="ic">PerfectCut programmering</span></div>
+    <div class="cl">
+      <div class="ci"><input type="checkbox" id="c7"><label for="c7">Juiste plaat geselecteerd (bijv. 3210 × 2550)</label></div>
+      <div class="ci"><input type="checkbox" id="c7b"><label for="c7b">Alle glasmaten correct ingevuld conform werkopdracht</label></div>
+      <div class="ci"><input type="checkbox" id="c8"><label for="c8">"Start processing for current family" geklik - layout berekend</label></div>
+      <div class="ci"><input type="checkbox" id="c9"><label for="c9">Programma opgeslagen (messenger-icoon)</label></div>
+      <div class="ci"><input type="checkbox" id="c10"><label for="c10">Programma naar "dati" folder verplaatst</label></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct"><span class="ic">Movetro laden</span></div>
+    <div class="cl">
+      <div class="ci"><input type="checkbox" id="c11"><label for="c11">Laadknop ingedrukt tot Movetro hoort</label></div>
+      <div class="ci"><input type="checkbox" id="c12"><label for="c12">Doorstuurknop ingedrukt - plaat op snijtafel</label></div>
+      <div class="ci"><input type="checkbox" id="c13"><label for="c13">Vinkje uitgezet, groene knop ingedrukt</label></div>
+      <div class="ci"><input type="checkbox" id="c14"><label for="c14">Resetknop ingedrukt - systeem gereset</label></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct"><span class="ic">Intermac Free Cut instellingen</span></div>
+    <div class="cl">
+      <div class="ci"><input type="checkbox" id="c15"><label for="c15">Intermac Genius LM software geopend (PerfectCut gesloten)</label></div>
+      <div class="ci"><input type="checkbox" id="c16"><label for="c16">Family veranderd naar "4iplus"</label></div>
+      <div class="ci"><input type="checkbox" id="c17"><label for="c17">Programma ingeladen, "Removal Only" gezet</label></div>
+      <div class="ci"><input type="checkbox" id="c18"><label for="c18">Parameter 1 en 2 ingevuld (berekende maten)</label></div>
+      <div class="ci"><input type="checkbox" id="c19"><label for="c19">Material Code ingesteld (331 of 442)</label></div>
+      <div class="ci"><input type="checkbox" id="c20"><label for="c20">Juiste mesje in machine gecontroleerd (331 of 442 variant)</label></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct"><span class="ic">Per snijcyclus</span></div>
+    <div class="cl">
+      <div class="ci"><input type="checkbox" id="c21"><label for="c21">Voetpedaal ingedrukt, snijkop start beweging</label></div>
+      <div class="ci"><input type="checkbox" id="c22"><label for="c22">Glas strak tegen gele knopjes gepositioneerd</label></div>
+      <div class="ci"><input type="checkbox" id="c23"><label for="c23">Mesje boven snijlijn visueel gecontroleerd</label></div>
+      <div class="ci"><input type="checkbox" id="c24"><label for="c24">Snijde uitgevoerd - glas losgelaten (machine maakt af)</label></div>
+      <div class="ci"><input type="checkbox" id="c25"><label for="c25">Geen breuken in glas na snijden</label></div>
+      <div class="ci"><input type="checkbox" id="c26"><label for="c26">Reststuk verwijderd (niet onder machine laten)</label></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct"><span class="ic">Na afloop shift</span></div>
+    <div class="cl">
+      <div class="ci"><input type="checkbox" id="c27"><label for="c27">Alle delen correct gesneden conform tekening</label></div>
+      <div class="ci"><input type="checkbox" id="c28"><label for="c28">Reststukken opgeruimd</label></div>
+      <div class="ci"><input type="checkbox" id="c29"><label for="c29">Stanley mesje en snijwieltjes gecontroleerd</label></div>
+      <div class="ci"><input type="checkbox" id="c30"><label for="c30">Mesje schoongeblazen, geen reststukjes</label></div>
+      <div class="ci"><input type="checkbox" id="c31"><label for="c31">Machine in parkeermodus</label></div>
+      <div class="ci"><input type="checkbox" id="c32"><label for="c32">Beide PC's correct afgesloten/ingesteld voor volgende dag</label></div>
+    </div>
+  </div>
+
+</div>
+
+</div>
+<footer>
+  <span>DWI-SNI-001 - Gelaagd Snijden iPlus/331 - v1.0 - <span id="footer-date"></span></span>
+  <span>Timmermans Hardglas B.V. | Handelsstraat 55-57 | 7772 TS Hardenberg</span>
+</footer>
+
+<script>
+var d=new Date().toLocaleDateString('nl-NL',{day:'2-digit',month:'2-digit',year:'numeric'});
+document.getElementById('doc-date').textContent=d;
+document.getElementById('footer-date').textContent=d;
+function go(name){document.querySelectorAll('.view').forEach(function(v){v.classList.remove('on')});document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on')});var el=document.getElementById('view-'+name);if(el)el.classList.add('on');document.querySelectorAll('.nb').forEach(function(b){var oc=b.getAttribute('onclick')||'';if(oc.indexOf("'"+name+"'")>-1)b.classList.add('on')});window.scrollTo(0,0)}
+function tab(btn,group,name){document.querySelectorAll('[id^="'+group+'-"]').forEach(function(p){p.classList.remove('on')});btn.closest('.tabs').querySelectorAll('.tb').forEach(function(b){b.classList.remove('on')});btn.classList.add('on');var panel=document.getElementById(group+'-'+name);if(panel)panel.classList.add('on')}
+</script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+{
+  "id": "DWI-ONT-001",
+  "titel": "Retour bokken verwerken",
+  "station": "ONT",
+  "stationNummer": 1,
+  "machine": "Bokken",
+  "auteur": "Daan Spijkerman",
+  "goedgekeurd": "Erik Stroot",
+  "versie": "1.0",
+  "datum": "08-01-2025",
+  "volgendeReview": "08-07-2025",
+  "status": "concept",
+  "gereedschap": [
+    "Pen",
+    "Boklijst"
+  ],
+  "pbm": [
+    "Veiligheidsschoenen",
+    "Veiligheidsbril"
+  ],
+  "stappen": [
+    {
+      "nummer": 1,
+      "titel": "Ontvangst retour bokken van chauffeur",
+      "beschrijving": "Ontvang de retour bokken van de Timmerman Transport chauffeur en controleer visueel op beschadigingen",
+      "waarschuwing": "Let op het gewicht van de bokken bij het verplaatsen - gebruik juiste tilhouding",
+      "tip": "Plaats bokken direct op een overzichtelijke locatie voor verdere verwerking",
+      "substappen": [
+        "Begroet chauffeur",
+        "Controleer aantal bokken visueel",
+        "Inspecteer bokken op beschadigingen"
+      ],
+      "afbeeldingen": [
+        "/images/dwi/DWI-ONT-001/stap-01.jpg"
+      ],
+      "bijschrift": [
+        "Standaard bokkenrek voor glasplaten met verticale steunen"
+      ]
+    },
+    {
+      "nummer": 2,
+      "titel": "Boklijst ophalen bij expeditie",
+      "beschrijving": "Haal de boklijst op bij de expeditie afdeling waarop alle boknummers staan vermeld",
+      "waarschuwing": null,
+      "tip": "Controleer of de boklijst de juiste datum heeft",
+      "substappen": [
+        "Ga naar expeditie",
+        "Vraag om boklijst van vandaag",
+        "Controleer volledigheid lijst"
+      ],
+      "afbeeldingen": [],
+      "bijschrift": []
+    },
+    {
+      "nummer": 3,
+      "titel": "Boknummers arceren op boklijst",
+      "beschrijving": "Arceer (streep door) alle boknummers op de boklijst die daadwerkelijk retour zijn gebracht door de chauffeur",
+      "waarschuwing": null,
+      "tip": "Gebruik duidelijke arcering zodat kantoor goed kan zien welke bokken retour zijn",
+      "substappen": [
+        "Zoek boknummer op bok",
+        "Zoek hetzelfde nummer op boklijst",
+        "Arceer het nummer op de lijst",
+        "Herhaal voor alle retour bokken"
+      ],
+      "afbeeldingen": [],
+      "bijschrift": []
+    },
+    {
+      "nummer": 4,
+      "titel": "Controle door expeditie",
+      "beschrijving": "Laat expeditie controleren of de gearceerde boklijst overeenkomt met de werkelijk aanwezige retour bokken",
+      "waarschuwing": null,
+      "tip": "Wacht op goedkeuring expeditie voordat je de lijst naar kantoor brengt",
+      "substappen": [
+        "Roep expeditie medewerker",
+        "Laat bokken en lijst controleren",
+        "Wacht op akkoord expeditie"
+      ],
+      "afbeeldingen": [],
+      "bijschrift": []
+    },
+    {
+      "nummer": 5,
+      "titel": "Boklijst naar kantoor",
+      "beschrijving": "Breng de gecontroleerde boklijst naar kantoor voor eindcontrole en administratieve verwerking",
+      "waarschuwing": null,
+      "tip": "Vermeld bij kantoor dat expeditie de lijst al heeft gecontroleerd",
+      "substappen": [
+        "Ga naar kantoor",
+        "Overhandig boklijst",
+        "Vermeld dat expeditie heeft gecontroleerd"
+      ],
+      "afbeeldingen": [],
+      "bijschrift": []
+    }
+  ],
+  "afwijkingen": [
+    {
+      "afwijking": "Boknummer niet vindbaar op boklijst",
+      "oorzaak": "Bok is niet van Timmermans of lijst is niet compleet",
+      "actie": "Meld dit direct aan expeditie en kantoor voor verificatie"
+    },
+    {
+      "afwijking": "Beschadigde bok retour ontvangen",
+      "oorzaak": "Transport- of gebruiksschade",
+      "actie": "Noteer schade op boklijst en informeer expeditie en kantoor"
+    },
+    {
+      "afwijking": "Aantal retour bokken komt niet overeen met verwachting",
+      "oorzaak": "Verkeerde informatie van kantoor of fout van chauffeur",
+      "actie": "Dubbelcheck met expeditie en neem contact op met kantoor voor verificatie"
+    }
+  ],
+  "zoektermen": "bokken retour transport chauffeur boklijst expeditie kantoor ontvangst"
+}

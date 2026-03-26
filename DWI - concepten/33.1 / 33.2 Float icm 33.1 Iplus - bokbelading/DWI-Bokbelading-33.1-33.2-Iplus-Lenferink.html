@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DWI — Bokbelading 33.1 / 33.2 Float + 33.1 Iplus | Lenferink</title>
+<style>
+  :root {
+    --thg-blauw: #005A9C;
+    --thg-donker: #004678;
+    --thg-grijs: #595959;
+    --thg-zwart: #000000;
+    --thg-wit: #FFFFFF;
+    --zone-a: #2196F3;
+    --zone-b: #4CAF50;
+    --zone-c: #F44336;
+    --zone-d: #FFC107;
+    --zone-a-light: #BBDEFB;
+    --zone-b-light: #C8E6C9;
+    --zone-c-light: #FFCDD2;
+    --zone-d-light: #FFF9C4;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Calibri, Arial, Helvetica, sans-serif;
+    font-size: 11pt;
+    color: var(--thg-zwart);
+    background: #f4f6f8;
+    line-height: 1.5;
+  }
+
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: var(--thg-wit);
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    background: var(--thg-blauw);
+    color: var(--thg-wit);
+    padding: 24px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header h1 {
+    font-size: 22pt;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .header .doc-info {
+    text-align: right;
+    font-size: 9pt;
+    opacity: 0.9;
+  }
+  .header .doc-info span { display: block; }
+
+  /* Metadata bar */
+  .meta-bar {
+    background: var(--thg-donker);
+    color: var(--thg-wit);
+    padding: 10px 40px;
+    display: flex;
+    gap: 32px;
+    font-size: 10pt;
+    flex-wrap: wrap;
+  }
+  .meta-bar .meta-item { display: flex; gap: 6px; }
+  .meta-bar .meta-label { font-weight: 700; opacity: 0.8; }
+
+  /* Content */
+  .content { padding: 32px 40px; }
+
+  h2 {
+    font-size: 16pt;
+    font-weight: 700;
+    color: var(--thg-blauw);
+    margin: 28px 0 12px 0;
+    padding-bottom: 4px;
+    border-bottom: 2px solid var(--thg-blauw);
+  }
+  h3 {
+    font-size: 13pt;
+    font-weight: 700;
+    color: var(--thg-donker);
+    margin: 20px 0 8px 0;
+  }
+  p { margin-bottom: 10px; }
+
+  .doel-box {
+    background: #E3F2FD;
+    border-left: 4px solid var(--thg-blauw);
+    padding: 16px 20px;
+    margin: 16px 0 24px 0;
+    border-radius: 4px;
+  }
+  .doel-box strong { color: var(--thg-blauw); }
+
+  .waarschuwing {
+    background: #FFF3E0;
+    border-left: 4px solid #FF9800;
+    padding: 14px 20px;
+    margin: 12px 0;
+    border-radius: 4px;
+    font-size: 10.5pt;
+  }
+  .waarschuwing::before { content: "⚠ "; font-size: 14pt; }
+
+  /* Legend */
+  .legenda {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin: 16px 0;
+  }
+  .legenda-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 10.5pt;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    border: 2px solid transparent;
+  }
+  .legenda-item:hover { transform: scale(1.05); }
+  .legenda-item.active { border-color: var(--thg-zwart); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .legenda-item .swatch {
+    width: 20px; height: 20px;
+    border-radius: 4px;
+    border: 1px solid rgba(0,0,0,0.2);
+  }
+  .leg-a { background: var(--zone-a-light); }
+  .leg-a .swatch { background: var(--zone-a); }
+  .leg-b { background: var(--zone-b-light); }
+  .leg-b .swatch { background: var(--zone-b); }
+  .leg-c { background: var(--zone-c-light); }
+  .leg-c .swatch { background: var(--zone-c); }
+  .leg-d { background: var(--zone-d-light); }
+  .leg-d .swatch { background: var(--zone-d); }
+
+  /* BOK illustration */
+  .bok-container {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 24px 0;
+  }
+  .bok-view {
+    text-align: center;
+    flex: 0 0 auto;
+  }
+  .bok-view h4 {
+    font-size: 11pt;
+    color: var(--thg-grijs);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .bok-svg {
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.12));
+  }
+
+  /* View toggle */
+  .view-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 20px 0 8px 0;
+  }
+  .view-btn {
+    padding: 8px 20px;
+    border: 2px solid var(--thg-blauw);
+    background: var(--thg-wit);
+    color: var(--thg-blauw);
+    font-family: Calibri, Arial, sans-serif;
+    font-size: 10.5pt;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .view-btn:hover { background: #E3F2FD; }
+  .view-btn.active {
+    background: var(--thg-blauw);
+    color: var(--thg-wit);
+  }
+
+  /* Steps */
+  .stap {
+    display: flex;
+    gap: 16px;
+    margin: 14px 0;
+    padding: 14px 18px;
+    background: #FAFAFA;
+    border-radius: 8px;
+    border: 1px solid #E0E0E0;
+    transition: background 0.2s;
+  }
+  .stap:hover { background: #F0F4F8; }
+  .stap-nr {
+    flex: 0 0 36px;
+    height: 36px;
+    background: var(--thg-blauw);
+    color: var(--thg-wit);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13pt;
+  }
+  .stap-tekst { flex: 1; }
+  .stap-tekst strong { color: var(--thg-donker); }
+
+  /* Table */
+  table.dwi-tabel {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 10.5pt;
+  }
+  table.dwi-tabel th {
+    background: var(--thg-blauw);
+    color: var(--thg-wit);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 700;
+  }
+  table.dwi-tabel td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #E0E0E0;
+  }
+  table.dwi-tabel tr:nth-child(even) td { background: #F8FAFC; }
+  table.dwi-tabel .zone-tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-weight: 700;
+    color: #fff;
+    font-size: 10pt;
+  }
+  .tag-a { background: var(--zone-a); }
+  .tag-b { background: var(--zone-b); }
+  .tag-c { background: var(--zone-c); }
+  .tag-d { background: var(--zone-d); color: #333 !important; }
+
+  /* Checklist */
+  .checklist { margin: 12px 0; }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #EEE;
+    cursor: pointer;
+    user-select: none;
+  }
+  .check-item:hover { background: #F8F8F8; }
+  .check-box {
+    width: 22px; height: 22px;
+    border: 2px solid var(--thg-blauw);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+  }
+  .check-item.checked .check-box {
+    background: var(--thg-blauw);
+  }
+  .check-item.checked .check-box::after {
+    content: "✓";
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .check-item.checked .check-label {
+    text-decoration: line-through;
+    color: var(--thg-grijs);
+  }
+
+  /* Footer */
+  .footer {
+    background: #F5F5F5;
+    border-top: 2px solid var(--thg-blauw);
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 9pt;
+    color: var(--thg-grijs);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .footer a { color: var(--thg-blauw); text-decoration: none; }
+
+  /* Print */
+  @media print {
+    body { background: white; }
+    .page { max-width: 100%; box-shadow: none; }
+    .view-toggle, .check-box { display: none; }
+    .bok-container { page-break-inside: avoid; }
+  }
+
+  /* Tooltip on SVG zones */
+  .zone-hover {
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .zone-hover:hover { opacity: 0.8; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <h1>DWI — Bokbelading Lenferink</h1>
+      <div style="font-size:11pt; margin-top:4px; opacity:0.9;">33.1 / 33.2 Float in combinatie met 33.1 Iplus</div>
+    </div>
+    <div class="doc-info">
+      <span><strong>Timmermans Hardglas B.V.</strong></span>
+      <span>Versie 1.0 — 23-03-2026</span>
+      <span>DWI-BOK-LEN-001</span>
+    </div>
+  </div>
+
+  <!-- META -->
+  <div class="meta-bar">
+    <div class="meta-item"><span class="meta-label">Afdeling:</span> Productie / ISO-lijn</div>
+    <div class="meta-item"><span class="meta-label">Order:</span> Lenferink bouwglas</div>
+    <div class="meta-item"><span class="meta-label">Glassoorten:</span> 33.1 Float · 33.2 Float · 33.1 Iplus</div>
+    <div class="meta-item"><span class="meta-label">Status:</span> Actief</div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- DOEL -->
+    <div class="doel-box">
+      <strong>Doel van deze werkinstructie:</strong> Beschrijft hoe 33.1 float, 33.2 float en 33.1 Iplus op bokken worden geplaatst voor grote Lenferink bouwglasorders, met <strong>minimale verstoring van de aanvoer en het opgooien bij de ISO-lijn</strong>.
+    </div>
+
+    <!-- SECTIE 1: PRINCIPE -->
+    <h2>1. Principe bokindeling</h2>
+    <p>Elke bok wordt aan <strong>beide zijden</strong> beladen. Per zijde wordt één float-vak en één Iplus-vak aangehouden. Zo kan de ISO-lijn ongestoord doordraaien: het juiste glas staat altijd aan de juiste kant klaar.</p>
+
+    <h3>Zoneschema (4 zones per bok)</h3>
+
+    <div class="legenda">
+      <div class="legenda-item leg-a" onclick="highlightZone('a')" id="leg-a">
+        <div class="swatch"></div>
+        <span>Vak A — 33.1 Float</span>
+      </div>
+      <div class="legenda-item leg-b" onclick="highlightZone('b')" id="leg-b">
+        <div class="swatch"></div>
+        <span>Vak B — 33.1 Iplus</span>
+      </div>
+      <div class="legenda-item leg-c" onclick="highlightZone('c')" id="leg-c">
+        <div class="swatch"></div>
+        <span>Vak C — 33.2 Float</span>
+      </div>
+      <div class="legenda-item leg-d" onclick="highlightZone('d')" id="leg-d">
+        <div class="swatch"></div>
+        <span>Vak D — 33.1 Iplus</span>
+      </div>
+    </div>
+
+    <!-- VIEW TOGGLE -->
+    <div class="view-toggle">
+      <button class="view-btn active" onclick="switchView('both')" id="btn-both">Beide zijden</button>
+      <button class="view-btn" onclick="switchView('front')" id="btn-front">Voorzijde (C+D)</button>
+      <button class="view-btn" onclick="switchView('back')" id="btn-back">Achterzijde (A+B)</button>
+      <button class="view-btn" onclick="switchView('top')" id="btn-top">Bovenaanzicht</button>
+    </div>
+
+    <!-- BOK ILLUSTRATIONS -->
+    <div class="bok-container" id="bok-display">
+
+      <!-- SIDE VIEW: BACK (A+B) -->
+      <div class="bok-view" id="view-back">
+        <h4>Achterzijde (A + B)</h4>
+        <svg class="bok-svg" width="340" height="320" viewBox="0 0 340 320">
+          <!-- Bok frame -->
+          <rect x="40" y="40" width="260" height="240" rx="4" fill="#E8E8E8" stroke="#999" stroke-width="2"/>
+          <!-- Floor line -->
+          <line x1="20" y1="280" x2="320" y2="280" stroke="#666" stroke-width="3"/>
+          <text x="170" y="300" text-anchor="middle" fill="#999" font-size="11" font-family="Calibri">vloer</text>
+          <!-- Bok legs -->
+          <rect x="55" y="270" width="12" height="18" rx="2" fill="#888"/>
+          <rect x="275" y="270" width="12" height="18" rx="2" fill="#888"/>
+          <!-- Divider -->
+          <line x1="170" y1="48" x2="170" y2="272" stroke="#666" stroke-width="2" stroke-dasharray="6,4"/>
+          <!-- Zone A (left) -->
+          <rect class="zone-hover" id="svg-a-back" x="48" y="48" width="116" height="224" rx="3" fill="#2196F3" fill-opacity="0.25" stroke="#2196F3" stroke-width="3"/>
+          <rect x="60" y="56" width="92" height="32" rx="4" fill="#2196F3"/>
+          <text x="106" y="77" text-anchor="middle" fill="white" font-size="14" font-weight="bold" font-family="Calibri">VAK A</text>
+          <text x="106" y="120" text-anchor="middle" fill="#1565C0" font-size="13" font-weight="bold" font-family="Calibri">33.1</text>
+          <text x="106" y="140" text-anchor="middle" fill="#1565C0" font-size="13" font-family="Calibri">Float</text>
+          <!-- glass panes indicator -->
+          <g transform="translate(76,160)">
+            <rect x="0" y="0" width="60" height="4" rx="1" fill="#2196F3" opacity="0.6"/>
+            <rect x="3" y="8" width="60" height="4" rx="1" fill="#2196F3" opacity="0.5"/>
+            <rect x="6" y="16" width="60" height="4" rx="1" fill="#2196F3" opacity="0.4"/>
+            <rect x="9" y="24" width="60" height="4" rx="1" fill="#2196F3" opacity="0.3"/>
+            <rect x="12" y="32" width="60" height="4" rx="1" fill="#2196F3" opacity="0.25"/>
+          </g>
+          <!-- Zone B (right) -->
+          <rect class="zone-hover" id="svg-b-back" x="178" y="48" width="116" height="224" rx="3" fill="#4CAF50" fill-opacity="0.25" stroke="#4CAF50" stroke-width="3"/>
+          <rect x="190" y="56" width="92" height="32" rx="4" fill="#4CAF50"/>
+          <text x="236" y="77" text-anchor="middle" fill="white" font-size="14" font-weight="bold" font-family="Calibri">VAK B</text>
+          <text x="236" y="120" text-anchor="middle" fill="#2E7D32" font-size="13" font-weight="bold" font-family="Calibri">33.1</text>
+          <text x="236" y="140" text-anchor="middle" fill="#2E7D32" font-size="13" font-family="Calibri">Iplus</text>
+          <g transform="translate(206,160)">
+            <rect x="0" y="0" width="60" height="4" rx="1" fill="#4CAF50" opacity="0.6"/>
+            <rect x="3" y="8" width="60" height="4" rx="1" fill="#4CAF50" opacity="0.5"/>
+            <rect x="6" y="16" width="60" height="4" rx="1" fill="#4CAF50" opacity="0.4"/>
+            <rect x="9" y="24" width="60" height="4" rx="1" fill="#4CAF50" opacity="0.3"/>
+            <rect x="12" y="32" width="60" height="4" rx="1" fill="#4CAF50" opacity="0.25"/>
+          </g>
+          <!-- Arrow showing lean direction -->
+          <text x="106" y="260" text-anchor="middle" fill="#1565C0" font-size="10" font-family="Calibri">← links</text>
+          <text x="236" y="260" text-anchor="middle" fill="#2E7D32" font-size="10" font-family="Calibri">rechts →</text>
+        </svg>
+      </div>
+
+      <!-- SIDE VIEW: FRONT (C+D) -->
+      <div class="bok-view" id="view-front">
+        <h4>Voorzijde (C + D)</h4>
+        <svg class="bok-svg" width="340" height="320" viewBox="0 0 340 320">
+          <rect x="40" y="40" width="260" height="240" rx="4" fill="#E8E8E8" stroke="#999" stroke-width="2"/>
+          <line x1="20" y1="280" x2="320" y2="280" stroke="#666" stroke-width="3"/>
+          <text x="170" y="300" text-anchor="middle" fill="#999" font-size="11" font-family="Calibri">vloer</text>
+          <rect x="55" y="270" width="12" height="18" rx="2" fill="#888"/>
+          <rect x="275" y="270" width="12" height="18" rx="2" fill="#888"/>
+          <line x1="170" y1="48" x2="170" y2="272" stroke="#666" stroke-width="2" stroke-dasharray="6,4"/>
+          <!-- Zone C (left) -->
+          <rect class="zone-hover" id="svg-c-front" x="48" y="48" width="116" height="224" rx="3" fill="#F44336" fill-opacity="0.25" stroke="#F44336" stroke-width="3"/>
+          <rect x="60" y="56" width="92" height="32" rx="4" fill="#F44336"/>
+          <text x="106" y="77" text-anchor="middle" fill="white" font-size="14" font-weight="bold" font-family="Calibri">VAK C</text>
+          <text x="106" y="120" text-anchor="middle" fill="#C62828" font-size="13" font-weight="bold" font-family="Calibri">33.2</text>
+          <text x="106" y="140" text-anchor="middle" fill="#C62828" font-size="13" font-family="Calibri">Float</text>
+          <g transform="translate(76,160)">
+            <rect x="0" y="0" width="60" height="4" rx="1" fill="#F44336" opacity="0.6"/>
+            <rect x="3" y="8" width="60" height="4" rx="1" fill="#F44336" opacity="0.5"/>
+            <rect x="6" y="16" width="60" height="4" rx="1" fill="#F44336" opacity="0.4"/>
+            <rect x="9" y="24" width="60" height="4" rx="1" fill="#F44336" opacity="0.3"/>
+            <rect x="12" y="32" width="60" height="4" rx="1" fill="#F44336" opacity="0.25"/>
+          </g>
+          <!-- Zone D (right) -->
+          <rect class="zone-hover" id="svg-d-front" x="178" y="48" width="116" height="224" rx="3" fill="#FFC107" fill-opacity="0.25" stroke="#FFC107" stroke-width="3"/>
+          <rect x="190" y="56" width="92" height="32" rx="4" fill="#FFC107"/>
+          <text x="236" y="77" text-anchor="middle" fill="#333" font-size="14" font-weight="bold" font-family="Calibri">VAK D</text>
+          <text x="236" y="120" text-anchor="middle" fill="#F57F17" font-size="13" font-weight="bold" font-family="Calibri">33.1</text>
+          <text x="236" y="140" text-anchor="middle" fill="#F57F17" font-size="13" font-family="Calibri">Iplus</text>
+          <g transform="translate(206,160)">
+            <rect x="0" y="0" width="60" height="4" rx="1" fill="#FFC107" opacity="0.6"/>
+            <rect x="3" y="8" width="60" height="4" rx="1" fill="#FFC107" opacity="0.5"/>
+            <rect x="6" y="16" width="60" height="4" rx="1" fill="#FFC107" opacity="0.4"/>
+            <rect x="9" y="24" width="60" height="4" rx="1" fill="#FFC107" opacity="0.3"/>
+            <rect x="12" y="32" width="60" height="4" rx="1" fill="#FFC107" opacity="0.25"/>
+          </g>
+          <text x="106" y="260" text-anchor="middle" fill="#C62828" font-size="10" font-family="Calibri">← links</text>
+          <text x="236" y="260" text-anchor="middle" fill="#F57F17" font-size="10" font-family="Calibri">rechts →</text>
+        </svg>
+      </div>
+
+    </div>
+
+    <!-- TOP VIEW (hidden by default) -->
+    <div class="bok-container" id="top-view" style="display:none;">
+      <div class="bok-view">
+        <h4>Bovenaanzicht — Bok</h4>
+        <svg class="bok-svg" width="500" height="260" viewBox="0 0 500 260">
+          <!-- Bok base (top view) -->
+          <rect x="40" y="30" width="420" height="200" rx="6" fill="#E8E8E8" stroke="#999" stroke-width="2"/>
+          <!-- Center divider (length of bok) -->
+          <line x1="250" y1="30" x2="250" y2="230" stroke="#666" stroke-width="2"/>
+          <!-- Side labels -->
+          <text x="145" y="22" text-anchor="middle" fill="var(--thg-grijs)" font-size="11" font-weight="bold" font-family="Calibri">ACHTERZIJDE (A + B)</text>
+          <text x="355" y="22" text-anchor="middle" fill="var(--thg-grijs)" font-size="11" font-weight="bold" font-family="Calibri">VOORZIJDE (C + D)</text>
+          <!-- Zone A -->
+          <rect x="48" y="38" width="96" height="184" rx="3" fill="#2196F3" fill-opacity="0.3" stroke="#2196F3" stroke-width="2"/>
+          <text x="96" y="100" text-anchor="middle" fill="#1565C0" font-size="14" font-weight="bold" font-family="Calibri">A</text>
+          <text x="96" y="120" text-anchor="middle" fill="#1565C0" font-size="11" font-family="Calibri">33.1 Float</text>
+          <!-- Zone B -->
+          <rect x="150" y="38" width="96" height="184" rx="3" fill="#4CAF50" fill-opacity="0.3" stroke="#4CAF50" stroke-width="2"/>
+          <text x="198" y="100" text-anchor="middle" fill="#2E7D32" font-size="14" font-weight="bold" font-family="Calibri">B</text>
+          <text x="198" y="120" text-anchor="middle" fill="#2E7D32" font-size="11" font-family="Calibri">33.1 Iplus</text>
+          <!-- Zone C -->
+          <rect x="256" y="38" width="96" height="184" rx="3" fill="#F44336" fill-opacity="0.3" stroke="#F44336" stroke-width="2"/>
+          <text x="304" y="100" text-anchor="middle" fill="#C62828" font-size="14" font-weight="bold" font-family="Calibri">C</text>
+          <text x="304" y="120" text-anchor="middle" fill="#C62828" font-size="11" font-family="Calibri">33.2 Float</text>
+          <!-- Zone D -->
+          <rect x="358" y="38" width="96" height="184" rx="3" fill="#FFC107" fill-opacity="0.3" stroke="#FFC107" stroke-width="2"/>
+          <text x="406" y="100" text-anchor="middle" fill="#F57F17" font-size="14" font-weight="bold" font-family="Calibri">D</text>
+          <text x="406" y="120" text-anchor="middle" fill="#F57F17" font-size="11" font-family="Calibri">33.1 Iplus</text>
+          <!-- Arrow: ISO line direction -->
+          <line x1="310" y1="245" x2="420" y2="245" stroke="var(--thg-blauw)" stroke-width="2" marker-end="url(#arrowhead)"/>
+          <text x="365" y="258" text-anchor="middle" fill="var(--thg-blauw)" font-size="10" font-family="Calibri">→ richting ISO-lijn</text>
+          <defs>
+            <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="var(--thg-blauw)"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+    </div>
+
+    <!-- OVERZICHTSTABEL -->
+    <h2>2. Overzicht vakindeling</h2>
+    <table class="dwi-tabel">
+      <thead>
+        <tr>
+          <th>Vak</th>
+          <th>Zijde bok</th>
+          <th>Glassoort</th>
+          <th>Dikte</th>
+          <th>Coating</th>
+          <th>Kleurcode</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="zone-tag tag-a">A</span></td>
+          <td>Achterzijde — links</td>
+          <td>Float</td>
+          <td>33.1</td>
+          <td>Geen</td>
+          <td>Blauw</td>
+        </tr>
+        <tr>
+          <td><span class="zone-tag tag-b">B</span></td>
+          <td>Achterzijde — rechts</td>
+          <td>Iplus</td>
+          <td>33.1</td>
+          <td>Iplus coating</td>
+          <td>Groen</td>
+        </tr>
+        <tr>
+          <td><span class="zone-tag tag-c">C</span></td>
+          <td>Voorzijde — links</td>
+          <td>Float</td>
+          <td>33.2</td>
+          <td>Geen</td>
+          <td>Rood</td>
+        </tr>
+        <tr>
+          <td><span class="zone-tag tag-d">D</span></td>
+          <td>Voorzijde — rechts</td>
+          <td>Iplus</td>
+          <td>33.1</td>
+          <td>Iplus coating</td>
+          <td>Geel</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- SECTIE 3: STAPPENPLAN -->
+    <h2>3. Stappenplan belading</h2>
+
+    <h3>3.1 Voorbereiding</h3>
+    <div class="stap">
+      <div class="stap-nr">1</div>
+      <div class="stap-tekst"><strong>Controleer de bok:</strong> Zorg dat de bok schoon is, stabiel staat en voldoende rubbertussenvlakken (strips) heeft om glaskrassen te voorkomen.</div>
+    </div>
+    <div class="stap">
+      <div class="stap-nr">2</div>
+      <div class="stap-tekst"><strong>Markeer de zones:</strong> Breng de kleurstickers of -labels aan op de bok zodat elk vak (A/B/C/D) duidelijk herkenbaar is. Gebruik de kleuren uit het schema hierboven.</div>
+    </div>
+    <div class="stap">
+      <div class="stap-nr">3</div>
+      <div class="stap-tekst"><strong>Check de orderlijst:</strong> Controleer in A+W welke formaten 33.1 float, 33.2 float en 33.1 Iplus er voor de Lenferink-order uitgesorteerd moeten worden.</div>
+    </div>
+
+    <h3>3.2 Belading — Achterzijde (A + B)</h3>
+    <div class="stap">
+      <div class="stap-nr">4</div>
+      <div class="stap-tekst"><strong>Vak A (blauw) — 33.1 Float:</strong> Plaats de 33.1 float-ruiten in het linker vak aan de achterzijde. Sorteer op formaat (groot achteraan, klein vooraan).</div>
+    </div>
+    <div class="stap">
+      <div class="stap-nr">5</div>
+      <div class="stap-tekst"><strong>Vak B (groen) — 33.1 Iplus:</strong> Plaats de 33.1 Iplus-ruiten in het rechter vak aan de achterzijde. <strong>Let op coatingzijde!</strong> Zorg dat de coating beschermd blijft.</div>
+    </div>
+
+    <div class="waarschuwing">
+      <strong>Iplus-glas altijd met coating naar binnen plaatsen.</strong> Voorkom contact van de coatingzijde met andere glasplaten of harde oppervlakken.
+    </div>
+
+    <h3>3.3 Belading — Voorzijde (C + D)</h3>
+    <div class="stap">
+      <div class="stap-nr">6</div>
+      <div class="stap-tekst"><strong>Vak C (rood) — 33.2 Float:</strong> Plaats de 33.2 float-ruiten in het linker vak aan de voorzijde. Dit is het dikkere float-glas; zorg voor extra draagkracht onderin de bok.</div>
+    </div>
+    <div class="stap">
+      <div class="stap-nr">7</div>
+      <div class="stap-tekst"><strong>Vak D (geel) — 33.1 Iplus:</strong> Plaats de 33.1 Iplus-ruiten in het rechter vak aan de voorzijde. Zelfde aandachtspunten als Vak B: coatingzijde beschermen.</div>
+    </div>
+
+    <h3>3.4 Positionering richting ISO-lijn</h3>
+    <div class="stap">
+      <div class="stap-nr">8</div>
+      <div class="stap-tekst"><strong>Voorzijde (C + D) richting ISO-lijn:</strong> Positioneer de bok zo dat de voorzijde (rood + geel) naar de ISO-lijn wijst. Zo kan het opgooiteam direct bij het glas dat als eerste nodig is, <strong>zonder de bok te draaien</strong>.</div>
+    </div>
+    <div class="stap">
+      <div class="stap-nr">9</div>
+      <div class="stap-tekst"><strong>Minimale loopafstand:</strong> Zet de bok zo dicht mogelijk bij het opgooipunt. Houd gangpaden vrij voor heftruck/vacuümkraan.</div>
+    </div>
+
+    <div class="waarschuwing">
+      <strong>Nooit bokken verplaatsen met glas erin als de bok niet volledig geborgd is.</strong> Gebruik altijd de spanband of vergrendelklem.
+    </div>
+
+    <!-- SECTIE 4: MINIMALE VERSTORING -->
+    <h2>4. Minimale verstoring ISO-lijn</h2>
+    <p>Het doel van deze bokindeling is dat de ISO-lijn continu kan doordraaien zonder wachttijden door verkeerd gesorteerd glas. De kernprincipes:</p>
+
+    <div class="stap">
+      <div class="stap-nr">→</div>
+      <div class="stap-tekst"><strong>Gescheiden glassoorten:</strong> Door float en Iplus per zijde te scheiden, hoeft de operator niet te zoeken. Kleurcodes maken het glastype op afstand herkenbaar.</div>
+    </div>
+    <div class="stap">
+      <div class="stap-nr">→</div>
+      <div class="stap-tekst"><strong>Voorzijde = eerste pakkans:</strong> Het glas dat het eerst nodig is bij de ISO-lijn (C + D) staat aan de voorzijde. De achterzijde (A + B) wordt pas later benut of bij het omlopen.</div>
+    </div>
+    <div class="stap">
+      <div class="stap-nr">→</div>
+      <div class="stap-tekst"><strong>Geen omstapelen onderweg:</strong> De bok wordt in de zaagafdeling / opslag al correct beladen. Geen tussentijdse correcties nodig bij de ISO-lijn.</div>
+    </div>
+
+    <!-- SECTIE 5: CONTROLELIJST -->
+    <h2>5. Controlelijst voor aftekening</h2>
+    <div class="checklist" id="checklist">
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Bok is schoon en stabiel</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Kleurlabels A/B/C/D zijn aangebracht</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Vak A (blauw): 33.1 Float correct geplaatst</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Vak B (groen): 33.1 Iplus correct geplaatst, coating beschermd</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Vak C (rood): 33.2 Float correct geplaatst</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Vak D (geel): 33.1 Iplus correct geplaatst, coating beschermd</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Voorzijde (C+D) gericht naar ISO-lijn</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Bok geborgd met spanband/klem</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Gangpad vrij voor heftruck/vacuümkraan</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span>23-03-2026</span>
+    <span>Timmermans Hardglas B.V. | Handelsstraat 55–57 | 7772 TS Hardenberg | www.timmermanshardglas.nl</span>
+    <span>DWI-BOK-LEN-001 v1.0</span>
+  </div>
+</div>
+
+<script>
+  // View switching
+  function switchView(view) {
+    const back = document.getElementById('view-back');
+    const front = document.getElementById('view-front');
+    const top = document.getElementById('top-view');
+    const bokDisplay = document.getElementById('bok-display');
+
+    // Reset all buttons
+    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+
+    if (view === 'both') {
+      bokDisplay.style.display = 'flex';
+      back.style.display = '';
+      front.style.display = '';
+      top.style.display = 'none';
+      document.getElementById('btn-both').classList.add('active');
+    } else if (view === 'front') {
+      bokDisplay.style.display = 'flex';
+      back.style.display = 'none';
+      front.style.display = '';
+      top.style.display = 'none';
+      document.getElementById('btn-front').classList.add('active');
+    } else if (view === 'back') {
+      bokDisplay.style.display = 'flex';
+      back.style.display = '';
+      front.style.display = 'none';
+      top.style.display = 'none';
+      document.getElementById('btn-back').classList.add('active');
+    } else if (view === 'top') {
+      bokDisplay.style.display = 'none';
+      top.style.display = 'flex';
+      document.getElementById('btn-top').classList.add('active');
+    }
+  }
+
+  // Legend highlight
+  function highlightZone(zone) {
+    const items = document.querySelectorAll('.legenda-item');
+    items.forEach(item => item.classList.remove('active'));
+    document.getElementById('leg-' + zone).classList.add('active');
+
+    // Pulse the SVG zone
+    const allZones = document.querySelectorAll('.zone-hover');
+    allZones.forEach(z => {
+      z.style.transition = 'fill-opacity 0.3s';
+      z.style.fillOpacity = '0.15';
+    });
+
+    const targets = {
+      a: ['svg-a-back'],
+      b: ['svg-b-back'],
+      c: ['svg-c-front'],
+      d: ['svg-d-front']
+    };
+
+    if (targets[zone]) {
+      targets[zone].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.fillOpacity = '0.5';
+      });
+    }
+
+    // Reset after 2s
+    setTimeout(() => {
+      allZones.forEach(z => z.style.fillOpacity = '0.25');
+      items.forEach(item => item.classList.remove('active'));
+    }, 2000);
+  }
+
+  // Checklist toggle
+  function toggleCheck(item) {
+    item.classList.toggle('checked');
+  }
+</script>
+
+</body>
+</html>
